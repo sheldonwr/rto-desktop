@@ -5,7 +5,7 @@ module.exports = {
   pages: {
     index: {
       entry: "src/renderer/main.js",
-      template: "src/renderer/index.html"
+      template: "public/editor.html"
     }
   },
   pluginOptions: {

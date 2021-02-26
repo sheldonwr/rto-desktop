@@ -21,7 +21,7 @@
 import DropMenu from "./DropMenu";
 
 export default {
-  name: 'menu',
+  name: 'app-menu',
   components: {
     DropMenu,
   },
@@ -242,7 +242,7 @@ export default {
       this.openedMenu = '';
       let menuItemId = menuItem.value;
       if(menuItemId === 'file-new') {
-        
+
       }
     }
   }

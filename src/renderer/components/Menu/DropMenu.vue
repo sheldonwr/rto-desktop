@@ -36,7 +36,7 @@ export default {
     };
   },
   mounted() {
-    this.menuInst = findComponentUpward(this, 'menu');
+    this.menuInst = findComponentUpward(this, 'app-menu');
   },
   methods: {
     menuMouseenterHandler(dropItem) {
