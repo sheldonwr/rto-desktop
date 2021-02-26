@@ -18,8 +18,10 @@ let win, tray;
 async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
+    width: 1024,
+    minWidth: 1024,
     height: 600,
+    minHeight: 600,
     titleBarStyle: "hidden",
     frame: false,
     webPreferences: {

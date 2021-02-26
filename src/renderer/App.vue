@@ -1,18 +1,21 @@
 <template>
-  <div id="app">
+  <div class="rto_custom rto_header">
     <top-header></top-header>
     <menu-view></menu-view>
+    <tool-bar></tool-bar>
   </div>
 </template>
 
 <script>
 import TopHeader from "components/Header";
 import MenuView from "components/Menu/index";
+import ToolBar from "components/Toolbar";
 
 export default {
   components: {
     TopHeader,
-    MenuView
+    MenuView,
+    ToolBar
   },
   name: 'App',
   mounted() {
@@ -23,5 +26,5 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 </style>

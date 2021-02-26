@@ -4,17 +4,17 @@
       <img :src="require('assets/img/logo.png')">
     </div>
     <div class="title-wrap">
-      <p>项目-乙烯装置全流程优化</p>
+      <p class="title">项目-乙烯装置全流程优化</p>
     </div>
     <div class="window-controls no-drag">
       <div class="window-icon" @click="windowControl('minimize')">
-        <span class="iconfont icon-minimize"></span>
+        <span class="rto_iconfont icon-minimize"></span>
       </div>
        <div class="window-icon" @click="windowControl('maximize')">
-        <span :class="['iconfont', isWindowMaximized ? 'icon-maximize-restore' : 'icon-maximize']"></span>
+        <span :class="['rto_iconfont', isWindowMaximized ? 'icon-maximize-restore' : 'icon-maximize']"></span>
       </div>
        <div class="window-icon danger" @click="windowControl('close')">
-        <span class="iconfont icon-close"></span>
+        <span class="rto_iconfont icon-close"></span>
       </div>
     </div>
   </div>
@@ -45,6 +45,9 @@ export default {
 .header-wrap {
   width: 100%;
   height: 37px;
+  background: rgba(255,255,255,0.6);
+  box-shadow: 0px 0px 1px 0px 
+		rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -52,6 +55,7 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 16px;
+    width: 150px;
     img {
       width: 88px;
       height: 23px;
@@ -59,14 +63,17 @@ export default {
   }
   .window-controls {
     display: flex;
+    width: 150px;
+    justify-content: flex-end;
     .window-icon {
       cursor: pointer;
-      padding: 8px 14px;
-      .iconfont {
-        font-size: 14px;
+      padding: 8px 16px;
+      .rto_iconfont {
+        font-size: 13px;
+        color: #333;
       }
       &:hover {
-        background: #aaa;
+        background: rgba(0, 0, 0, 0.2);
       }
       &.danger:hover {
         background: red;

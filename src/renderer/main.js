@@ -11,4 +11,4 @@ Vue.use(Vuex);
 new Vue({
   store: new Vuex.Store(store),
   render: h => h(App),
-}).$mount('#app')
+}).$mount('.rto_header')

@@ -1,18 +1,32 @@
-*, *::after, *::before {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  user-select: none;
-  -webkit-user-drag: none;
+.rto_custom {
+  *, *::after, *::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  ul {
+    list-style: none;
+  }
+  .drag {
+    -webkit-app-region: drag;
+  }
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
 }
 
-ul {
-  list-style: none;
-}
 
-.drag {
-  -webkit-app-region: drag;
+// override suanpan
+#container {
+  top: 115px;
+  display: none;
 }
-.no-drag {
-  -webkit-app-region: no-drag;
+.sp-app-actions {
+  display: none;
+}
+#container+.app {
+  top: 0;
+  height: calc(100% - 110px);
 }

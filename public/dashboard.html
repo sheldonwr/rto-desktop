@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title><%= title %></title>
+  <link rel="icon" type="image/x-ico" href="../../<%= faviconImgPath %>" />
+  <link rel="stylesheet" href="<%= suanpanSdkAllCSSPath %>" type="text/css" />
+  <link rel="stylesheet" href="/common_static/css/fontawesome.5.1.0.css" type="text/css" />
+  <link rel="stylesheet" href="/common_static/fontFamily/index.css" type="text/css" />
+  <%- dashboardCss %>
+  <script src="<%= suanpanSdkAllPath %>"></script>
+  <script>
+    window.appConfig = {
+      env: '<%= env %>',
+      dashboardHost: '<%= host %>',
+      userId: '<%= userId %>',
+      id: '<%= id %>',
+      ossType: '<%= ossType %>'
+    };
+    window.sp({
+      url: location.protocol + "//" + window.appConfig.dashboardHost,
+      path: '/socket/' + window.appConfig.id,
+      transports: ['websocket'],
+      oss: {
+        type: window.appConfig.ossType
+      }
+    }).then((s) => {
+      window.spSocket = s;
+      $('body').find('.loader').remove();
+
+      <%- dashboardScripts %>
+    });
+  </script>
+</head>
+
+<body>
+  <div class="loader" style="background-color: #fff;"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+  <%- dashboardHtml %>
+</body>
+
+</html>
