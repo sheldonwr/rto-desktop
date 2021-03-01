@@ -31,38 +31,38 @@ module.exports = {
   devServer: {
     proxy: {
       '/assets': {
-        target: 'http://10.88.34.96:7000',
-        // target: 'https://spnext.xuelangyun.com/',
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
         ws: true,
         changeOrigin: true
       },
       '/oss': {
-        target: 'http://10.88.34.96:7000',
-        // target: 'https://spnext.xuelangyun.com/',
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
         ws: true,
         changeOrigin: true
       },
       '/app': {
-        target: 'http://10.88.34.96:7000',
-        // target: 'https://spnext.xuelangyun.com/',
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
         ws: true,
         changeOrigin: true
       },
       '/predict': {
-        target: 'http://10.88.34.96:7000',
-        // target: 'https://spnext.xuelangyun.com/',
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
         ws: true,
         changeOrigin: true
       },
       '/component': {
-        target: 'http://10.88.34.96:7000',
-        // target: 'https://spnext.xuelangyun.com/',
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
         ws: true,
         changeOrigin: true
       },
       '/system': {
-        target: 'http://10.88.34.96:7000',
-        // target: 'https://spnext.xuelangyun.com/',
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
         ws: true,
         changeOrigin: true
       },
