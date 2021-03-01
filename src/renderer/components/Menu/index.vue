@@ -253,6 +253,7 @@ export default {
 .menu-list {
   display: flex;
   align-items: center;
+  background: #fff;
   padding: 4px 0 4px 6px;
   height: 38px;
   .menu-item {

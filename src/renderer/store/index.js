@@ -1,8 +1,10 @@
 import window from "./window";
+import view from "./view";
 
 export default {
   modules: {
-    window
+    window,
+    view
   },
   state: {},
   mutations: {},

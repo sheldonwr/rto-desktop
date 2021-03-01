@@ -43,8 +43,8 @@ module.exports = {
         changeOrigin: true
       },
       '/app': {
-        target: 'http://10.88.34.96:7000',
-        // target: 'https://spnext.xuelangyun.com/',
+        // target: 'http://10.88.34.96:7000',
+        target: 'https://spnext.xuelangyun.com/',
         ws: true,
         changeOrigin: true
       },

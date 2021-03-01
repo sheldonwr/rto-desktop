@@ -58,6 +58,7 @@
     <div id="container">
       <div class="spinner"></div>
     </div>
+    <div class="rto_custom rto_log"></div>
     <div ui-view class="app" id="app"></div>
     <div class="page-loading">
       <div id="loader-logo"></div>
@@ -152,7 +153,7 @@
         publicOss: "https://suanpan-public.oss-cn-shanghai.aliyuncs.com",
         predictHost: "spnextapi.xuelangyun.com",
         edgeVersion: "0",
-        version: "3.1.1",
+        version: "3.1.2",
         releasedRPAPath: "/rpa-release/suanpan-RPA-2.1-latest.exe",
         checkUpdateInterval: "3600",
         statusTimeout: 2000,
@@ -202,17 +203,9 @@
           address: "江苏省无锡市",
           point: { y: "3684426.86", x: "13392487.81" },
         },
-        appId: "3350",
+        appId: "3109",
         pluginLoaded: true,
       };
-      function async_load(src, callback) {
-        var scriptElement = document.createElement("script");
-        scriptElement.type = "text/javascript";
-        scriptElement.async = true;
-        scriptElement.src = src;
-        document.body.appendChild(scriptElement);
-        scriptElement.addEventListener("load", callback);
-      }
     </script>
 
     <!-- <div class="page-loading">
@@ -222,10 +215,10 @@
     <script src="<%= BASE_URL %>assets/web/js/lib-dfe6aae89f.js"></script>
 
     <script src="<%= BASE_URL %>assets/web/js/element.js"></script>
-    
+
     <script src="<%= BASE_URL %>assets/web/js/main-a69bb5d22e.js"></script>
-    
-    <script src="https://spnext.xuelangyun.com/common_public/sdk/0.9.263/suanpan-sdk.dashboard.min.js"></script>
-    <script src="https://spnext.xuelangyun.com/common_public/sdk/0.9.263/suanpan-sdk.dashboardPage.min.js"></script>
+
+    <!-- <script src="https://spnext.xuelangyun.com/common_public/sdk/0.9.263/suanpan-sdk.dashboard.min.js"></script> -->
+    <!-- <script src="https://spnext.xuelangyun.com/common_public/sdk/0.9.263/suanpan-sdk.dashboardPage.min.js"></script> -->
   </body>
 </html>
