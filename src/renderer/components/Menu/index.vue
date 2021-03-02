@@ -197,6 +197,16 @@ export default {
               value: "tools-manage",
               status: 'normal'
             },
+            {
+              label: "模型管理",
+              value: "model-manage",
+              status: 'normal'
+            },
+            {
+              label: "算法管理",
+              value: "algo-manage",
+              status: 'normal'
+            },
           ],
         },
         help: {
@@ -243,6 +253,18 @@ export default {
       let menuItemId = menuItem.value;
       if(menuItemId === 'file-new') {
 
+      }
+      switch(menuItemId) {
+        case "file-new":
+          break;
+        case "model-manage": // 模型管理
+          this.$store.dispatch('drawer/showDrawer');
+          this.$store.dispatch('drawer/selectActiveTab', 'model');
+          break;
+        case "algo-manage": // 算法管理
+          this.$store.dispatch('drawer/showDrawer');
+          this.$store.dispatch('drawer/selectActiveTab', 'algo');
+          break;
       }
     }
   }
