@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const entryTemplate = process.env.NODE_ENV !== 'production' ? "public/editor.dev.html" : "public/editor.prod.html";
+const isDevelopment = process.env.NODE_ENV !== 'production'
+const entryTemplate = isDevelopment ? "public/editor.dev.html" : "public/editor.prod.html";
 
 module.exports = {
   pages: {
@@ -36,6 +37,16 @@ module.exports = {
     fs.readdirSync(root, { withFileTypes: true })
       .filter(i => i.isDirectory())
       .forEach(i => config.resolve.alias.set(i.name, path.join(root, i.name)));
+    // if(isDevelopment) {
+    //   let ac = require('./appconfig')
+    //   config.plugin('html-index').tap((args) => {
+    //       args[0].templateParameters = {
+    //         'BASE_URL': '/',
+    //         ...ac
+    //       }
+    //       return args;
+    //     });
+    // }
   },
   devServer: {
     proxy: {

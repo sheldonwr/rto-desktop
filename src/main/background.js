@@ -5,7 +5,7 @@ import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, session } from 'ele
 import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import { appInjectProd } from './appInject';
+import { appInjectDev, appInjectProd } from './appInject';
 import * as configs from "./configs";
 import log from './log'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -36,7 +36,6 @@ async function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    // await appInjectDev(win, process.env.WEBPACK_DEV_SERVER_URL);
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
@@ -99,7 +98,9 @@ app.on('ready', async () => {
     }
   }
   if (!isDevelopment) {
-    appInjectProd();
+    await appInjectProd();
+  }else {
+    await appInjectDev();
   }
   
   createWindow()
