@@ -13,6 +13,8 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "log4js": "^6.3.0",
+    "node-html-parser": "^3.0.3",
     "vue": "^2.6.11",
     "vuex": "^3.6.2"
   },

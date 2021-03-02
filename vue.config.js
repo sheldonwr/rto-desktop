@@ -1,11 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
+const entryTemplate = process.env.NODE_ENV !== 'production' ? "public/editor.dev.html" : "public/editor.prod.html";
+
 module.exports = {
   pages: {
     index: {
       entry: "src/renderer/main.js",
-      template: "public/editor.html"
+      template: entryTemplate
     }
   },
   pluginOptions: {
@@ -18,6 +20,13 @@ module.exports = {
           target: "AppImage",
           category: "Utility"
         },
+        extraResources: [
+          {
+            from: "./src/main/assets/",
+            to: "assets",
+            filter: ["**/*"]
+          },
+        ]
       }
     },
   },
