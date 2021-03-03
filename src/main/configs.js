@@ -28,3 +28,5 @@ export const isDevelopment =
       ? path.join(process.resourcesPath, "assets")
       : path.join(".", "src", "main", "assets")
   );
+
+export const RtoOrigin = 'http://10.88.36.102'

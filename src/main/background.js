@@ -3,9 +3,11 @@
 import './api'
 import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, session } from 'electron'
 import path from "path";
-import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+// import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import { appInjectDev, appInjectProd } from './appInject';
 import * as configs from "./configs";
+import log from './log'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -37,7 +39,7 @@ async function createWindow() {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
+    // createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
@@ -95,10 +97,12 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  // session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-  //   console.log(details)
-  //   callback()
-  // })
+  if (!isDevelopment) {
+    await appInjectProd();
+  }else {
+    await appInjectDev();
+  }
+  
   createWindow()
   createTray()
 })

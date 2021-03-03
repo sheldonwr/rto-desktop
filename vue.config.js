@@ -1,11 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 
+const isDevelopment = process.env.NODE_ENV !== 'production'
+const entryTemplate = isDevelopment ? "public/editor.dev.html" : "public/editor.prod.html";
+
 module.exports = {
   pages: {
     index: {
       entry: "src/renderer/main.js",
-      template: "public/editor.html"
+      template: entryTemplate
     }
   },
   pluginOptions: {
@@ -18,6 +21,13 @@ module.exports = {
           target: "AppImage",
           category: "Utility"
         },
+        extraResources: [
+          {
+            from: "./src/main/assets/",
+            to: "assets",
+            filter: ["**/*"]
+          },
+        ]
       }
     },
   },
@@ -27,10 +37,26 @@ module.exports = {
     fs.readdirSync(root, { withFileTypes: true })
       .filter(i => i.isDirectory())
       .forEach(i => config.resolve.alias.set(i.name, path.join(root, i.name)));
+    // if(isDevelopment) {
+    //   let ac = require('./appconfig')
+    //   config.plugin('html-index').tap((args) => {
+    //       args[0].templateParameters = {
+    //         'BASE_URL': '/',
+    //         ...ac
+    //       }
+    //       return args;
+    //     });
+    // }
   },
   devServer: {
     proxy: {
       '/assets': {
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
+        ws: true,
+        changeOrigin: true
+      },
+      '/common_public': {
         // target: 'http://10.88.34.96:7000',
         target: 'http://10.88.36.102/',
         ws: true,
