@@ -7,23 +7,24 @@ import * as configs from "./configs";
 import log from "./log";
 
 export async function appInjectDev() {
-  // protocol.registerBufferProtocol(
-  //   'http',
-  //   (request, respond) => {
-  //     console.log('+++', new URL(request.url))
-  //   }
-  // )
+  let ac = await getAppConfig();
+  protocol.interceptStringProtocol('http', async (request, callback) => {
+    protocol.uninterceptProtocol('http');
+    let url = new URL(request.url);
+    let htmlStr = await getHtmlString(url.href);
+    callback({ mimeType:'text/html', data: injectAppConfig(htmlStr, ac)})
+  })
 }
 
 function getHtmlString(url) {
-  return new Promise((resolve, reject) => {
+  return new Promise( resolve => {
     http.get(url, (res) => {
       let indexHtml = "";
       res.on("data", (chunk) => {
         indexHtml += chunk;
       });
       res.on("end", () => {
-        resolve(injectAppConfig(indexHtml));
+        resolve(indexHtml);
       });
     });
   });
@@ -158,10 +159,11 @@ const appConfig = {
   },
   appId: "13707",
   pluginLoaded: true,
+  redirectRequest: configs.RtoOrigin
 };
 
 function getAppConfig() {
-  return new Promise( (resolve, reject) => {
+  return new Promise( resolve => {
     setTimeout(() => {
       resolve(appConfig)
     }, 1000);
@@ -178,51 +180,6 @@ function injectAppConfig(htmlStr, ac) {
 }
 
 export async function appInjectProd() {
-  session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-    let url = new URL(details.url);
-    // log.debug('+++', url)
-    if((url.protocol === 'app:') && (url.pathname.indexOf('oss/object/get') > -1)) {
-      callback({
-        redirectURL: `${configs.RtoOrigin}${url.pathname}${url.search}${url.hash}`
-      })
-    }else{
-      callback({})
-    }
-    // if((url.protocol === 'app:') && (url.pathname === '/index.html')) {
-    //   callback({})
-    // }else if((url.protocol === 'app:') && (url.pathname.indexOf('/css') === 0)) {
-    //   callback({})
-    // }else if((url.protocol === 'app:') && (url.pathname.indexOf('/js') === 0)) {
-    //   callback({})
-    // }else if((url.protocol === 'app:') && (url.pathname.indexOf('/img') === 0)) {
-    //   callback({})
-    // }else if(url.protocol === 'app:') {
-    //   callback({
-    //     redirectURL: path.join(configs.RtoOrigin, url.pathname)
-    //   })
-    // }else {
-    //   callback({})
-    // }
-  })
-  // session.defaultSession.webRequest.onBeforeSendHeaders(
-  //   (details, callback) => {
-  //     let url = new URL(details.url);
-  //     log.debug('===', url)
-  //     callback({});
-  //   }
-  // );
-  // session.defaultSession.webRequest.onHeadersReceived(
-  //   (details, callback) => {
-  //     let url = new URL(details.url);
-  //     log.debug('===', url)
-  //     callback({});
-  //   }
-  // );
-  // session.defaultSession.webRequest.onBeforeRedirect( details => {
-  //   let url = new URL(details.url);
-  //   log.debug('***', url)
-  // })
-
   let ac = await getAppConfig();
   protocol.registerBufferProtocol(
     'app',

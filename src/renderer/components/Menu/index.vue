@@ -252,7 +252,7 @@ export default {
       this.openedMenu = '';
       let menuItemId = menuItem.value;
       if(menuItemId === 'file-new') {
-
+        
       }
       switch(menuItemId) {
         case "file-new":
