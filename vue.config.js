@@ -56,6 +56,12 @@ module.exports = {
         ws: true,
         changeOrigin: true
       },
+      '/common_public': {
+        // target: 'http://10.88.34.96:7000',
+        target: 'http://10.88.36.102/',
+        ws: true,
+        changeOrigin: true
+      },
       '/oss': {
         // target: 'http://10.88.34.96:7000',
         target: 'http://10.88.36.102/',
