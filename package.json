@@ -12,6 +12,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "ant-design-vue": "^1.7.4",
     "core-js": "^3.6.5",
     "log4js": "^6.3.0",
     "node-html-parser": "^3.0.3",

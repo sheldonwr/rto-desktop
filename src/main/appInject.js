@@ -7,23 +7,24 @@ import * as configs from "./configs";
 import log from "./log";
 
 export async function appInjectDev() {
-  // protocol.registerBufferProtocol(
-  //   'http',
-  //   (request, respond) => {
-  //     console.log('+++', new URL(request.url))
-  //   }
-  // )
+  let ac = await getAppConfig();
+  protocol.interceptStringProtocol('http', async (request, callback) => {
+    protocol.uninterceptProtocol('http');
+    let url = new URL(request.url);
+    let htmlStr = await getHtmlString(url.href);
+    callback({ mimeType:'text/html', data: injectAppConfig(htmlStr, ac)})
+  })
 }
 
 function getHtmlString(url) {
-  return new Promise((resolve, reject) => {
+  return new Promise( resolve => {
     http.get(url, (res) => {
       let indexHtml = "";
       res.on("data", (chunk) => {
         indexHtml += chunk;
       });
       res.on("end", () => {
-        resolve(injectAppConfig(indexHtml));
+        resolve(indexHtml);
       });
     });
   });

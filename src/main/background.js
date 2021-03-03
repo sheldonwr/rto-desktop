@@ -1,13 +1,12 @@
 'use strict'
 
 import './api'
-import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, session } from 'electron'
+import { app, protocol, BrowserWindow, Menu, MenuItem, Tray } from 'electron'
 import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { appInjectDev, appInjectProd } from './appInject';
 import * as configs from "./configs";
-import log from './log'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready

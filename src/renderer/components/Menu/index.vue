@@ -242,7 +242,7 @@ export default {
       this.openedMenu = '';
       let menuItemId = menuItem.value;
       if(menuItemId === 'file-new') {
-
+        
       }
     }
   }
