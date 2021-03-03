@@ -7,6 +7,8 @@ import path from "path";
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { appInjectDev, appInjectProd } from './appInject';
 import * as configs from "./configs";
+import log from "./log";
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -42,6 +44,10 @@ async function createWindow() {
     // createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
+
+    win.webContents.on('did-fail-load', () => {
+      win.loadURL('app://./index.html')
+    })
   }
 }
 
@@ -104,7 +110,7 @@ app.on('ready', async () => {
   }
   
   createWindow()
-  createTray()
+  // createTray()
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -121,3 +127,19 @@ if (isDevelopment) {
     })
   }
 }
+
+/**
+ * SingleInstanceLock
+ */
+const gotTheLock = app.requestSingleInstanceLock();
+
+if(!gotTheLock){
+  app.quit()
+}
+
+app.on('second-instance', () => {
+  if (win && win.isMinimized()) {
+    win.restore()
+    win.focus()
+  }
+})

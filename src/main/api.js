@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from "electron";
+import { ipcMain, BrowserWindow, app } from "electron";
 
 ipcMain.on("window-minimize", minimize); 
 ipcMain.on("window-maximize", maximize);
@@ -21,7 +21,10 @@ function maximize() {
 }
 
 function closeWindow(event) {
+  // let win = BrowserWindow.getFocusedWindow();
+  // event.preventDefault();
+  // win.hide();
   let win = BrowserWindow.getFocusedWindow();
-  event.preventDefault();
-  win.hide();
+  win.destroy();
+  app.quit();
 }

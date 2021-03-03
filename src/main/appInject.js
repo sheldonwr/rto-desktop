@@ -163,7 +163,7 @@ const appConfig = {
 };
 
 function getAppConfig() {
-  return new Promise( (resolve, reject) => {
+  return new Promise( resolve => {
     setTimeout(() => {
       resolve(appConfig)
     }, 1000);
