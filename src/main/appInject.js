@@ -159,6 +159,7 @@ const appConfig = {
   },
   appId: "13707",
   pluginLoaded: true,
+  redirectRequest: configs.RtoOrigin
 };
 
 function getAppConfig() {
@@ -179,51 +180,6 @@ function injectAppConfig(htmlStr, ac) {
 }
 
 export async function appInjectProd() {
-  session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-    let url = new URL(details.url);
-    // log.debug('+++', url)
-    if((url.protocol === 'app:') && (url.pathname.indexOf('oss/object/get') > -1)) {
-      callback({
-        redirectURL: `${configs.RtoOrigin}${url.pathname}${url.search}${url.hash}`
-      })
-    }else{
-      callback({})
-    }
-    // if((url.protocol === 'app:') && (url.pathname === '/index.html')) {
-    //   callback({})
-    // }else if((url.protocol === 'app:') && (url.pathname.indexOf('/css') === 0)) {
-    //   callback({})
-    // }else if((url.protocol === 'app:') && (url.pathname.indexOf('/js') === 0)) {
-    //   callback({})
-    // }else if((url.protocol === 'app:') && (url.pathname.indexOf('/img') === 0)) {
-    //   callback({})
-    // }else if(url.protocol === 'app:') {
-    //   callback({
-    //     redirectURL: path.join(configs.RtoOrigin, url.pathname)
-    //   })
-    // }else {
-    //   callback({})
-    // }
-  })
-  // session.defaultSession.webRequest.onBeforeSendHeaders(
-  //   (details, callback) => {
-  //     let url = new URL(details.url);
-  //     log.debug('===', url)
-  //     callback({});
-  //   }
-  // );
-  // session.defaultSession.webRequest.onHeadersReceived(
-  //   (details, callback) => {
-  //     let url = new URL(details.url);
-  //     log.debug('===', url)
-  //     callback({});
-  //   }
-  // );
-  // session.defaultSession.webRequest.onBeforeRedirect( details => {
-  //   let url = new URL(details.url);
-  //   log.debug('***', url)
-  // })
-
   let ac = await getAppConfig();
   protocol.registerBufferProtocol(
     'app',
