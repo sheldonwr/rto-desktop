@@ -45,6 +45,7 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
 
+    //https://github.com/electron/electron/issues/14978
     win.webContents.on('did-fail-load', () => {
       win.loadURL('app://./index.html')
     })
