@@ -25,9 +25,6 @@ export default {
     }
   },
   methods: {
-    afterVisibleChange(val) {
-      console.log('visible', val);
-    },
     onClose() {
       this.$store.dispatch('drawer/closeDrawer');
     },

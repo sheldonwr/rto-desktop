@@ -2,10 +2,10 @@
   <div class="card-content">
     <a-tabs :active-key="getActiveTab" type="card" @change="this.changeActiveTab">
       <a-tab-pane key="model" tab="模型管理">
-        <Manage type="模型" />
+        <Manage type="model" />
       </a-tab-pane>
       <a-tab-pane key="algo" tab="算法管理">
-        <Manage type="算法" />
+        <Manage type="algo" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -29,6 +29,7 @@ export default {
   methods: {
     changeActiveTab(activeKey) {
       this.$store.dispatch('drawer/selectActiveTab', activeKey);
+      this.$store.commit('ci/updatePagination', { current: 1 });
     },
   },
 };

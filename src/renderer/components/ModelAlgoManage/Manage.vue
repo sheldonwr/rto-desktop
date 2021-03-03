@@ -3,8 +3,9 @@
     <a-table
       size="middle"
       :columns="initColumns"
-      :data-source="data"
+      :data-source="dataList"
       :pagination="pagination"
+      @change="this.changeTable"
     >
       <span slot="action">
         <a @click="editorRow">编辑</a>
@@ -132,23 +133,56 @@ export default {
   props: ["type"],
   computed: {
     initColumns: function() {
-      this.columns[0].title = `${this.type}名称`;
-      this.columns[1].title = `${this.type}描述`;
+      this.columns[0].title = `${this.types[this.type]}名称`;
+      this.columns[1].title = `${this.types[this.type]}描述`;
       return this.columns;
     },
     popconfirmTitle: function() {
-      return `确定删除当前${this.type}?`;
+      return `确定删除当前${this.types[this.type]}?`;
+    },
+    dataList: function() {
+      let data = new Array();
+      this.$store.state.ci.ciList.map(val => {
+        const { id, name, desc } = val;
+        data.push({
+          key: val.id,
+          name,
+          desc
+        });
+      });
+      return data;
+    },
+    pagination: function() {
+      const { pageSize, pageNo } = this.$store.state.ci.pagination;
+      return {
+        pageSize,
+        current: pageNo
+      };
     }
   },
   watch: {
     '$store.state.drawer.drawerVisible': function(drawerVisible) {
+      console.log(drawerVisible)
+      const { activeTab } = this.$store.state.drawer;
       if (!drawerVisible) {
         this.closeForm();
+      } else if (activeTab === this.type){
+        this.getList();
+      }
+    },
+    '$store.state.drawer.activeTab':  function(activeTab) {
+      const { drawerVisible } = this.$store.state.drawer;
+      if (drawerVisible && activeTab === this.type){
+        this.getList();
       }
     }
   },
   data() {
     return {
+      types: {
+        model: '模型',
+        algo: '算法'
+      },
       columns: [
         { title: '名称', dataIndex: 'name', key: 'name'},
         { title: '描述', dataIndex: 'desc', key: 'desc'},
@@ -162,20 +196,6 @@ export default {
           sm: { span: 20, offset: 4 },
         },
       },
-      data: [
-        {key: 1, name: '模型1', desc: 'test'},
-        {key: 2, name: '模型1', desc: 'test'},
-        {key: 3, name: '模型1', desc: 'test'},
-        {key: 4, name: '模型1', desc: 'test'},
-        {key: 5, name: '模型1', desc: 'test'},
-        {key: 6, name: '模型1', desc: 'test'},
-        {key: 7, name: '模型1', desc: 'test'},
-        {key: 8, name: '模型1', desc: 'test'},
-        {key: 9, name: '模型1', desc: 'test'},
-        {key: 10, name: '模型1', desc: 'test'},
-        {key: 11, name: '模型1', desc: 'test'},
-        {key: 12, name: '模型1', desc: 'test'}
-      ],
       form: {
         name: '',
         prop: [
@@ -190,13 +210,13 @@ export default {
           { required: true, message: '请输入模型名称', trigger: 'blur' },
         ],
       },
-      pagination: {
-        pageSize: 5
-      },
       formVisible: false
     };
   },
   methods: {
+    changeTable(pagination) {
+      this.$store.commit('ci/updatePagination', pagination);
+    },
     showForm() {
       this.formVisible = true;
     },
@@ -232,6 +252,12 @@ export default {
     },
     editorRow() {
       this.showForm();
+    },
+    getList() {
+      this.$store.dispatch('ci/getList', {
+        type: this.type,
+        pagination: this.$store.getters['ci/getPagination']
+      });
     }
   }, 
 };
