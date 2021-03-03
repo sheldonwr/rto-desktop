@@ -7,21 +7,21 @@
       :pagination="pagination"
       @change="this.changeTable"
     >
-      <span slot="action">
-        <a @click="editorRow">编辑</a>
+      <span slot="action" slot-scope="text, record">
+        <a @click="() => editorRow(record)">编辑</a>
         <a-divider type="vertical" />
         <a-popconfirm
           :title="popconfirmTitle"
           ok-text="确定"
           cancel-text="取消"
-          @confirm="deleteRow"
+          @confirm="() => deleteRow(record)"
         >
           <a>删除</a>
         </a-popconfirm>
       </span>
     </a-table>
     <div v-if="formVisible">
-      <a-button class="okBtn" type="primary">
+      <a-button class="okBtn" type="primary" @click="onSubmit">
         确定
       </a-button>
       <a-button type="primary" @click="closeForm">
@@ -29,12 +29,19 @@
       </a-button>
     </div>
      <a-button v-else type="primary" @click="showForm">
-      新建{{ this.type }}
+      新建{{ this.types[this.type] }}
     </a-button>
     <div class="form" v-show="formVisible">
       <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
         <a-form-model-item ref="name" label="模型名称" prop="name">
-          <a-input v-model="form.name" />
+          <a-input
+            v-model="form.name" 
+            @blur="
+              () => {
+                $refs.name.onFieldBlur();
+              }
+            "
+          />
         </a-form-model-item>
         <a-form-model-item ref="desc" label="模型描述" prop="desc">
           <a-input v-model="form.desc" />
@@ -51,7 +58,7 @@
             placeholder="标题"
           />
           <a-input
-            v-model="item.value"
+            v-model="item.name"
             placeholder="key"
           />
           <a-select class="select_type" v-model="item.type" placeholder="类型">
@@ -93,7 +100,7 @@
             placeholder="标题"
           />
           <a-input
-            v-model="item.value"
+            v-model="item.name"
             placeholder="key"
           />
           <a-select class="select_type" v-model="item.type" placeholder="类型">
@@ -162,8 +169,8 @@ export default {
   },
   watch: {
     '$store.state.drawer.drawerVisible': function(drawerVisible) {
-      console.log(drawerVisible)
       const { activeTab } = this.$store.state.drawer;
+      console.log(drawerVisible, activeTab, this.type)
       if (!drawerVisible) {
         this.closeForm();
       } else if (activeTab === this.type){
@@ -175,6 +182,9 @@ export default {
       if (drawerVisible && activeTab === this.type){
         this.getList();
       }
+    },
+    '$store.state.ci.currentCiDetail': function(detail) {
+      this.updateForm(detail);
     }
   },
   data() {
@@ -188,29 +198,27 @@ export default {
         { title: '描述', dataIndex: 'desc', key: 'desc'},
         { title: '操作', dataIndex: 'operation', key: 'operation', width: 100, scopedSlots: { customRender: 'action' }},
       ],
-      labelCol: { span: 4},
-      wrapperCol: { span: 20 },
+      labelCol: { span: 5},
+      wrapperCol: { span: 19 },
       formItemLayoutWithOutLabel: {
         wrapperCol: {
-          xs: { span: 20, offset: 4 },
-          sm: { span: 20, offset: 4 },
+          xs: { span: 19, offset: 5 },
+          sm: { span: 19, offset: 5 },
         },
       },
       form: {
         name: '',
-        prop: [
-          { label: '', name: ''}
-        ],
-        param: [
-          { label: '', name: ''}
-        ]
+        desc: '',
+        prop: [],
+        param: []
       },
       rules: {
         name: [
           { required: true, message: '请输入模型名称', trigger: 'blur' },
         ],
       },
-      formVisible: false
+      formVisible: false,
+      createNew: true,
     };
   },
   methods: {
@@ -218,10 +226,29 @@ export default {
       this.$store.commit('ci/updatePagination', pagination);
     },
     showForm() {
+      this.createNew = true;
       this.formVisible = true;
     },
     closeForm() {
+      this.$store.commit('ci/updateCurrentCiDetail', {
+        name: '',
+        desc: '',
+        prop: [],
+        param: []
+      });
       this.formVisible = false;
+    },
+    onSubmit() {
+      console.log(this.form)
+      if (this.createNew) {
+        this.$store.dispatch('ci/createCi', {
+          type: this.type,
+          ...this.form
+        });
+      } else {
+        this.$store.dispatch('ci/updateCi', this.form);
+      }
+      this.closeForm();
     },
     addProp() {
       this.form.prop.push({
@@ -247,17 +274,23 @@ export default {
         this.form.param.splice(index, 1);
       }
     },
-    deleteRow() {
-
+    deleteRow(record) {
+      this.$store.dispatch('ci/deleteCi', { id: record.key, type: this.type });
     },
-    editorRow() {
-      this.showForm();
+    editorRow(record) {
+      console.log(record)
+      this.$store.dispatch('ci/getCiDetail', { id: record.key });
+      this.createNew = false;
+      this.formVisible = true;
     },
     getList() {
       this.$store.dispatch('ci/getList', {
         type: this.type,
         pagination: this.$store.getters['ci/getPagination']
       });
+    },
+    updateForm(detail) {
+      this.form = JSON.parse(JSON.stringify(detail));
     }
   }, 
 };

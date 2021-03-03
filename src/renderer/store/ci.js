@@ -1,4 +1,4 @@
-import { getCiList } from "../api/ci";
+import { getCiList, createCi, updateCi, getCiDetail, deleteCi } from "../api/ci";
 export default {
 	namespaced: true,
 	state: {
@@ -7,7 +7,8 @@ export default {
 			pageSize: 5,
 			pageNo: 1,
 			total: 0
-		}
+		},
+		currentCiDetail: {}
 	},
 	getters: {
 		getPagination(state) {
@@ -30,14 +31,54 @@ export default {
 		updatePagination(state, data) {
 			if (data.hasOwnProperty('pageSize')) state.pagination.pageSize = data.pageSize;
 			if (data.hasOwnProperty('current')) state.pagination.pageNo = data.current;
+		},
+		updateCurrentCiDetail(state, data) {
+			state.currentCiDetail = JSON.parse(JSON.stringify(data));
 		}
 	},
 	actions: {
 		getList(context, data) {
-			console.log(data)
 			getCiList(data).then(res => {
-				console.log(res)
 				context.commit('updateCiList', res);
+			});
+		},
+		createCi({ dispatch }, data) {
+			createCi(data).then(() => {
+				dispatch('getList', {
+					type: data.type,
+					pagination: {
+						pageSize: 5,
+						pageNo: 1
+					}
+				});
+			});
+		},
+		updateCi({ dispatch }, data) {
+			updateCi(data).then(() => {
+				dispatch('getList', {
+					type: data.type,
+					pagination: {
+						pageSize: 5,
+						pageNo: 1
+					}
+				});
+			});
+		},
+		getCiDetail({ commit }, data){
+			getCiDetail(data).then((res) => {
+				commit('updateCurrentCiDetail', res)
+			});
+		},
+		deleteCi({ dispatch }, data) {
+			const { id, type } = data;
+			deleteCi({ id }).then(() => {
+				dispatch('getList', {
+					type,
+					pagination: {
+						pageSize: 5,
+						pageNo: 1
+					}
+				});
 			});
 		}
 	}

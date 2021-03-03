@@ -27,6 +27,7 @@ export default {
   methods: {
     onClose() {
       this.$store.dispatch('drawer/closeDrawer');
+      this.$store.commit('ci/updatePagination', { current: 1 });
     },
   }, 
 };

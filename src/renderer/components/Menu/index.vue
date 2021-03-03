@@ -260,10 +260,18 @@ export default {
         case "model-manage": // 模型管理
           this.$store.dispatch('drawer/showDrawer');
           this.$store.dispatch('drawer/selectActiveTab', 'model');
+          this.$store.dispatch('ci/getList', {
+            type: 'model',
+            pagination: this.$store.getters['ci/getPagination']
+          });
           break;
         case "algo-manage": // 算法管理
           this.$store.dispatch('drawer/showDrawer');
           this.$store.dispatch('drawer/selectActiveTab', 'algo');
+          this.$store.dispatch('ci/getList', {
+            type: 'algo',
+            pagination: this.$store.getters['ci/getPagination']
+          });
           break;
       }
     }
