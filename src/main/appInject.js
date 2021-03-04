@@ -62,7 +62,8 @@ function convert2Appconfig(obj) {
       ossAccessSecret: obj.ossAccessSecret
     }
   }, {
-    redirectRequest: configs.RtoOrigin
+    redirectRequest: configs.RtoOrigin,
+    socketRequest: configs.RtoSocketOrigin
   });
   ac.defaultDirs = JSON.parse(ac.defaultDirs);
   ac.appMenu = JSON.parse(ac.appMenu);
