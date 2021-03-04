@@ -7,12 +7,8 @@ const service = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(config => {
-  config.data = JSON.stringify(config.data);
-  const token = getCookie('名称');
-  if (token) {
-    config.params = { 'token': token };
-    config.headers.token = token;
-  }
+  //请求前的一些共有的处理
+
   return config;
 }, error => {
   Promise.reject(error);
@@ -26,8 +22,6 @@ service.interceptors.response.use(response => {
 }, error => {
   /***** 接收到异常响应的处理开始 *****/
   if (error && error.response) {
-    // 1.公共错误处理
-    // 2.根据响应码具体处理
     switch (error.response.status) {
       case 400:
         error.message = '错误请求'
@@ -72,14 +66,13 @@ service.interceptors.response.use(response => {
   } else {
     // 超时处理
     if (JSON.stringify(error).includes('timeout')) {
-      Message.error('服务器响应超时，请刷新当前页')
+      // Message.error('服务器响应超时，请刷新当前页')
     }
   }
 
-  Message.error(error.message)
   /***** 处理结束 *****/
   //如果不需要错误处理，以上的处理过程都可省略
-  return Promise.resolve(error.response)
+  // return Promise.resolve(error.response)
 });
 
 export default service;
