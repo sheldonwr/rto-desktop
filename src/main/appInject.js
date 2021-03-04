@@ -6,8 +6,7 @@ import path from "path";
 import * as configs from "./configs";
 import log from "./log";
 
-export async function appInjectDev() {
-  let ac = await getAppConfig();
+export async function appInjectDev(ac) {
   protocol.interceptStringProtocol('http', async (request, callback) => {
     protocol.uninterceptProtocol('http');
     let url = new URL(request.url);
@@ -30,7 +29,7 @@ function getHtmlString(url) {
   });
 }
 
-const appConfig = {
+let appConfig = {
   env: "xuelangyun",
   dev: "false",
   logoImgPath: "images/logo.svg",
@@ -162,12 +161,16 @@ const appConfig = {
   redirectRequest: configs.RtoOrigin
 };
 
-function getAppConfig() {
+export function getAppConfig() {
   return new Promise( resolve => {
     setTimeout(() => {
       resolve(appConfig)
     }, 1000);
   })
+}
+
+export function setAppConfig(ac) {
+  appConfig = ac
 }
 
 function injectAppConfig(htmlStr, ac) {
@@ -179,8 +182,7 @@ function injectAppConfig(htmlStr, ac) {
   return root.toString();
 }
 
-export async function appInjectProd() {
-  let ac = await getAppConfig();
+export function appInjectProd() {
   protocol.registerBufferProtocol(
     'app',
     (request, respond) => {
@@ -201,7 +203,9 @@ export async function appInjectProd() {
           mimeType = 'text/javascript'
         } else if (extension === '.html') {
           mimeType = 'text/html'
-          data = Buffer.from(injectAppConfig(data.toString(), ac));
+          if(pathName === '/index.html') {
+            data = Buffer.from(injectAppConfig(data.toString(), appConfig));
+          }
         } else if (extension === '.css') {
           mimeType = 'text/css'
         } else if (extension === '.svg' || extension === '.svgz') {

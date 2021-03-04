@@ -6,6 +6,10 @@ module.exports = {
     index: {
       entry: "src/renderer/main.js",
       template: "public/editor.html"
+    },
+    splash: {
+      entry: "src/splash/main.js",
+      template: "public/splash.html"
     }
   },
   pluginOptions: {
