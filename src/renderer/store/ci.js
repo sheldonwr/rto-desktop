@@ -5,32 +5,28 @@ export default {
 		ciList: [],
 		pagination: {
 			pageSize: 5,
-			pageNo: 1,
+			current: 1,
 			total: 0
 		},
 		currentCiDetail: {}
 	},
 	getters: {
 		getPagination(state) {
-			const { pageSize, pageNo } = state.pagination;
+			const { pageSize, current } = state.pagination;
 			return {
 				pageSize,
-				pageNo
+				pageNo: current
 			}
 		}
 	},
 	mutations: {
-		updateCiList(state, res) {
-			if (res.hasOwnProperty('data')) {
-				state.ciList = JSON.parse(JSON.stringify(res.data));
-			}
-			if  (res.hasOwnProperty('pagination')) {
-				state.pagination = JSON.parse(JSON.stringify(res.pagination));
-			}
+		updateCiList(state, data) {
+			state.ciList = JSON.parse(JSON.stringify(data));
 		},
 		updatePagination(state, data) {
 			if (data.hasOwnProperty('pageSize')) state.pagination.pageSize = data.pageSize;
-			if (data.hasOwnProperty('current')) state.pagination.pageNo = data.current;
+			if (data.hasOwnProperty('current')) state.pagination.current = data.current;
+			if (data.hasOwnProperty('total')) state.pagination.total = data.total;
 		},
 		updateCurrentCiDetail(state, data) {
 			state.currentCiDetail = JSON.parse(JSON.stringify(data));
@@ -39,7 +35,8 @@ export default {
 	actions: {
 		getList(context, data) {
 			getCiList(data).then(res => {
-				context.commit('updateCiList', res);
+				if (res.hasOwnProperty('data')) context.commit('updateCiList', res.data);
+				if (res.hasOwnProperty('pagination')) context.commit('updatePagination', res.pagination);
 			});
 		},
 		createCi({ dispatch }, data) {
@@ -66,7 +63,7 @@ export default {
 		},
 		getCiDetail({ commit }, data){
 			getCiDetail(data).then((res) => {
-				commit('updateCurrentCiDetail', res)
+				commit('updateCurrentCiDetail', res.data)
 			});
 		},
 		deleteCi({ dispatch }, data) {

@@ -1,7 +1,7 @@
 import axios from 'axios';
-
+import { notification } from 'ant-design-vue';
 const service = axios.create({
-  baseURL: '',
+  baseURL: 'http://10.88.36.102:30000',
   timeout: 3 * 1000
 });
 
@@ -16,9 +16,15 @@ service.interceptors.request.use(config => {
 
 // 响应拦截器
 service.interceptors.response.use(response => {
-  //接收到响应数据并成功后的一些共有的处理，关闭loading等
-  
-  return response
+  //接收到响应数据并成功后的一些共有的处理，关闭loading等'
+  const { data } = response;
+  if (data.success) {
+    return data;
+  } else {
+    notification['error']({
+      message: data.msg,
+    });
+  }
 }, error => {
   /***** 接收到异常响应的处理开始 *****/
   if (error && error.response) {
@@ -63,10 +69,15 @@ service.interceptors.response.use(response => {
       default:
         error.message = `连接错误${error.response.status}`
     }
+    notification['error']({
+      message: error.message,
+    });
   } else {
     // 超时处理
     if (JSON.stringify(error).includes('timeout')) {
-      // Message.error('服务器响应超时，请刷新当前页')
+      notification['error']({
+        message: '服务器响应超时，请刷新当前页',
+      });
     }
   }
 
