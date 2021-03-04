@@ -57,6 +57,7 @@ export default {
   width: 150px;
   padding: 0;
   background: #fff;
+  border-radius: 2px;
   .drop-menu-item {
     padding: 5px 0 7px 16px;
     position: relative;

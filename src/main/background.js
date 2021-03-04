@@ -65,7 +65,6 @@ async function createWindow() {
     // createProtocol('app')
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
-
     //https://github.com/electron/electron/issues/14978
     win.webContents.on("did-fail-load", () => {
       win.loadURL("app://./index.html");
@@ -78,6 +77,7 @@ function createSplashWindow() {
     width: 600,
     height: 400,
     frame: false,
+    resizable: false,
     // alwaysOnTop: true,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
