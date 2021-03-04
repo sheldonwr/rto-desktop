@@ -8,7 +8,8 @@ export default {
 			current: 1,
 			total: 0
 		},
-		currentCiDetail: {}
+		currentCiDetail: {},
+		loading: false,
 	},
 	getters: {
 		getPagination(state) {
@@ -30,13 +31,18 @@ export default {
 		},
 		updateCurrentCiDetail(state, data) {
 			state.currentCiDetail = JSON.parse(JSON.stringify(data));
+		},
+		upadteLoading(state, loading) {
+			state.loading = loading;
 		}
 	},
 	actions: {
-		getList(context, data) {
+		getList({ commit }, data) {
+			commit('upadteLoading', true);
 			getCiList(data).then(res => {
-				if (res.hasOwnProperty('data')) context.commit('updateCiList', res.data);
-				if (res.hasOwnProperty('pagination')) context.commit('updatePagination', res.pagination);
+				if (res.hasOwnProperty('data')) commit('updateCiList', res.data);
+				if (res.hasOwnProperty('pagination')) commit('updatePagination', res.pagination);
+				commit('upadteLoading', false);
 			});
 		},
 		createCi({ dispatch }, data) {

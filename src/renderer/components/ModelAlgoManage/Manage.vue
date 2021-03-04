@@ -6,6 +6,7 @@
       :data-source="dataList"
       :pagination="pagination"
       @change="this.changeTable"
+      :loading="tableLoading"
     >
       <span slot="action" slot-scope="text, record">
         <a @click="() => editorRow(record)">编辑</a>
@@ -163,6 +164,9 @@ export default {
     },
     pagination: function() {
       return this.$store.state.ci.pagination;
+    },
+    tableLoading: function() {
+      return this.$store.state.ci.loading;
     }
   },
   watch: {
