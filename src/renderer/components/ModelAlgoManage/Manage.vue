@@ -6,6 +6,7 @@
       :data-source="dataList"
       :pagination="pagination"
       @change="this.changeTable"
+      :loading="tableLoading"
     >
       <span slot="action" slot-scope="text, record">
         <a @click="() => editorRow(record)">编辑</a>
@@ -32,7 +33,7 @@
       新建{{ this.types[this.type] }}
     </a-button>
     <div class="form" v-show="formVisible">
-      <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
+      <a-form-model ref="ruleForm" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
         <a-form-model-item ref="name" label="模型名称" prop="name">
           <a-input
             v-model="form.name" 
@@ -52,6 +53,7 @@
           v-for="(item, index) in form.prop"
           :key="item.key"
           :label="index === 0 ? '基本参数' : ''"
+          prop="prop"
         >
           <a-input
             v-model="item.label"
@@ -64,6 +66,7 @@
           <a-select class="select_type" v-model="item.type" placeholder="类型">
             <a-select-option value="string">string</a-select-option>
             <a-select-option value="int">int</a-select-option>
+            <a-select-option value="array">array</a-select-option>
           </a-select>
           <a-input-number
             v-if="item.type === 'int'"
@@ -76,7 +79,6 @@
             placeholder="默认值"
           />
           <a-icon
-            v-if="form.prop.length > 1"
             class="dynamic-delete-button"
             type="minus-circle-o"
             :disabled="form.prop.length === 1"
@@ -94,6 +96,7 @@
           v-bind="index !== 0 && formItemLayoutWithOutLabel"
           :key="item.key"
           :label="index === 0 ? '参数配置' : ''"
+          prop="param"
         >
           <a-input
             v-model="item.label"
@@ -106,6 +109,7 @@
           <a-select class="select_type" v-model="item.type" placeholder="类型">
             <a-select-option value="string">string</a-select-option>
             <a-select-option value="int">int</a-select-option>
+            <a-select-option value="array">array</a-select-option>
           </a-select>
           <a-input-number
             v-if="item.type === 'int'"
@@ -119,7 +123,6 @@
           />
           <a-radio v-model="item.isRequired">必填</a-radio>
           <a-icon
-            v-if="form.param.length > 1"
             class="dynamic-delete-button"
             type="minus-circle-o"
             :disabled="form.param.length === 1"
@@ -160,31 +163,21 @@ export default {
       return data;
     },
     pagination: function() {
-      const { pageSize, pageNo } = this.$store.state.ci.pagination;
-      return {
-        pageSize,
-        current: pageNo
-      };
+      return this.$store.state.ci.pagination;
+    },
+    tableLoading: function() {
+      return this.$store.state.ci.loading;
     }
   },
   watch: {
     '$store.state.drawer.drawerVisible': function(drawerVisible) {
       const { activeTab } = this.$store.state.drawer;
-      console.log(drawerVisible, activeTab, this.type)
       if (!drawerVisible) {
         this.closeForm();
-      } else if (activeTab === this.type){
-        this.getList();
-      }
-    },
-    '$store.state.drawer.activeTab':  function(activeTab) {
-      const { drawerVisible } = this.$store.state.drawer;
-      if (drawerVisible && activeTab === this.type){
-        this.getList();
       }
     },
     '$store.state.ci.currentCiDetail': function(detail) {
-      this.updateForm(detail);
+      this.updateForm({ ...this.form, ...detail });
     }
   },
   data() {
@@ -213,9 +206,9 @@ export default {
         param: []
       },
       rules: {
-        name: [
-          { required: true, message: '请输入模型名称', trigger: 'blur' },
-        ],
+        name: [{ required: true, message: '请输入模型名称', trigger: 'blur' }],
+        prop: [{ validator: this.checkParam }],
+        param: [{ validator: this.checkParam }]
       },
       formVisible: false,
       createNew: true,
@@ -224,6 +217,7 @@ export default {
   methods: {
     changeTable(pagination) {
       this.$store.commit('ci/updatePagination', pagination);
+      this.getList();
     },
     showForm() {
       this.createNew = true;
@@ -239,22 +233,39 @@ export default {
       this.formVisible = false;
     },
     onSubmit() {
-      console.log(this.form)
-      if (this.createNew) {
-        this.$store.dispatch('ci/createCi', {
-          type: this.type,
-          ...this.form
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          if (this.createNew) {
+            this.$store.dispatch('ci/createCi', {
+              type: this.type,
+              ...this.form
+            });
+          } else {
+            this.$store.dispatch('ci/updateCi', this.form);
+          }
+          this.closeForm();
+        } else {
+          return false;
+        }
+      });      
+    },
+    checkParam(rule, value, callback) {
+      if (value.length > 0) {
+        value.map(val => {
+          if (Object.keys(val).length <= 0) {
+            callback('请输入参数信息');
+          }
         });
-      } else {
-        this.$store.dispatch('ci/updateCi', this.form);
       }
-      this.closeForm();
+      callback();
+      return;
     },
     addProp() {
-      this.form.prop.push({
-        value: '',
-        label: '',
-      });
+      if (this.form.hasOwnProperty('prop')) {
+        this.form.prop.push({});
+      } else {
+        Object.assign(this.form, { prop: [{}]});
+      }
     },
     removeProp(item) {
       let index = this.form.prop.indexOf(item);
@@ -263,10 +274,11 @@ export default {
       }
     },
     addParam() {
-      this.form.param.push({
-        value: '',
-        label: '',
-      });
+      if (this.form.hasOwnProperty('param')) {
+        this.form.param.push({});
+      } else {
+        Object.assign(this.form, { param: [{}]});
+      }
     },
     removeParam(item) {
       let index = this.form.param.indexOf(item);
@@ -278,7 +290,6 @@ export default {
       this.$store.dispatch('ci/deleteCi', { id: record.key, type: this.type });
     },
     editorRow(record) {
-      console.log(record)
       this.$store.dispatch('ci/getCiDetail', { id: record.key });
       this.createNew = false;
       this.formVisible = true;
