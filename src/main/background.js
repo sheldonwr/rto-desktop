@@ -36,6 +36,18 @@ async function createWindow() {
     }
   })
 
+  // https://www.electronjs.org/docs/api/window-open
+  win.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+    event.preventDefault();
+    Object.assign(options, {
+      titleBarStyle: "default",
+      frame: true,
+    })
+    event.newGuest = new BrowserWindow(options)
+    // Menu.setApplicationMenu(null)
+    event.newGuest.removeMenu()
+  })
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
