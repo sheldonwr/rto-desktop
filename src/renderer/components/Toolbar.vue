@@ -36,8 +36,8 @@
       </div>
     </div>
     <div class="deploy-container">
-      <div class="toolbar-icon" title="关于">
-        <span class="rto_iconfont icon-about"></span>
+      <div class="toolbar-icon" title="部署">
+        <span class="rto_iconfont icon-start"></span>
       </div>
     </div>
     <div class="placeholder"></div>

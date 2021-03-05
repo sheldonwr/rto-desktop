@@ -6,7 +6,7 @@ import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { getAppConfig, setAppConfig, appInjectDev, appInjectProd } from "./appInject";
-import * as configs from "./configs";
+import * as mainconfigs from "./mainconfig";
 import log from "./log";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -65,7 +65,6 @@ async function createWindow() {
     // createProtocol('app')
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
-
     //https://github.com/electron/electron/issues/14978
     win.webContents.on("did-fail-load", () => {
       win.loadURL("app://./index.html");
@@ -78,6 +77,7 @@ function createSplashWindow() {
     width: 600,
     height: 400,
     frame: false,
+    resizable: false,
     // alwaysOnTop: true,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -96,7 +96,7 @@ function createSplashWindow() {
 
 function createTray() {
   // https://www.electronjs.org/docs/api/native-image#high-resolution-image
-  tray = new Tray(path.join(configs.assetsPath, "logo.png"));
+  tray = new Tray(path.join(mainconfigs.assetsPath, "logo.png"));
   tray.on("click", () => {
     if (win === null) {
       createWindow();
@@ -104,7 +104,7 @@ function createTray() {
       win.show();
     }
   });
-  if (configs.platform == "win") {
+  if (mainconfigs.platform == "win") {
     const contextMenu = Menu.buildFromTemplate([
       new MenuItem({
         label: "退出",

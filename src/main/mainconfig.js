@@ -20,13 +20,12 @@ function getPlatform() {
 
 export const platform = getPlatform();
 
-export const isDevelopment =
-  process.env.NODE_ENV !== "production" && !app.isPackaged;
+// export const isDevelopment =
+//   process.env.NODE_ENV !== "production" && !app.isPackaged;
+export const isDevelopment = process.env.NODE_ENV !== "production"
 
   export const assetsPath = path.resolve(
     !isDevelopment
       ? path.join(process.resourcesPath, "assets")
       : path.join(".", "src", "main", "assets")
   );
-
-export const RtoOrigin = 'http://10.88.36.102'

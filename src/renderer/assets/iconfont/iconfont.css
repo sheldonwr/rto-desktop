@@ -1,6 +1,6 @@
 @font-face {
   font-family: "rto_iconfont";
-  src: url('iconfont.woff?t=1614229744411') format('woff');
+  src: url('iconfont.woff?t=1614843067282') format('woff');
 }
 
 .rto_iconfont {
@@ -9,6 +9,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-start:before {
+  content: "\e656";
+}
+
+.icon-stop:before {
+  content: "\e638";
 }
 
 .icon-rizhi:before {
