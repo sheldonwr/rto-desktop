@@ -4,7 +4,6 @@ import { parse } from "node-html-parser";
 import fs from "fs";
 import path from "path";
 import * as configs from "../configs";
-import log from "./log";
 
 export async function appInjectDev(ac) {
   protocol.interceptStringProtocol("http", async (request, callback) => {

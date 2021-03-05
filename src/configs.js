@@ -1,3 +1,3 @@
 
-export const RtoOrigin = 'http://10.88.36.102:30000'
-export const RtoSocketOrigin = 'http://10.88.36.102:80'
+export const RtoOrigin = 'http://58.215.216.238:48000'
+export const RtoSocketOrigin = 'http://58.215.216.238:80'
