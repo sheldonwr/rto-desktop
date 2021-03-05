@@ -33,6 +33,7 @@
       新建{{ this.types[this.type] }}
     </a-button>
     <div class="form" v-show="formVisible">
+      <a-spin :spinning="formSpinning"/>
       <a-form-model ref="ruleForm" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
         <a-form-model-item ref="name" label="模型名称" prop="name">
           <a-input
@@ -167,7 +168,10 @@ export default {
     },
     tableLoading: function() {
       return this.$store.state.ci.loading;
-    }
+    },
+    formSpinning: function() {
+      return this.$store.state.ci.formSpinning;
+    },
   },
   watch: {
     '$store.state.drawer.drawerVisible': function(drawerVisible) {

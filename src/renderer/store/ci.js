@@ -10,6 +10,7 @@ export default {
 		},
 		currentCiDetail: {},
 		loading: false,
+		formSpinning: false,
 	},
 	getters: {
 		getPagination(state) {
@@ -34,7 +35,10 @@ export default {
 		},
 		upadteLoading(state, loading) {
 			state.loading = loading;
-		}
+		},
+		updateSpinning(state, spinning) {
+			state.formSpinning = spinning;
+		},
 	},
 	actions: {
 		getList({ commit }, data) {
@@ -68,8 +72,10 @@ export default {
 			});
 		},
 		getCiDetail({ commit }, data){
+			commit('updateSpinning', true);
 			getCiDetail(data).then((res) => {
-				commit('updateCurrentCiDetail', res.data)
+				commit('updateCurrentCiDetail', res.data);
+				commit('updateSpinning', false);
 			});
 		},
 		deleteCi({ dispatch }, data) {
