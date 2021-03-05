@@ -1,7 +1,7 @@
 <template>
   <ul class="drop-menu">
     <li
-      class="drop-menu-item"
+      :class="['drop-menu-item', { 'disabled' : dropItem.disabled }]"
       v-for="dropItem in datas"
       :key="dropItem.value"
       @mouseenter="menuMouseenterHandler(dropItem)"
@@ -43,7 +43,7 @@ export default {
       this.openedItem = dropItem.value;
     },
     menuClickHandler(dropItem) {
-      if(dropItem.status === 'disabled') {
+      if(dropItem.disabled) {
         return;
       }
       this.menuInst.menuItemClicked(dropItem);
@@ -62,7 +62,11 @@ export default {
     padding: 5px 0 7px 16px;
     position: relative;
     font-size: 14px;
-    &:hover {
+    &.disabled {
+      color: #888;
+      cursor: not-allowed;
+    }
+    &:not(.disabled):hover {
       background-color: #f2f2f2;
       color: #0084ff;
     }

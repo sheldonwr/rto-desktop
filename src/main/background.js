@@ -1,9 +1,8 @@
 "use strict";
 
-import "./api";
+import "./api/";
 import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "electron";
 import path from "path";
-import http from "http";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { getAppConfig, setAppConfig, appInjectDev, appInjectProd } from "./appInject";

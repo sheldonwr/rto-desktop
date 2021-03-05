@@ -10,7 +10,6 @@ import store from "./store";
 import 'ant-design-vue/dist/antd.css';
 
 Vue.config.productionTip = false
-Vue.use(Antd);
 Vue.use(Vuex);
 Vue.use(Antd);
 
@@ -25,3 +24,7 @@ new Vue({
   store: storeInst,
   render: h => h(LogApp),
 }).$mount('.rto_log');
+
+window.addEventListener('load', () => {
+  storeInst.dispatch('file/importFile')
+})

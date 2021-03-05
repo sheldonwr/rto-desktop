@@ -35,43 +35,43 @@ export default {
             {
               label: "新建",
               value: "file-new",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "打开",
               value: "file-open",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "保存",
               value: "file-save",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "另存为",
               value: "file-saveAs",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "关闭",
               value: "file-close",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "终止",
               value: "file-terminate",
-              status: 'disabled'
+              disabled: true
             },
             {
               label: "最近打开",
               value: "file-recent",
-              status: 'normal',
+              disabled: false,
               items: []
             },
             {
               label: "退出",
               value: "file-quit",
-              status: 'normal'
+              disabled: false
             },
           ],
         },
@@ -82,27 +82,27 @@ export default {
             {
               label: "剪切",
               value: "edit-cut",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "复制",
               value: "edit-copy",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "粘贴",
               value: "edit-paste",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "删除",
               value: "edit-delete",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "切换功能块状态",
               value: "edit-switchStatus",
-              status: 'normal'
+              disabled: false
             },
           ],
         },
@@ -113,47 +113,47 @@ export default {
             {
               label: "工具栏",
               value: "view-tool",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "状态栏",
               value: "view-status",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "平台窗口",
               value: "view-platform",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "报警显示",
               value: "view-alarm",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "刷新",
               value: "view-refresh",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "设置",
               value: "view-setting",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "事件日志",
               value: "view-log",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "显示说明",
               value: "view-description",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "溯源",
               value: "view-origin",
-              status: 'normal'
+              disabled: false
             },
           ],
         },
@@ -164,17 +164,17 @@ export default {
             {
               label: "连接",
               value: "action-connection",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "路径",
               value: "edit-path",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "更新",
               value: "edit-update",
-              status: 'normal'
+              disabled: false
             },
           ],
         },
@@ -185,27 +185,27 @@ export default {
             {
               label: "未注册",
               value: "tools-notRegister",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "更新URT服务账户",
               value: "tools-urt",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "管理组",
               value: "tools-manage",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "模型管理",
               value: "model-manage",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "算法管理",
               value: "algo-manage",
-              status: 'normal'
+              disabled: false
             },
           ],
         },
@@ -216,12 +216,12 @@ export default {
             {
               label: "URT用户帮助",
               value: "help-urt",
-              status: 'normal'
+              disabled: false
             },
             {
               label: "关于UrtExplorer",
               value: "help-about",
-              status: 'normal'
+              disabled: false
             },
           ],
         },
@@ -251,11 +251,12 @@ export default {
     menuItemClicked(menuItem) {
       this.openedMenu = '';
       let menuItemId = menuItem.value;
-      if(menuItemId === 'file-new') {
-        
-      }
       switch(menuItemId) {
         case "file-new":
+          // 新建
+          break;
+        case "file-open":
+          this.$store.dispatch('file/openFile')
           break;
         case "model-manage": // 模型管理
           this.$store.dispatch('drawer/showDrawer');
