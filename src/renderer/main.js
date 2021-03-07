@@ -26,5 +26,11 @@ new Vue({
 }).$mount('.rto_log');
 
 window.addEventListener('load', () => {
-  storeInst.dispatch('file/importFile')
+  let enable = true;
+  window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
+    if(enable) {
+      enable = false;
+      // storeInst.dispatch('file/startApp')
+    }
+  });
 })

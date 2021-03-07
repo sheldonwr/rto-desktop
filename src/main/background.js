@@ -7,7 +7,6 @@ import path from "path";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { getAppConfig, setAppConfig, appInjectDev, appInjectProd } from "./appInject";
 import * as mainconfigs from "./mainconfig";
-import log from "./log";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -40,8 +39,8 @@ async function createWindow() {
   win.once('ready-to-show', () => {
     splashWin.destroy();
     win.show();
-    // if (process.env.WEBPACK_DEV_SERVER_URL && !process.env.IS_TEST) win.webContents.openDevTools();
-    win.webContents.openDevTools()
+    if (process.env.WEBPACK_DEV_SERVER_URL && !process.env.IS_TEST) win.webContents.openDevTools();
+    // win.webContents.openDevTools()
   });
 
   // https://www.electronjs.org/docs/api/window-open

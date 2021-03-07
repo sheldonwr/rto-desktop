@@ -4,7 +4,7 @@
       <img :src="require('assets/img/logo.png')">
     </div>
     <div class="title-wrap">
-      <p class="title">项目-乙烯装置全流程优化</p>
+      <p class="title"></p>
     </div>
     <div class="window-controls no-drag">
       <div class="window-icon" @click="windowControl('minimize')">

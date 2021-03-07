@@ -256,8 +256,12 @@ export default {
           // 新建
           break;
         case "file-open":
+          // 打开
           this.$store.dispatch('file/openFile')
           break;
+        case "file-save":
+          this.$store.dispatch('file/saveFile')
+          break
         case "model-manage": // 模型管理
           this.$store.dispatch('drawer/showDrawer');
           this.$store.dispatch('drawer/selectActiveTab', 'model');

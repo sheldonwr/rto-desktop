@@ -15,20 +15,28 @@ export default {
     }
   },
   actions: {
-    importFile({ state, commit, rootState }) {
+    startApp({ state, commit, dispatch, rootState }) {
       if(state.lastOpenedPath) {
-
-      }else {
-        window.appService.create('tmp', 0, 'predict').then( res => {
-          commit("lastAppId", res.id)
-          window.SuanpanAPI.common.goto('predict', res.id)
-        }).catch( err => {
-          
-        })
+        loadFile(state.lastOpenedPath)
+      }else {  
+          window.appService.create('tmp', 0, 'predict').then( res => {
+            commit("lastAppId", res.id)
+            window.SuanpanAPI.common.goto('predict', res.id)
+          }).catch( err => {})
       }
+    },
+    loadFile({ state }, filePath) {
+      invoke(filePath)
     },
     openFile() {
       send('file-open');
+    },
+    saveFile({ state }) {
+      invoke('file-save-dialog').then( filePath => {
+        if(filePath) {
+
+        }
+      });
     }
   }
 };
