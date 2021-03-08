@@ -2,7 +2,9 @@ export default {
   namespaced: true,
   state: {
     drawerVisible: false,
-    activeTab: ''
+    activeTab: '',
+    isModelAlgoManage: false,
+    iframURL: ''
   },
   mutations: {
     changeDrawerVisible(state, visible) {
@@ -10,17 +12,14 @@ export default {
     },
     changeActiveTab(state, type) {
       state.activeTab = type;
+    },
+    changeIsModelAlgoManage(state, isShow) {
+      state.isModelAlgoManage = isShow;
+    },
+    changeIframURL(state, url) {
+      state.iframURL = url;
     }
   },
   actions: {
-    showDrawer(context) {
-      context.commit('changeDrawerVisible', true);
-    },
-    closeDrawer(context) {
-      context.commit('changeDrawerVisible', false);
-    },
-    selectActiveTab(context, type) {
-      context.commit('changeActiveTab', type);
-    }
   }
 };
