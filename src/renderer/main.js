@@ -7,11 +7,12 @@ import Vue from 'vue';
 import App from './App.vue';
 import LogApp from './LogApp.vue';
 import store from "./store";
-import 'ant-design-vue/dist/antd.css';
+import Loading from "components/Loading"
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 Vue.use(Vuex);
 Vue.use(Antd);
+Vue.prototype.$loading = Loading;
 
 const storeInst = new Vuex.Store(store)
 
@@ -26,11 +27,8 @@ new Vue({
 }).$mount('.rto_log');
 
 window.addEventListener('load', () => {
-  let enable = true;
-  window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
-    if(enable) {
-      enable = false;
-      // storeInst.dispatch('file/startApp')
-    }
+  let topicId = window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
+    window.SuanpanAPI.eventService.off(topicId)
+    storeInst.dispatch('file/startApp')
   });
 })

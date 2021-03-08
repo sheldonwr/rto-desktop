@@ -20,9 +20,9 @@ let win, tray, splashWin;
 async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1024,
+    width: 1400,
     minWidth: 1024,
-    height: 600,
+    height: 900,
     minHeight: 600,
     titleBarStyle: "hidden",
     frame: false,

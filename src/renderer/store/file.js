@@ -34,7 +34,16 @@ export default {
     saveFile({ state }) {
       invoke('file-save-dialog').then( filePath => {
         if(filePath) {
-
+          window.appService.export(state.lastAppId, {
+            exportAppNext: true,
+            packAppNext: true,
+            type: "appDashboardExport"
+          }).then( res => {
+            window.loopService.fetchJob({asyncable: true}, res.job.id, appService.getJob).then(
+              (res) => { console.log(res) },
+              (err) => { console.error(err) }
+            )
+          })
         }
       });
     }

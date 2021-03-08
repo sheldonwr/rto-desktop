@@ -113,12 +113,16 @@ export default {
             {
               label: "工具栏",
               value: "view-tool",
-              disabled: false
+              disabled: false,
+              checkable: true,
+              checked: this.$store.state.view.toolbarVisible
             },
             {
               label: "状态栏",
               value: "view-status",
-              disabled: false
+              disabled: false,
+              checkable: true,
+              checked: this.$store.state.view.logPanelVisible
             },
             {
               label: "平台窗口",
@@ -261,7 +265,15 @@ export default {
           break;
         case "file-save":
           this.$store.dispatch('file/saveFile')
-          break
+          break;
+        case "view-tool":
+          menuItem.checked = !this.$store.state.view.toolbarVisible;
+          this.$store.commit('view/toolbarVisible', !this.$store.state.view.toolbarVisible)
+          break;
+        case "view-status":
+          menuItem.checked = !this.$store.state.view.logPanelVisible;
+          this.$store.commit('view/logPanelVisible', !this.$store.state.view.logPanelVisible)
+          break;
         case "model-manage": // 模型管理
           this.$store.dispatch('drawer/showDrawer');
           this.$store.dispatch('drawer/selectActiveTab', 'model');

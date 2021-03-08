@@ -7,6 +7,9 @@
       @mouseenter="menuMouseenterHandler(dropItem)"
       @click.stop="menuClickHandler(dropItem)"
     >
+      <span class="check-wrap">
+        <span v-if="dropItem.checkable && dropItem.checked" class="rto_iconfont icon-check"></span>
+      </span>
       <span>{{ dropItem.label }}</span>
       <drop-menu
         v-if="openedItem === dropItem.value"
@@ -59,7 +62,7 @@ export default {
   background: #fff;
   border-radius: 2px;
   .drop-menu-item {
-    padding: 5px 0 7px 16px;
+    padding: 5px 0 7px 28px;
     position: relative;
     font-size: 14px;
     &.disabled {
@@ -69,6 +72,19 @@ export default {
     &:not(.disabled):hover {
       background-color: #f2f2f2;
       color: #0084ff;
+    }
+    .check-wrap {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .rto_iconfont {
+        font-size: 13px;
+      }
     }
     .menu-right {
       position: absolute;

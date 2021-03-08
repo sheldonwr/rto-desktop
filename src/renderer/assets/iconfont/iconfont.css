@@ -1,6 +1,6 @@
 @font-face {
   font-family: "rto_iconfont";
-  src: url('iconfont.woff?t=1614843067282') format('woff');
+  src: url('iconfont.woff?t=1615189611999') format('woff');
 }
 
 .rto_iconfont {
@@ -9,6 +9,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-check:before {
+  content: "\e6ab";
+}
+
+.icon-loading-copy:before {
+  content: "\e805";
 }
 
 .icon-start:before {
