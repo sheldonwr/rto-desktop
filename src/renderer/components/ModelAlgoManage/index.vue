@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     changeActiveTab(activeKey) {
-      this.$store.dispatch('drawer/selectActiveTab', activeKey);
+      this.$store.commit('drawer/changeActiveTab', activeKey);
       this.$store.commit('ci/updatePagination', { current: 1 });
       this.$store.dispatch('ci/getList', {
         type: activeKey,
