@@ -268,7 +268,7 @@ export default {
           break;
         case "view-tool":
           menuItem.checked = !this.$store.state.view.toolbarVisible;
-          this.$store.commit('view/toolbarVisible', !this.$store.state.view.toolbarVisible)
+          this.$store.commit('view/toolbarVisible', menuItem.checked)
           break;
         case "view-status":
           menuItem.checked = !this.$store.state.view.logPanelVisible;

@@ -8,6 +8,8 @@ import App from './App.vue';
 import LogApp from './LogApp.vue';
 import store from "./store";
 import Loading from "components/Loading"
+import './listeners'
+import CallbackChain from './plugins/callbackChain'
 
 Vue.config.productionTip = false;
 Vue.use(Vuex);
@@ -15,6 +17,8 @@ Vue.use(Antd);
 Vue.prototype.$loading = Loading;
 
 const storeInst = new Vuex.Store(store)
+
+Vue.use(CallbackChain, {store: storeInst});
 
 new Vue({
   store: storeInst,
@@ -26,35 +30,5 @@ new Vue({
   render: h => h(LogApp),
 }).$mount('.rto_log');
 
+// 加载app
 storeInst.dispatch('file/startApp')
-
-window.addEventListener('load', () => {
-  // 监听组件选中
-  window.SuanpanAPI.eventService.on('sp:node:select', (event, data) => {
-    console.log(event, data)
-    if (data && data.length > 1) {
-      const nodeInfo = data[1];
-      //  判断当前选中组件是否为rto组件
-      if (nodeInfo.metadata.def.type ===  601) {
-
-      }
-    }
-  });
-
-
-  // 监听rto组件打开操作面板
-  window.SuanpanAPI.eventService.on('rto:setting:params', (event, data) => {
-    console.log(event, data)
-    if (data && data.length > 1) {
-      const nodeInfo = data[1];
-      const { actionList } = nodeInfo.metadata.def;
-      actionList.map(action => {
-        if (action.hasOwnProperty('label') && action.hasOwnProperty('url')) {
-          storeInst.commit('drawer/changeDrawerVisible', true);
-          storeInst.commit('drawer/changeIsModelAlgoManage', false);
-          storeInst.commit('drawer/changeIframURL', action.url);
-        }
-      });
-    }
-  });
-})
