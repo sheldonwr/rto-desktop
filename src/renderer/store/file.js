@@ -1,4 +1,5 @@
-import { send, invoke } from "../services"
+import { invoke } from "../services";
+import { createEmpty, openFile, saveFile} from "services/file"
 
 export default {
   namespaced: true,
@@ -8,44 +9,59 @@ export default {
   },
   mutations: {
     lastOpenedPath(state, val) {
-      state.lastOpenedPath = val
+      state.lastOpenedPath = val;
     },
     lastAppId(state, val) {
-      state.lastAppId = val
-    }
+      state.lastAppId = val;
+    },
   },
   actions: {
-    startApp({ state, commit, dispatch, rootState }) {
-      if(state.lastOpenedPath) {
-        loadFile(state.lastOpenedPath)
-      }else {  
-          window.appService.create('tmp', 0, 'predict').then( res => {
-            commit("lastAppId", res.id)
-            window.SuanpanAPI.common.goto('predict', res.id)
-          }).catch( err => {})
-      }
+    startApp({ state, commit, dispatch }) {
+      this.dispatch('showLoading');
+      window.addEventListener('load', () => {
+        let firstId = window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
+          window.SuanpanAPI.eventService.off(firstId)
+          if (state.lastOpenedPath) {
+            
+          } else {
+            // create an empty app
+            createEmpty().then(res => {
+              commit("lastAppId", res.id);
+              let secondId = window.SuanpanAPI.eventService.on('sp:transition:success', () => {
+                window.SuanpanAPI.eventService.off(secondId)
+                this.dispatch('closeLoading', true);
+              });
+              window.SuanpanAPI.common.goto("predict", res.id);
+            }).catch((err) => {
+              this.dispatch('closeLoading', true);
+              console.error(err);
+            });
+          }
+        });
+      })
     },
-    loadFile({ state }, filePath) {
-      invoke(filePath)
-    },
-    openFile() {
-      send('file-open');
-    },
-    saveFile({ state }) {
-      invoke('file-save-dialog').then( filePath => {
+    importFile({ state }) {
+      invoke("file-open").then( filePath => {
         if(filePath) {
-          window.appService.export(state.lastAppId, {
-            exportAppNext: true,
-            packAppNext: true,
-            type: "appDashboardExport"
-          }).then( res => {
-            window.loopService.fetchJob({asyncable: true}, res.job.id, appService.getJob).then(
-              (res) => { console.log(res) },
-              (err) => { console.error(err) }
-            )
+          openFile(filePath).then( res => {
+            commit("lastAppId", res.id);
+            window.SuanpanAPI.common.goto("predict", res.id);
+          }).catch(err => {
+            console.error(err);
           })
         }
       });
-    }
-  }
+    },
+    saveFile({ state }) {
+      invoke("file-save-dialog").then(filePath => {
+        if(filePath) {
+          saveFile(state.lastAppId, filePath).then(res => {
+
+          }).catch(err => {
+            console.error(err);
+          });
+        }
+      });
+    },
+  },
 };

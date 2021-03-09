@@ -63,8 +63,7 @@ function convert2Appconfig(obj) {
       },
     },
     {
-      redirectRequest: configs.RtoOrigin,
-      redirectSocket: configs.RtoSocketOrigin,
+      redirectRequest: configs.RtoOrigin
     }
   );
   ac.defaultDirs = JSON.parse(ac.defaultDirs);

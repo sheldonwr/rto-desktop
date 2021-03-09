@@ -16,5 +16,18 @@ export default {
   },
   state: {},
   mutations: {},
-  actions: {}
+  actions: {
+    showLoading() {
+      this._vm.$loading.show();
+    },
+    closeLoading({ state }, delay=false) {
+      if(delay) {
+        setTimeout(() => {
+          this._vm.$loading.close();
+        }, 500);
+      }else {
+        this._vm.$loading.close();
+      }
+    }
+  }
 };

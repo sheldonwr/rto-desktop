@@ -16,6 +16,8 @@ export default {
     }
   },
   close() {
-    loadingInst.close();
+    if(loadingInst) {
+      loadingInst.close();
+    }
   }
 }

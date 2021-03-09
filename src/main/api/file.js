@@ -1,28 +1,33 @@
 import { ipcMain, dialog, BrowserWindow, app } from "electron";
 import fs from 'fs';
+const http = require('http');
 
-ipcMain.on("file-open", openFile);
+ipcMain.handle("file-open", openFile);
 ipcMain.handle("file-load", loadFile);
 ipcMain.handle("file-save-dialog", saveFileDialog);
 ipcMain.handle("file-save", saveFile);
 
-function openFile() {
-  dialog.showOpenDialog( BrowserWindow.getFocusedWindow(), {
+async function openFile() {
+  const { filePaths } = await dialog.showOpenDialog( BrowserWindow.getFocusedWindow(), {
+    title: '打开',
+    defaultPath: app.getPath("documents"),
+    filters: [{
+      name: "sp", extensions: ['sp']
+    }]
   });
+  return filePaths[0];
 }
 
-async function loadFile(event, filePath) {
-  let result = {
-    success: false
-  }
-  try {
-    let fileContent = fs.promises.readFile(filePath)
-    result.success = true
-    result.data = fileContent
-  } catch (error) {
-    result.error = error;
-  }
-  return result
+function loadFile(event, filePath) {
+  return new Promise( (resolve, reject) => {
+    fs.readFile(filePath, (error, data) => {
+      if(error) {
+        reject(error)
+      }else {
+        resolve(data)
+      }
+    })
+  });
 }
 
 async function saveFileDialog() {
@@ -36,6 +41,17 @@ async function saveFileDialog() {
   return filePath
 }
 
-async function saveFile(event, filePath) {
-  
+function saveFile(event, filePath, url) {
+  return new Promise( (resolve, reject) => {
+    let file = fs.createWriteStream(filePath);
+    let request = http.get(url, function(response) {
+      response.pipe(file);
+      file.on('finish', function() {
+        file.close(resolve);
+      });
+    }).on('error', function(err) {
+      fs.unlink(filePath);
+      reject(err);
+    });
+  })
 }

@@ -26,12 +26,9 @@ new Vue({
   render: h => h(LogApp),
 }).$mount('.rto_log');
 
-window.addEventListener('load', () => {
-  let topicId = window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
-    window.SuanpanAPI.eventService.off(topicId)
-    storeInst.dispatch('file/startApp')
-  });
+storeInst.dispatch('file/startApp')
 
+window.addEventListener('load', () => {
   // 监听组件选中
   window.SuanpanAPI.eventService.on('sp:node:select', (event, data) => {
     console.log(event, data)

@@ -35,7 +35,7 @@ export default {
   align-items: center;
   justify-content: center;
   .loading-icon {
-    width: 50px;
+    width: 240px;
     // transform: rotate(0deg);
     // animation: 0.8s linear 0s infinite loading;
   }

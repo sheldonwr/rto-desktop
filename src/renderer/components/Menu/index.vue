@@ -261,7 +261,7 @@ export default {
           break;
         case "file-open":
           // 打开
-          this.$store.dispatch('file/openFile')
+          this.$store.dispatch('file/importFile')
           break;
         case "file-save":
           this.$store.dispatch('file/saveFile')
