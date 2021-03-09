@@ -9,12 +9,14 @@
 
 <script>
 export default {
-  name: 'log',
-}
+  name: "log",
+};
 </script>
 
 <style lang="scss" scoped>
 .rto_log {
+  position: relative;
+  z-index: 9;
   background: gray;
 }
 .log-head-wrap {
