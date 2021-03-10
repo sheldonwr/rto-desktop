@@ -3,6 +3,8 @@ import view from "./view";
 import drawer from './drawer';
 import ci from './ci';
 import file from './file';
+import status from './status';
+
 import PersistedState from './persistedState';
 
 export default {
@@ -12,7 +14,8 @@ export default {
     view,
     drawer,
     ci,
-    file
+    file,
+    status
   },
   state: {},
   mutations: {},

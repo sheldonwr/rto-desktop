@@ -27,6 +27,8 @@ export default {
       this.$store.dispatch('window/getMaximizedState');
     });
   },
+  created() {
+  },
   watch: {
     "$store.state.view.toolbarVisible" : {
       handler() {

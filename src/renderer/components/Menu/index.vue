@@ -306,7 +306,7 @@ export default {
           break;
         case "view-status":
           menuItem.checked = !this.$store.state.view.logPanelVisible;
-          this.$store.commit('view/logPanelVisible', !this.$store.state.view.logPanelVisible)
+          this.$store.commit('view/logPanelVisible', menuItem.checked)
           break;
         case "model-manage": // 模型管理
           this.$store.commit('drawer/changeDrawerVisible', true);

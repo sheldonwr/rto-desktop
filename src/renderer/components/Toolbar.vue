@@ -1,16 +1,16 @@
 <template>
   <div class="toolbar">
     <div class="toolbar-list">
-      <div class="toolbar-icon" title="新建">
+      <div class="toolbar-icon" title="新建" @click="clickHandler('file-new')">
         <span class="rto_iconfont icon-xinjian"></span>
       </div>
-      <div class="toolbar-icon" title="打开">
+      <div class="toolbar-icon" title="打开" @click="clickHandler('file-open')">
         <span class="rto_iconfont icon-dakai"></span>
       </div>
-      <div class="toolbar-icon" title="保存">
+      <div class="toolbar-icon" title="保存" @click="clickHandler('file-save')">
         <span class="rto_iconfont icon-baocun"></span>
       </div>
-      <div class="toolbar-icon" title="另存为">
+      <div class="toolbar-icon" title="另存为" @click="clickHandler('file-saveAs')">
         <span class="rto_iconfont icon-lingcunwei"></span>
       </div>
       <div class="separator"></div>
@@ -46,7 +46,19 @@
 
 <script>
 export default {
-
+  methods: {
+    clickHandler(id) {
+      if(id === 'file-new') {
+        this.$store.dispatch('file/create')
+      }else if(id === 'file-open') {
+        this.$store.dispatch('file/openDialog')
+      }else if(id === 'file-save') {
+        this.$store.dispatch('file/save')
+      }else if(id === 'file-saveAs') {
+        this.$store.dispatch('file/saveAs')
+      }
+    }
+  }
 }
 </script>
 
