@@ -4,7 +4,7 @@
       <img :src="require('assets/img/logo.png')">
     </div>
     <div class="title-wrap">
-      <p class="title">{{ this.$store.getters['file/title'] }}</p>
+      <p class="title">{{ $store.getters['file/title'] }}</p>
     </div>
     <div class="window-controls no-drag">
       <div class="window-icon" @click="windowControl('minimize')">

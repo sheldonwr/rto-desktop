@@ -36,8 +36,8 @@
       </div>
     </div>
     <div class="deploy-container">
-      <div class="toolbar-icon" title="部署">
-        <span class="rto_iconfont icon-start"></span>
+      <div class="toolbar-icon" :title="$store.getters['status/deploySuccess'] ? '释放' :'部署'" @click="clickHandler('deploy')">
+        <span :class="['rto_iconfont', $store.getters['status/deploySuccess'] ? 'icon-stop':'icon-start']"></span>
       </div>
     </div>
     <div class="placeholder"></div>
@@ -46,6 +46,16 @@
 
 <script>
 export default {
+  data() {
+
+  },
+  watch: {
+    '$store.state.status.appStatus': {
+      handler() {
+
+      }
+    }
+  },
   methods: {
     clickHandler(id) {
       if(id === 'file-new') {
@@ -56,8 +66,10 @@ export default {
         this.$store.dispatch('file/save')
       }else if(id === 'file-saveAs') {
         this.$store.dispatch('file/saveAs')
+      }else if(id === 'deploy') {
+        this.$store.dispatch('status/triggerDeploy')
       }
-    }
+    },
   }
 }
 </script>

@@ -31,4 +31,6 @@ new Vue({
 }).$mount('.rto_log');
 
 // 加载app
-storeInst.dispatch('file/startApp')
+storeInst.dispatch('file/startApp', () => {
+  storeInst.dispatch('status/getStatus')
+})
