@@ -16,7 +16,7 @@ export function createEmpty() {
  * 打开项目
  */
 export function openFile(fullpath) {
-  return invoke(fullpath).then((fileBuffer) => {
+  return invoke('file-load', fullpath).then((fileBuffer) => {
     return new Promise( (resolve, reject) => {
       let { name: fileName } = getFileNameAndExt(fullpath);
       const importAppDataPath = window.SuanpanAPI.commonService.getImportPath(
@@ -54,7 +54,12 @@ export function openFile(fullpath) {
                     )
                     .then(
                       (res) => {
-                        resolve(res);
+                        window.SuanpanAPI.appService.switch(res.appId, res.importFolderName).then( () => {
+                          resolve(res);
+                        }).catch (err => {
+                          console.error(err);
+                          reject(err);
+                        })
                       },
                       (err) => {
                         console.error(err);
@@ -82,7 +87,9 @@ function getDownloadUrl(appId) {
     type: "appDashboardExport"
   }).then( res => {
     return window.SuanpanAPI.loopService.fetchJob({type: "export", asyncable: true}, res.job.id, window.appService.getJob).then(
-      (res) => { return SuanpanAPI.appDataStoreService.url(res) })
+      (res) => {
+        return SuanpanAPI.appDataStoreService.url(res) 
+      })
   })
 }
 
@@ -91,7 +98,15 @@ function getDownloadUrl(appId) {
  */
 export function saveFile(appId, fullpath) {
   return getDownloadUrl(appId).then( downloadUrl => {
-    return invoke("file-save", fullpath, downloadUrl)
+    return invoke("file-save", fullpath, downloadUrl.data)
   })
 }
 
+
+/**
+ * 删除项目
+ */
+
+export function deleteApp(appId) {
+  return window.SuanpanAPI.appService.del(appId)
+}

@@ -17,17 +17,31 @@ export default {
   state: {},
   mutations: {},
   actions: {
-    showLoading() {
-      this._vm.$loading.show();
+    showLoading({}, args) {
+      let opts = Object.assign({
+        opacity: true,
+        msg: ''
+      }, args)
+      this._vm.$loading.show(opts);
     },
-    closeLoading({ state }, delay=false) {
-      if(delay) {
-        setTimeout(() => {
-          this._vm.$loading.close();
-        }, 500);
-      }else {
-        this._vm.$loading.close();
+    closeLoading({ state }) {
+      this._vm.$loading.close();
+    },
+    showNotify({ state }, opts) {
+      if(typeof opts === 'string') {
+        opts = {
+          message: opts
+        }
       }
+      let option = Object.assign({
+        type: 'error',
+        duration: 3,
+        message: '',
+        description: '',
+        placement: 'topRight',
+        top: '24px'
+      }, opts);
+      this._vm.$notification[option.type](option);
     }
   }
 };

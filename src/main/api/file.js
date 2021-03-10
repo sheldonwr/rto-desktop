@@ -6,6 +6,7 @@ ipcMain.handle("file-open", openFile);
 ipcMain.handle("file-load", loadFile);
 ipcMain.handle("file-save-dialog", saveFileDialog);
 ipcMain.handle("file-save", saveFile);
+ipcMain.handle("file-message-dialog", fileMessageDialog);
 
 async function openFile() {
   const { filePaths } = await dialog.showOpenDialog( BrowserWindow.getFocusedWindow(), {
@@ -54,4 +55,15 @@ function saveFile(event, filePath, url) {
       reject(err);
     });
   })
+}
+
+async function fileMessageDialog() {
+  let { response } = await dialog.showMessageBox( BrowserWindow.getFocusedWindow(), {
+    type: 'warning',
+    message: '是否保存当前文件？',
+    buttons: ['保存', '不保存', '取消'],
+    noLink: true,
+    cancelId: 2
+  });
+  return response;
 }

@@ -125,3 +125,7 @@ export function getFileNameAndExt(fullpath) {
   }
   return { name, ext}
 }
+
+export function uniqueArray(array) {
+  return [...new Set(array)];
+}
