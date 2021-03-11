@@ -37,7 +37,7 @@
     </div>
     <div class="deploy-container">
       <div class="toolbar-icon" :title="!$store.getters['status/deploySuccess'] ? '部署': '释放'" @click="clickHandler('deploy')">
-        <span :class="['rto_iconfont', !$store.getters['status/deploySuccess'] ? 'icon-start' : 'icon-stop']"></span>
+        <span :class="['rto_iconfont', !$store.getters['status/deploySuccess'] ? 'icon-start' : 'icon-stop']" style="font-size: 22px"></span>
       </div>
     </div>
     <div class="placeholder"></div>
@@ -55,7 +55,7 @@ export default {
     '$store.state.status.appStatus': {
       handler() {
         if(!this.$store.getters['status/statusDone']) {
-          this.startStatusListen();
+          // this.startStatusListen();
         }
       }
     }
@@ -75,11 +75,11 @@ export default {
         this.$store.dispatch('file/saveAs')
       }else if(id === 'deploy') {
         if(!this.$store.getters['status/deploySuccess']) {
-          this.$store.dispatch('status/deploy')
+          this.$store.dispatch('status/deploy').then(this.$store.dispatch('status/getStatus'))
         }else {
-          this.$store.dispatch('status/release')
+          this.$store.dispatch('status/release').then(this.$store.dispatch('status/getStatus'))
         }
-        this.startStatusListen();
+        // this.startStatusListen();
       }
     },
     startStatusListen() {

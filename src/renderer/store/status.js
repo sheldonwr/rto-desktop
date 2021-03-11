@@ -28,19 +28,20 @@ export default {
           }else {
             commit('appStatus', '0')
           }
+          if(window.SuanpanAPI.predictService.handleAppStatus) {
+            window.SuanpanAPI.predictService.handleAppStatus(res)
+          }
           return state.appStatus;
         })
       }
     },
     deploy({ state, commit, dispatch, rootState }) {
       this.dispatch('showNotify', {type: 'info', message: '部署中...'});
-      return window.SuanpanAPI.predictService.deploy(rootState.file.currentAppId).then( res => {
-      })
+      return window.SuanpanAPI.predictService.deploy(rootState.file.currentAppId)
     },
     release({ state, commit, dispatch, rootState }) {
       this.dispatch('showNotify', {type: 'info', message: '释放中...'});
-      return window.SuanpanAPI.predictService.release(rootState.file.currentAppId).then( res => {
-      })
+      return window.SuanpanAPI.predictService.release(rootState.file.currentAppId)
     }
   },
 };
