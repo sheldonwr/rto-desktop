@@ -56,6 +56,6 @@ window.addEventListener('load', () => {
 });
 
 // 加载app
-storeInst.dispatch('file/startApp', () => {
-  storeInst.dispatch('status/getStatus')
-})
+// storeInst.dispatch('file/startApp', () => {
+//   storeInst.dispatch('status/getStatus')
+// })

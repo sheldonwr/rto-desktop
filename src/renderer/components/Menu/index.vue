@@ -258,7 +258,12 @@ export default {
         this.menus.file.items.find( item => item.value === 'file-recent').items = this.recentPaths;
       },
       immediate: true
-    }
+    },
+    '$store.state.view.logPanelVisible': {
+      handler() {
+        this.menus.view.items.find( item => item.value === 'view-status').checked = this.$store.state.view.logPanelVisible;
+      }
+    },
   },
   methods: {
     menuClickHandler(menuItem) {
