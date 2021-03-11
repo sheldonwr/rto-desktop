@@ -31,7 +31,7 @@ export default {
       if(state.appStatus == '1' || state.appStatus == '5' || state.appStatus == '6' || state.appStatus == '9') {
         return;
       }
-      
+      // if(state.appStatus == '2' || state.appStatus == '')
     }
   },
 };
