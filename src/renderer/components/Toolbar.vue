@@ -47,7 +47,7 @@
 <script>
 export default {
   data() {
-
+    return {};
   },
   watch: {
     '$store.state.status.appStatus': {
