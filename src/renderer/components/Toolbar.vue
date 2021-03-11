@@ -75,9 +75,9 @@ export default {
         this.$store.dispatch('file/saveAs')
       }else if(id === 'deploy') {
         if(!this.$store.getters['status/deploySuccess']) {
-          this.$store.dispatch('status/deploy').then()
+          this.$store.dispatch('status/deploy')
         }else {
-          this.$store.dispatch('status/release').then()
+          this.$store.dispatch('status/release')
         }
         this.startStatusListen();
       }

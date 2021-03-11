@@ -33,13 +33,13 @@ export default {
       }
     },
     deploy({ state, commit, dispatch, rootState }) {
+      this.dispatch('showNotify', {type: 'info', message: '部署中...'});
       return window.SuanpanAPI.predictService.deploy(rootState.file.currentAppId).then( res => {
-        this.dispatch('showNotify', {type: 'info', message: '部署中...'});
       })
     },
     release({ state, commit, dispatch, rootState }) {
+      this.dispatch('showNotify', {type: 'info', message: '释放中...'});
       return window.SuanpanAPI.predictService.release(rootState.file.currentAppId).then( res => {
-        this.dispatch('showNotify', {type: 'info', message: '释放中...'});
       })
     }
   },
