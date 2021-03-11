@@ -1,7 +1,7 @@
 <template>
   <ul class="drop-menu">
     <li
-      :class="['drop-menu-item', { 'disabled' : dropItem.disabled }]"
+      :class="['drop-menu-item', { 'disabled' : dropItem.disabled }, {'sub': dropItem.level === 2}]"
       v-for="dropItem in datas"
       :key="dropItem.value"
       @mouseenter="menuMouseenterHandler(dropItem)"
@@ -11,6 +11,9 @@
         <span v-if="dropItem.checkable && dropItem.checked" class="rto_iconfont icon-check"></span>
       </span>
       <span>{{ dropItem.label }}</span>
+      <span v-if="dropItem.items && dropItem.items.length>0" class="more-wrap">
+        <span class="rto_iconfont icon-right-arrow"></span>
+      </span>
       <drop-menu
         v-if="openedItem === dropItem.value"
         class="menu-right"
@@ -57,14 +60,17 @@ export default {
 
 <style lang="scss" scoped>
 .drop-menu {
-  width: 150px;
   padding: 0;
   background: #fff;
   border-radius: 2px;
   .drop-menu-item {
+    width: 150px;
     padding: 5px 0 7px 28px;
     position: relative;
     font-size: 14px;
+    &.sub {
+      width: 300px;
+    }
     &.disabled {
       color: #888;
       cursor: not-allowed;
@@ -76,6 +82,19 @@ export default {
     .check-wrap {
       position: absolute;
       left: 0;
+      top: 0;
+      bottom: 0;
+      width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .rto_iconfont {
+        font-size: 13px;
+      }
+    }
+    .more-wrap {
+      position: absolute;
+      right: 0;
       top: 0;
       bottom: 0;
       width: 28px;

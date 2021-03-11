@@ -113,3 +113,19 @@ export function findComponentsDownward(context, componentName) {
     return components.concat(foundChilds);
   }, []);
 }
+
+export function getFileNameAndExt(fullpath) {
+  let fileName = fullpath.replace(/^.*[\\\/]/, '');
+  const _index = fileName.lastIndexOf('.');
+  let ext = '';
+  let name = '';
+  if (_index > -1) {
+    name = fileName.slice(0, _index);
+    ext = fileName.slice(_index);
+  }
+  return { name, ext}
+}
+
+export function uniqueArray(array) {
+  return [...new Set(array)];
+}

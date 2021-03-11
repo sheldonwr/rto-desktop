@@ -4,7 +4,7 @@
       <img :src="require('assets/img/logo.png')">
     </div>
     <div class="title-wrap">
-      <p class="title"></p>
+      <p class="title">{{ $store.getters['file/title'] }}</p>
     </div>
     <div class="window-controls no-drag">
       <div class="window-icon" @click="windowControl('minimize')">
@@ -27,6 +27,11 @@ export default {
       return this.$store.state.window.maximized;
     }
   },
+  created() {
+    window.ipcRenderer.on('window-close', () => {
+      this.$callbackChain.exec('close');
+    })
+  },
   methods: {
     windowControl(type) {
       if(type === 'minimize') {
@@ -34,7 +39,7 @@ export default {
       }else if(type === 'maximize') {
         this.$store.dispatch('window/maximizeWindow');
       }else if(type === 'close') {
-        this.$store.dispatch('window/closeWindow');
+        this.$callbackChain.exec('close');
       }
     }
   }

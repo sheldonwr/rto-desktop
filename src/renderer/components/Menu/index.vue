@@ -66,7 +66,7 @@ export default {
               label: "最近打开",
               value: "file-recent",
               disabled: false,
-              items: []
+              items: this.recentPaths,
             },
             {
               label: "退出",
@@ -239,6 +239,26 @@ export default {
         ...this.menus[menuKey],
       }));
     },
+    recentPaths() {
+      let paths = [];
+      let _paths = this.$store.state.file.recentOpenedPaths;
+      for(let i = 0; i < _paths.length; i++) {
+        paths.push({
+          label: _paths[0],
+          value: `file-recent-${i}`,
+          level: 2
+        })
+      }
+      return paths;
+    }
+  },
+  watch: {
+    '$store.state.file.recentOpenedPaths': {
+      handler() {
+        this.menus.file.items.find( item => item.value === 'file-recent').items = this.recentPaths;
+      },
+      immediate: true
+    }
   },
   methods: {
     menuClickHandler(menuItem) {
@@ -255,24 +275,38 @@ export default {
     menuItemClicked(menuItem) {
       this.openedMenu = '';
       let menuItemId = menuItem.value;
+      if(menuItemId.indexOf('file-recent') === 0) {
+        let arr = menuItemId.split('-');
+        let idx = parseInt(arr[arr.length - 1]);
+        this.$store.dispatch('file/openDialog', this.recentPaths[idx].label);
+      }
       switch(menuItemId) {
         case "file-new":
           // 新建
+          this.$store.dispatch('file/create')
           break;
         case "file-open":
           // 打开
-          this.$store.dispatch('file/openFile')
+          this.$store.dispatch('file/openDialog')
           break;
         case "file-save":
-          this.$store.dispatch('file/saveFile')
+          // 保存
+          this.$store.dispatch('file/save')
+          break;
+        case "file-saveAs":
+          // 另存为
+          this.$store.dispatch('file/saveAs')
+          break;
+        case "file-quit":
+          this.$callbackChain.exec('close');
           break;
         case "view-tool":
           menuItem.checked = !this.$store.state.view.toolbarVisible;
-          this.$store.commit('view/toolbarVisible', !this.$store.state.view.toolbarVisible)
+          this.$store.commit('view/toolbarVisible', menuItem.checked)
           break;
         case "view-status":
           menuItem.checked = !this.$store.state.view.logPanelVisible;
-          this.$store.commit('view/logPanelVisible', !this.$store.state.view.logPanelVisible)
+          this.$store.commit('view/logPanelVisible', menuItem.checked)
           break;
         case "model-manage": // 模型管理
           this.$store.commit('drawer/changeDrawerVisible', true);

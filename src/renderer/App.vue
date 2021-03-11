@@ -2,7 +2,7 @@
   <div class="rto_custom rto_header">
     <top-header></top-header>
     <menu-view></menu-view>
-    <tool-bar v-if="$store.state.view.toolbarVisible"></tool-bar>
+    <tool-bar v-show="$store.state.view.toolbarVisible"></tool-bar>
     <drawer></drawer>
   </div>
 </template>
@@ -26,6 +26,8 @@ export default {
     window.addEventListener('resize', () => {
       this.$store.dispatch('window/getMaximizedState');
     });
+  },
+  created() {
   },
   watch: {
     "$store.state.view.toolbarVisible" : {

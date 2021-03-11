@@ -5,5 +5,7 @@ export default createPersistedState({
   paths: [
     "view.toolbarVisible",
     "view.logPanelVisible",
+    // "file.currentOpenedPath",
+    "file.recentOpenedPaths"
   ],
 });

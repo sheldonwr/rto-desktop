@@ -1,6 +1,6 @@
 
-export function send(type) {
-  window.ipcRenderer.send(type);
+export function send(type, ...args) {
+  window.ipcRenderer.send(type, ...args);
 }
 
 export function invoke(type, ...args) {
