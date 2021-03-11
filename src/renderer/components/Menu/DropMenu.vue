@@ -65,11 +65,12 @@ export default {
   border-radius: 2px;
   .drop-menu-item {
     width: 150px;
-    padding: 5px 0 7px 28px;
+    padding: 8px 0 8px 28px;
     position: relative;
     font-size: 14px;
     &.sub {
       width: 300px;
+      padding-right: 10px;
     }
     &.disabled {
       color: #888;

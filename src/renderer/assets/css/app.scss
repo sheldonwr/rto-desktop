@@ -28,7 +28,9 @@
   display: none;
 }
 .sp-app-actions {
-  display: none;
+  // display: none;
+  right: 2500px !important;
+  visibility: hidden !important;
 }
 #container+.app {
   top: 0;

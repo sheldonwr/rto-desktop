@@ -36,8 +36,8 @@
       </div>
     </div>
     <div class="deploy-container">
-      <div class="toolbar-icon" :title="!$store.getters['status/deploySuccess'] ? '部署': '释放'" @click="clickHandler('deploy')">
-        <span :class="['rto_iconfont', !$store.getters['status/deploySuccess'] ? 'icon-start' : 'icon-stop']" style="font-size: 22px"></span>
+      <div class="toolbar-icon" :title="isRunning ? '释放': '部署'" @click="clickHandler('deploy')">
+        <span :class="['rto_iconfont', isRunning ? 'icon-stop' : 'icon-start']" style="font-size: 22px"></span>
       </div>
     </div>
     <div class="placeholder"></div>
@@ -48,15 +48,13 @@
 export default {
   data() {
     return {
-
+      isRunning: false
     };
   },
   watch: {
     '$store.state.status.appStatus': {
       handler() {
-        if(!this.$store.getters['status/statusDone']) {
-          // this.startStatusListen();
-        }
+        this.isRunning = this.$store.getters['status/isRunning']
       }
     }
   },
@@ -74,28 +72,9 @@ export default {
       }else if(id === 'file-saveAs') {
         this.$store.dispatch('file/saveAs')
       }else if(id === 'deploy') {
-        if(!this.$store.getters['status/deploySuccess']) {
-          this.$store.dispatch('status/deploy').then(this.$store.dispatch('status/getStatus'))
-        }else {
-          this.$store.dispatch('status/release').then(this.$store.dispatch('status/getStatus'))
-        }
-        // this.startStatusListen();
-      }
-    },
-    startStatusListen() {
-      this.stopStatusListen()
-      this.statusListenId = setInterval(() => {
-        this.$store.dispatch('status/getStatus').then( () => {
-          if(this.$store.getters['status/statusDone']) {
-            this.stopStatusListen();
-          }
-        })
-      }, 3000);
-    },
-    stopStatusListen() {
-      if(this.statusListenId) {
-        clearInterval(this.statusListenId)
-        this.statusListenId = null
+        let deployBtn = document.querySelector('.sp-app-actions .footer-item');
+        deployBtn.click()
+        this.isRunning = !this.isRunning
       }
     }
   }

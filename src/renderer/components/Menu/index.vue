@@ -244,7 +244,7 @@ export default {
       let _paths = this.$store.state.file.recentOpenedPaths;
       for(let i = 0; i < _paths.length; i++) {
         paths.push({
-          label: _paths[0],
+          label: _paths[i],
           value: `file-recent-${i}`,
           level: 2
         })

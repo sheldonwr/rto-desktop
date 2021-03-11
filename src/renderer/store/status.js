@@ -7,12 +7,9 @@ export default {
     appStatus: '0',
   },
   getters: {
-    deploySuccess(state) {
+    isRunning(state) {
       return state.appStatus == '1' || state.appStatus == '3'
     },
-    statusDone(state) {
-      return state.appStatus != '1' && state.appStatus != '5' && state.appStatus != '6' && state.appStatus != '9'
-    }
   },
   mutations: {
     appStatus(state, val) {
@@ -28,20 +25,9 @@ export default {
           }else {
             commit('appStatus', '0')
           }
-          if(window.SuanpanAPI.predictService.handleAppStatus) {
-            window.SuanpanAPI.predictService.handleAppStatus(res)
-          }
           return state.appStatus;
         })
       }
     },
-    deploy({ state, commit, dispatch, rootState }) {
-      this.dispatch('showNotify', {type: 'info', message: '部署中...'});
-      return window.SuanpanAPI.predictService.deploy(rootState.file.currentAppId)
-    },
-    release({ state, commit, dispatch, rootState }) {
-      this.dispatch('showNotify', {type: 'info', message: '释放中...'});
-      return window.SuanpanAPI.predictService.release(rootState.file.currentAppId)
-    }
   },
 };
