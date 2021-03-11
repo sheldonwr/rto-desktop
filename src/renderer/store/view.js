@@ -2,7 +2,7 @@
 export default {
   namespaced: true,
   state: {
-    toolbarVisible: false,
+    toolbarVisible: true,
     logPanelVisible: false
   },
   mutations: {
