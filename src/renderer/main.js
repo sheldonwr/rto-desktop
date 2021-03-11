@@ -31,11 +31,6 @@ new Vue({
 }).$mount('.rto_log');
 
 window.addEventListener('load', () => {
-  let topicId = window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
-    window.SuanpanAPI.eventService.off(topicId)
-    storeInst.dispatch('file/startApp')
-  });
-
   // 监听组件选中
   window.SuanpanAPI.eventService.on('sp:node:select', (event, data) => {
     if (data && data.length > 1) {
@@ -46,8 +41,7 @@ window.addEventListener('load', () => {
       }
     }
   });
-
-
+  
   // 监听rto组件打开操作面板
   window.SuanpanAPI.eventService.on('rto:setting:params', (event, data) => {
     console.log(event, data)
@@ -56,11 +50,12 @@ window.addEventListener('load', () => {
       if (url && url !== '') {
         storeInst.commit('drawer/changeDrawerVisible', true);
         storeInst.commit('drawer/changeIsModelAlgoManage', false);
-        storeInst.commit('drawer/changeIframURL', url);
+        storeInst.commit('drawer/changeIframURL', `${appConfig.redirectRequest}${url.match(/\/proxr[\S]*/)}`);
       }
     }
   });
-})
+});
+
 // 加载app
 storeInst.dispatch('file/startApp', () => {
   storeInst.dispatch('status/getStatus')
