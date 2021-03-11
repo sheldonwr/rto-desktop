@@ -8,7 +8,10 @@ export default {
   },
   getters: {
     deploySuccess(state) {
-      return state.appStatus == '3'
+      return state.appStatus == '1' || state.appStatus == '3'
+    },
+    statusDone(state) {
+      return state.appStatus != '1' && state.appStatus != '5' && state.appStatus != '6' && state.appStatus != '9'
     }
   },
   mutations: {
@@ -22,16 +25,22 @@ export default {
         return window.SuanpanAPI.predictService.getNetworkStatus(rootState.file.currentAppId).then( res => {
           if(res.map && (res.map.status != null)) {
             commit('appStatus', res.map.status)
+          }else {
+            commit('appStatus', '0')
           }
           return state.appStatus;
         })
       }
     },
-    triggerDeploy({ state, commit, dispatch }) {
-      if(state.appStatus == '1' || state.appStatus == '5' || state.appStatus == '6' || state.appStatus == '9') {
-        return;
-      }
-      // if(state.appStatus == '2' || state.appStatus == '')
+    deploy({ state, commit, dispatch, rootState }) {
+      return window.SuanpanAPI.predictService.deploy(rootState.file.currentAppId).then( res => {
+        this.dispatch('showNotify', {type: 'info', message: '部署中...'});
+      })
+    },
+    release({ state, commit, dispatch, rootState }) {
+      return window.SuanpanAPI.predictService.release(rootState.file.currentAppId).then( res => {
+        this.dispatch('showNotify', {type: 'info', message: '释放中...'});
+      })
     }
   },
 };

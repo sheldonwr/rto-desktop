@@ -36,8 +36,8 @@
       </div>
     </div>
     <div class="deploy-container">
-      <div class="toolbar-icon" :title="$store.getters['status/deploySuccess'] ? '释放' :'部署'" @click="clickHandler('deploy')">
-        <span :class="['rto_iconfont', $store.getters['status/deploySuccess'] ? 'icon-stop':'icon-start']"></span>
+      <div class="toolbar-icon" :title="!$store.getters['status/deploySuccess'] ? '部署': '释放'" @click="clickHandler('deploy')">
+        <span :class="['rto_iconfont', !$store.getters['status/deploySuccess'] ? 'icon-start' : 'icon-stop']"></span>
       </div>
     </div>
     <div class="placeholder"></div>
@@ -47,14 +47,21 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+
+    };
   },
   watch: {
     '$store.state.status.appStatus': {
       handler() {
-
+        if(!this.$store.getters['status/statusDone']) {
+          this.startStatusListen();
+        }
       }
     }
+  },
+  created() {
+
   },
   methods: {
     clickHandler(id) {
@@ -67,9 +74,30 @@ export default {
       }else if(id === 'file-saveAs') {
         this.$store.dispatch('file/saveAs')
       }else if(id === 'deploy') {
-        this.$store.dispatch('status/triggerDeploy')
+        if(!this.$store.getters['status/deploySuccess']) {
+          this.$store.dispatch('status/deploy').then()
+        }else {
+          this.$store.dispatch('status/release').then()
+        }
+        this.startStatusListen();
       }
     },
+    startStatusListen() {
+      this.stopStatusListen()
+      this.statusListenId = setInterval(() => {
+        this.$store.dispatch('status/getStatus').then( () => {
+          if(this.$store.getters['status/statusDone']) {
+            this.stopStatusListen();
+          }
+        })
+      }, 3000);
+    },
+    stopStatusListen() {
+      if(this.statusListenId) {
+        clearInterval(this.statusListenId)
+        this.statusListenId = null
+      }
+    }
   }
 }
 </script>
