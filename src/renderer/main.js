@@ -8,7 +8,6 @@ import App from './App.vue';
 import LogApp from './LogApp.vue';
 import store from "./store";
 import Loading from "components/Loading"
-import './listeners'
 import CallbackChain from './plugins/callbackChain'
 
 Vue.config.productionTip = false;
