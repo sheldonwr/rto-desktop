@@ -4,6 +4,7 @@ import drawer from './drawer';
 import ci from './ci';
 import file from './file';
 import status from './status';
+import edit from './edit';
 
 import PersistedState from './persistedState';
 
@@ -15,10 +16,17 @@ export default {
     drawer,
     ci,
     file,
-    status
+    status,
+    edit
   },
-  state: {},
-  mutations: {},
+  state: {
+    selectedNode: null
+  },
+  mutations: {
+    selectedNode(state, val) {
+      state.selectedNode = val;
+    }
+  },
   actions: {
     showLoading({}, args) {
       let opts = Object.assign({

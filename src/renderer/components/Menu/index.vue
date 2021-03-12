@@ -305,6 +305,18 @@ export default {
         case "file-quit":
           this.$callbackChain.exec('close');
           break;
+        case "edit-cut":
+          this.$store.dispatch('edit/cutNode');
+          break;
+        case "edit-copy":
+          this.$store.dispatch('edit/copyNode');
+          break;
+        case "edit-paste":
+          this.$store.dispatch('edit/pasteNode');
+          break;
+        case "edit-delete":
+          this.$store.dispatch('edit/deleteNode');
+          break;
         case "view-tool":
           menuItem.checked = !this.$store.state.view.toolbarVisible;
           this.$store.commit('view/toolbarVisible', menuItem.checked)

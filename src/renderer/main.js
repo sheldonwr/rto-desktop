@@ -53,6 +53,13 @@ window.addEventListener('load', () => {
       }
     }
   });
+
+  window.SuanpanAPI.eventService.on('sp:node:select', (event, data) => {
+    storeInst.commit('edit/selectedNode', data[1])
+  })
+  window.SuanpanAPI.eventService.on('sp:node:deselect', (event, data) => {
+    storeInst.commit('edit/selectedNode', null)
+  })
 });
 
 // 加载app
