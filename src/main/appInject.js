@@ -63,7 +63,8 @@ function convert2Appconfig(obj) {
       },
     },
     {
-      redirectRequest: configs.RtoOrigin
+      redirectRequest: configs.RtoOrigin,
+      suanpanWebHost: configs.RtoOrigin
     }
   );
   ac.defaultDirs = JSON.parse(ac.defaultDirs);
