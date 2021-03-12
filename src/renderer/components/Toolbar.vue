@@ -10,7 +10,11 @@
       <div class="toolbar-icon" title="保存" @click="clickHandler('file-save')">
         <span class="rto_iconfont icon-baocun"></span>
       </div>
-      <div class="toolbar-icon" title="另存为" @click="clickHandler('file-saveAs')">
+      <div
+        class="toolbar-icon"
+        title="另存为"
+        @click="clickHandler('file-saveAs')"
+      >
         <span class="rto_iconfont icon-lingcunwei"></span>
       </div>
       <div class="separator"></div>
@@ -52,15 +56,13 @@ export default {
     };
   },
   watch: {
-    '$store.state.status.appStatus': {
+    "$store.state.status.appStatus": {
       handler() {
         this.isRunning = this.$store.getters['status/isRunning']
       }
     }
   },
-  created() {
-
-  },
+  created() {},
   methods: {
     clickHandler(id) {
       if(id === 'file-new') {
@@ -78,7 +80,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -88,7 +90,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   background-color: #f6f7fb;
-	border: solid 1px #dcdcdc;
+  border: solid 1px #dcdcdc;
   padding-left: 6px;
   .toolbar-list {
     display: flex;
@@ -109,7 +111,7 @@ export default {
   }
   .separator {
     width: 1px;
-    background: rgba(220,220,220,0.6);
+    background: rgba(220, 220, 220, 0.6);
     height: 100%;
     margin: 0 1px;
   }
