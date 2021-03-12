@@ -5,6 +5,7 @@ import ci from './ci';
 import file from './file';
 import status from './status';
 import edit from './edit';
+import log from './log';
 
 import PersistedState from './persistedState';
 
@@ -17,7 +18,8 @@ export default {
     ci,
     file,
     status,
-    edit
+    edit,
+    log
   },
   state: {
     selectedNode: null

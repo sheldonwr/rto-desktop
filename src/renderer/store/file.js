@@ -34,7 +34,7 @@ export default {
     }
   },
   actions: {
-    startApp({ state, commit, dispatch }, cb) {
+    startApp({ state, commit, dispatch }) {
       this.dispatch('showLoading');
       window.addEventListener('load', () => {
         let firstId = window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
@@ -48,7 +48,6 @@ export default {
                 this.dispatch('closeLoading');
               });
               window.SuanpanAPI.common.goto("predict", res.appId);
-              cb && cb();
             }).catch(err => {
               console.error(err);
               this.dispatch('closeLoading');
@@ -64,7 +63,6 @@ export default {
                 this.dispatch('closeLoading');
               });
               window.SuanpanAPI.common.goto("predict", res.id);
-              cb && cb();
             }).catch((err) => {
               this.dispatch('closeLoading');
               console.error(err);

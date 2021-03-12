@@ -13,11 +13,6 @@
       </div>
     </div>
     <ul class="log-content-wrap">
-      <li class="pull-left source">来源（组件名称）</li>
-      <li class="pull-left time">时间</li>
-      <li class="pull-left message">详细描述</li>
-      <li class="pull-left severity">错误信息</li>
-      <li class="pull-left condition">错误信息</li>
     </ul>
   </div>
 </template>
@@ -25,11 +20,16 @@
 <script>
 export default {
   name: "log",
+  data() {
+    return {
+      allLogs: []
+    }
+  },
   methods: {
     close() {
       this.$store.commit('view/logPanelVisible', false)
     }
-  }
+  },
 };
 </script>
 

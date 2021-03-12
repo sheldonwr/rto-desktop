@@ -62,7 +62,19 @@ window.addEventListener('load', () => {
   })
 });
 
+
 // 加载app
-storeInst.dispatch('file/startApp', () => {
-  storeInst.dispatch('status/getStatus')
-})
+storeInst.dispatch('file/startApp')
+storeInst.watch(
+  function (state) {
+      return state.file.currentAppId;
+  },
+  function () {
+    if(storeInst.state.file.currentAppId) {
+      storeInst.dispatch('status/getStatus')
+      storeInst.dispatch('log/connect')
+      storeInst.dispatch('log/query')
+    }
+  }
+);
+
