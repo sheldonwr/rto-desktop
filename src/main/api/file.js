@@ -13,7 +13,8 @@ async function openFile() {
     title: '打开',
     defaultPath: app.getPath("documents"),
     filters: [{
-      name: "sp", extensions: ['sp']
+      name: "sp", extensions: ['sp'],
+      name: 'zip', extensions: ['zip'],
     }]
   });
   return filePaths[0];

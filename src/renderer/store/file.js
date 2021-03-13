@@ -113,7 +113,7 @@ export default {
           this.dispatch('showNotify', `打开文件${filePath}失败`);
         })
     },
-    saveDialog({ state, commit }, savePath=true, isDelete=false) {
+    saveDialog({ state, commit }, {savePath=true, isDelete=false}={}) {
       return invoke("file-save-dialog").then(filePath => {
         if(filePath) {
           this.dispatch('showLoading', { opacity: false, msg: '保存中...'});
@@ -161,11 +161,11 @@ export default {
           throw err;
         });
       }else {
-        return dispatch('saveDialog', true, isDelete);
+        return dispatch('saveDialog', { savePath:true, isDelete: isDelete });
       }
     },
     saveAs({ dispatch }) {
-      dispatch('saveDialog', false);
+      dispatch('saveDialog', { savePath:false });
     },
     messageDialog() {
       return invoke("file-message-dialog")
