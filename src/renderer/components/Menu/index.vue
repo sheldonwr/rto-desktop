@@ -259,6 +259,11 @@ export default {
       },
       immediate: true
     },
+    '$store.state.view.toolbarVisible': {
+      handler() {
+        this.menus.view.items.find( item => item.value === 'view-tool').checked = this.$store.state.view.toolbarVisible;
+      }
+    },
     '$store.state.view.logPanelVisible': {
       handler() {
         this.menus.view.items.find( item => item.value === 'view-alarm').checked = this.$store.state.view.logPanelVisible;
@@ -318,14 +323,12 @@ export default {
           this.$store.dispatch('edit/deleteNode');
           break;
         case "view-tool":
-          menuItem.checked = !this.$store.state.view.toolbarVisible;
-          this.$store.commit('view/toolbarVisible', menuItem.checked)
+          this.$store.commit('view/toolbarVisible', !this.$store.state.view.toolbarVisible)
           break;
         case "view-status":
           break;
         case "view-alarm":
-          menuItem.checked = !this.$store.state.view.logPanelVisible;
-          this.$store.commit('view/logPanelVisible', menuItem.checked)
+          this.$store.commit('view/logPanelVisible', !this.$store.state.view.logPanelVisible)
           break;
         case "model-manage": // 模型管理
           this.$store.commit('drawer/changeDrawerVisible', true);

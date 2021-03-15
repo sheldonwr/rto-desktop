@@ -18,17 +18,17 @@
         <span class="rto_iconfont icon-lingcunwei"></span>
       </div>
       <div class="separator"></div>
-      <div class="toolbar-icon" title="剪切">
+      <div class="toolbar-icon" title="剪切" @click="clickHandler('edit-cut')">
         <span class="rto_iconfont icon-jianqie"></span>
       </div>
-      <div class="toolbar-icon" title="复制">
+      <div class="toolbar-icon" title="复制" @click="clickHandler('edit-copy')">
         <span class="rto_iconfont icon-fuzhi"></span>
       </div>
       <div class="separator"></div>
       <div class="toolbar-icon" title="设置">
         <span class="rto_iconfont icon-shezhi"></span>
       </div>
-      <div class="toolbar-icon" title="日志">
+      <div class="toolbar-icon" title="日志" @click="clickHandler('view-alarm')">
         <span class="rto_iconfont icon-rizhi"></span>
       </div>
       <div class="separator"></div>
@@ -77,6 +77,12 @@ export default {
         let deployBtn = document.querySelector('.sp-app-actions .footer-item');
         deployBtn.click()
         this.isRunning = !this.isRunning
+      }else if(id === 'edit-cut') {
+        this.$store.dispatch('edit/cutNode');
+      }else if(id === 'edit-copy') {
+        this.$store.dispatch('edit/copyNode');
+      }else if(id === 'view-alarm') {
+        this.$store.commit('view/logPanelVisible', !this.$store.state.view.logPanelVisible)
       }
     }
   }
