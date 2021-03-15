@@ -31,6 +31,7 @@ function addLogs(logs, newLogs=[]) {
   // time
   for(let i = 0; i < newLogs.length; i++) {
     newLogs[i].ftime = convertUTCDateToLocalDate(newLogs[i].time);
+    newLogs[i].fnode = getNodeLabel(newLogs[i].data.node);
   }
   logs = logs.concat(newLogs);
   // sort
@@ -53,4 +54,10 @@ function convertUTCDateToLocalDate(dateStr) {
   let date = new Date(dateStr);
   var newDate = new Date(date.getTime() - date.getTimezoneOffset()*60*1000);
   return newDate.toLocaleString();   
+}
+
+function getNodeLabel(nodeId) {
+  let nodeObj = window.SuanpanAPI.nodeService.getNode(nodeId);
+  let nodeLabel = nodeObj.metadata.label;
+  return `${nodeLabel} (id:${nodeId.slice(0, 6)})`
 }

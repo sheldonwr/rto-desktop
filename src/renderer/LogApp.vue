@@ -14,7 +14,7 @@
     </div>
     <ul class="log-content-wrap">
       <li class="clearfix" v-for="log in  $store.state.log.allLogs" :key="log.id">
-        <span class="pull-left source">{{ log.data.node }}</span>
+        <span class="pull-left source">{{ log.fnode }}</span>
         <span class="pull-left time">{{ log.ftime }}</span>
         <span class="pull-left message">{{ log.title }}</span>
         <span class="pull-left severity">{{ log.level }}</span>
