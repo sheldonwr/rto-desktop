@@ -6,13 +6,41 @@
         <li class="pull-left time">时间</li>
         <li class="pull-left message">详细描述</li>
         <li class="pull-left severity">错误信息</li>
-        <li class="pull-left condition">错误信息</li>
+        <li class="pull-left condition">状态</li>
       </ul>
       <div class="close-wrap" @click="close">
          <span class="rto_iconfont icon-close"></span>
       </div>
     </div>
     <ul class="log-content-wrap">
+      <li class="clearfix">
+        <span class="pull-left source">优化引擎</span>
+        <span class="pull-left time">2021/3/12 09:23:02</span>
+        <span class="pull-left message">System.Exception.Error</span>
+        <span class="pull-left severity">Error</span>
+        <span class="pull-left condition">FBDONOT</span>
+      </li>
+      <li class="clearfix">
+        <span class="pull-left source">优化引擎</span>
+        <span class="pull-left time">2021/3/12 09:23:02</span>
+        <span class="pull-left message">System.Exception.Error</span>
+        <span class="pull-left severity">Error</span>
+        <span class="pull-left condition">FBDONOT</span>
+      </li>
+      <li class="clearfix">
+        <span class="pull-left source">优化引擎</span>
+        <span class="pull-left time">2021/3/12 09:23:02</span>
+        <span class="pull-left message">System.Exception.Error</span>
+        <span class="pull-left severity">Error</span>
+        <span class="pull-left condition">FBDONOT</span>
+      </li>
+      <li class="clearfix">
+        <span class="pull-left source">优化引擎</span>
+        <span class="pull-left time">2021/3/12 09:23:02</span>
+        <span class="pull-left message">System.Exception.Error</span>
+        <span class="pull-left severity">Error</span>
+        <span class="pull-left condition">FBDONOT</span>
+      </li>
     </ul>
   </div>
 </template>

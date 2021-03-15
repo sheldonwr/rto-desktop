@@ -127,3 +127,14 @@ export function appInjectProd() {
     }
   );
 }
+
+export function interceptUrl(url) {
+  let startIdx = url.indexOf('proxr')
+  if(startIdx === -1) {
+    startIdx = url.indexOf('proxy')
+  }
+  if(startIdx === -1) {
+    return url;
+  }
+  return path.join(configs.RtoOrigin, url.slice(startIdx));
+}

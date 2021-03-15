@@ -33,27 +33,38 @@ export default {
     "$store.state.view.toolbarVisible" : {
       handler() {
         this.updateAppHeight();
-      }
+      },
+      immediate: true
     },
     "$store.state.view.logPanelVisible" : {
       handler() {
         this.updateAppHeight();
-      }
+      },
+      immediate: true
     },
   },
   methods: {
     updateAppHeight() {
-      let h = '';
+      let appH = '';
+      let rightPanelH = 'calc(100vh - (50px + 38px + 60px))';
       if(this.$store.state.view.toolbarVisible && this.$store.state.view.logPanelVisible) {
-        h = 'calc(100% - 115px - 280px)';
+        appH = 'calc(100% - 115px - 280px)';
+        rightPanelH = 'calc(100vh - (50px + 38px + 60px + 280px))';
       }else if(this.$store.state.view.toolbarVisible) {
-        h = 'calc(100% - 115px)';
+        appH = 'calc(100% - 115px)';
+        rightPanelH = 'calc(100vh - (50px + 38px + 60px))';
       }else if(this.$store.state.view.logPanelVisible) {
-        h = 'calc(100% - 115px + 40px - 280px)';
+        appH = 'calc(100% - 115px + 40px - 280px)';
+        rightPanelH = 'calc(100vh - (50px + 38px + 60px - 40px + 280px))';
       }else {
-        h = 'calc(100% - 115px + 40px)';
+        appH = 'calc(100% - 115px + 40px)';
+        rightPanelH = 'calc(100vh - (50px + 38px + 60px - 40px))';
       }
-      return document.getElementById('app').style.height = h;
+      document.getElementById('app').style.height = appH;
+      let rightPabelEl = document.querySelector('.tab-pane.ng-scope');
+      if(rightPabelEl) {
+        rightPabelEl.style.height = rightPanelH;
+      }
     }
   }
 }

@@ -12,13 +12,12 @@ export default {
     connect() {
       window.SuanpanAPI.componentLogService.connect()
       window.SuanpanAPI.componentLogService.registerLogProcessor((res) => {
-        console.log('+++', res)
+        console.log('++register++', res)
       })
     },
     query({ rootState }) {
-      window.SuanpanAPI.componentLogService.query({
-        app: rootState.file.currentAppId,
-        limit: 500
+      window.SuanpanAPI.componentLogService.query().then( res => {
+        console.log('++query++', res)
       })
     }
   }

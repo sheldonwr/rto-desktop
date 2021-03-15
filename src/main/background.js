@@ -5,7 +5,7 @@ import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "ele
 import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { getAppConfig, setAppConfig, appInjectDev, appInjectProd } from "./appInject";
+import { getAppConfig, setAppConfig, appInjectDev, appInjectProd, interceptUrl } from "./appInject";
 import * as mainconfigs from "./mainconfig";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -54,7 +54,8 @@ async function createWindow() {
       });
       event.newGuest = new BrowserWindow(options);
       // Menu.setApplicationMenu(null)
-      event.newGuest.removeMenu();
+      // event.newGuest.removeMenu();
+      event.newGuest.loadURL(interceptUrl(url));
     }
   );
 
