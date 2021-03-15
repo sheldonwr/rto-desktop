@@ -60,7 +60,6 @@ window.addEventListener('load', () => {
   window.SuanpanAPI.eventService.on('sp:node:deselect', (event, data) => {
     storeInst.commit('edit/selectedNode', null)
   })
-  storeInst.dispatch('log/connect')
 });
 
 
@@ -73,7 +72,10 @@ storeInst.watch(
   function () {
     if(storeInst.state.file.currentAppId) {
       storeInst.dispatch('status/getStatus')
-      storeInst.dispatch('log/query')
+      storeInst.dispatch('log/connect').then(() => {
+        storeInst.dispatch('log/register')
+        storeInst.dispatch('log/query')
+      })
     }
   }
 );

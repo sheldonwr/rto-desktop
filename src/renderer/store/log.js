@@ -10,7 +10,9 @@ export default {
   },
   actions: {
     connect() {
-      window.SuanpanAPI.componentLogService.connect()
+      return window.SuanpanAPI.componentLogService.connect()
+    },
+    register() {
       window.SuanpanAPI.componentLogService.registerLogProcessor((res) => {
         console.log('++register++', res)
       })
