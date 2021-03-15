@@ -1,4 +1,4 @@
-import { invoke } from "../services";
+import { invoke, gotoPredict } from "../services";
 import { createEmpty, openFile, saveFile, deleteApp} from "services/file"
 import { uniqueArray } from "utils/"
 
@@ -42,12 +42,10 @@ export default {
           if (state.currentOpenedPath) {
             // open last file
             openFile(state.currentOpenedPath).then( res => {
-              commit("currentAppId", res.appId);
-              let secondId = window.SuanpanAPI.eventService.on('sp:transition:success', () => {
-                window.SuanpanAPI.eventService.off(secondId)
+              gotoPredict(res.appId).then( () => {
+                commit("currentAppId", res.appId);
                 this.dispatch('closeLoading');
-              });
-              window.SuanpanAPI.common.goto("predict", res.appId);
+              })
             }).catch(err => {
               console.error(err);
               this.dispatch('closeLoading');
@@ -56,13 +54,11 @@ export default {
           } else {
             // create an empty app
             createEmpty().then(res => {
-              commit("currentAppId", res.id);
-              commit("currentOpenedPath", null);
-              let secondId = window.SuanpanAPI.eventService.on('sp:transition:success', () => {
-                window.SuanpanAPI.eventService.off(secondId)
+              gotoPredict(res.id).then( () => {
+                commit("currentAppId", res.id);
+                commit("currentOpenedPath", null);
                 this.dispatch('closeLoading');
-              });
-              window.SuanpanAPI.common.goto("predict", res.id);
+              })
             }).catch((err) => {
               this.dispatch('closeLoading');
               console.error(err);
@@ -103,9 +99,11 @@ export default {
     openFile({ state, commit, dispatch }, filePath) {
       this.dispatch('showLoading', { opacity: false, msg: '打开中...'});
         openFile(filePath).then( res => {
-          commit("currentAppId", res.appId);
-          commit("currentOpenedPath", filePath);
-          window.SuanpanAPI.common.goto("predict", res.appId);
+          gotoPredict(res.appId).then( () => {
+            commit("currentAppId", res.appId);
+            commit("currentOpenedPath", filePath);
+            this.dispatch('closeLoading');
+          })
           this.dispatch('closeLoading');
         }).catch(err => {
           console.error(err);
@@ -176,9 +174,10 @@ export default {
           // save
           dispatch('save', true).then(() => {
             return createEmpty().then(res => {
-              commit("currentAppId", res.id);
-              commit("currentOpenedPath", null);
-              window.SuanpanAPI.common.goto("predict", res.id);
+              gotoPredict(res.id).then( () => {
+                commit("currentAppId", res.id);
+                commit("currentOpenedPath", null);
+              })
             }).catch((err) => {
               console.error(err);
             });
@@ -187,10 +186,11 @@ export default {
           // do not save
           this.dispatch('showLoading', { opacity: false});
           return createEmpty().then(res => {
-            commit("currentAppId", res.id);
-            commit("currentOpenedPath", null);
-            window.SuanpanAPI.common.goto("predict", res.id);
-            this.dispatch('closeLoading');
+            gotoPredict(res.id).then( () => {
+              commit("currentAppId", res.id);
+              commit("currentOpenedPath", null);
+              this.dispatch('closeLoading');
+            })
           }).catch((err) => {
             console.error(err);
             this.dispatch('closeLoading');

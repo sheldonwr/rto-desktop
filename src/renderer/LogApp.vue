@@ -2,10 +2,10 @@
   <div v-if="$store.state.view.logPanelVisible" class="rto_custom rto_log">
     <div class="log-head">
       <ul class="log-head-inner clearfix">
-        <li class="pull-left source">来源（组件名称）</li>
+        <li class="pull-left source">节点</li>
         <li class="pull-left time">时间</li>
-        <li class="pull-left message">详细描述</li>
-        <li class="pull-left severity">错误信息</li>
+        <li class="pull-left message">内容</li>
+        <li class="pull-left severity">分级</li>
         <li class="pull-left condition">状态</li>
       </ul>
       <div class="close-wrap" @click="close">
@@ -13,33 +13,12 @@
       </div>
     </div>
     <ul class="log-content-wrap">
-      <li class="clearfix">
-        <span class="pull-left source">优化引擎</span>
-        <span class="pull-left time">2021/3/12 09:23:02</span>
-        <span class="pull-left message">System.Exception.Error</span>
-        <span class="pull-left severity">Error</span>
-        <span class="pull-left condition">FBDONOT</span>
-      </li>
-      <li class="clearfix">
-        <span class="pull-left source">优化引擎</span>
-        <span class="pull-left time">2021/3/12 09:23:02</span>
-        <span class="pull-left message">System.Exception.Error</span>
-        <span class="pull-left severity">Error</span>
-        <span class="pull-left condition">FBDONOT</span>
-      </li>
-      <li class="clearfix">
-        <span class="pull-left source">优化引擎</span>
-        <span class="pull-left time">2021/3/12 09:23:02</span>
-        <span class="pull-left message">System.Exception.Error</span>
-        <span class="pull-left severity">Error</span>
-        <span class="pull-left condition">FBDONOT</span>
-      </li>
-      <li class="clearfix">
-        <span class="pull-left source">优化引擎</span>
-        <span class="pull-left time">2021/3/12 09:23:02</span>
-        <span class="pull-left message">System.Exception.Error</span>
-        <span class="pull-left severity">Error</span>
-        <span class="pull-left condition">FBDONOT</span>
+      <li class="clearfix" v-for="log in  $store.state.log.allLogs" :key="log.id">
+        <span class="pull-left source">{{ log.data.node }}</span>
+        <span class="pull-left time">{{ log.ftime }}</span>
+        <span class="pull-left message">{{ log.title }}</span>
+        <span class="pull-left severity">{{ log.level }}</span>
+        <span class="pull-left condition"></span>
       </li>
     </ul>
   </div>
@@ -74,13 +53,13 @@ export default {
     float: left !important;
   }
   .source {
-    width: calc( 50% - 180px );
+    width: calc( 50% - 220px );
   }
   .time {
-    width: 120px;
+    width: 200px;
   }
   .message {
-    width: calc( 50% - 100px );
+    width: calc( 50% - 140px );
   }
   .severity {
     width: 80px;
@@ -123,5 +102,6 @@ export default {
   font-size: 12px;
   color: #888;
   line-height: 28px;
+  overflow: auto;
 }
 </style>

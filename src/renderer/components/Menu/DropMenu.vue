@@ -1,7 +1,7 @@
 <template>
   <ul class="drop-menu">
     <li
-      :class="['drop-menu-item', { 'disabled' : dropItem.disabled }, {'sub': dropItem.level === 2}]"
+      :class="['drop-menu-item', {'selected': openedItem === dropItem.value} , { 'disabled' : dropItem.disabled }, {'sub': dropItem.level === 2}]"
       v-for="dropItem in datas"
       :key="dropItem.value"
       @mouseenter="menuMouseenterHandler(dropItem)"
@@ -10,7 +10,7 @@
       <span class="check-wrap">
         <span v-if="dropItem.checkable && dropItem.checked" class="rto_iconfont icon-check"></span>
       </span>
-      <span>{{ dropItem.label }}</span>
+      <span class="menu-label" :title="dropItem.level === 2? dropItem.label: ''">{{ dropItem.label }}</span>
       <span v-if="dropItem.items && dropItem.items.length>0" class="more-wrap">
         <span class="rto_iconfont icon-right-arrow"></span>
       </span>
@@ -68,18 +68,30 @@ export default {
     padding: 8px 0 8px 28px;
     position: relative;
     font-size: 14px;
+    color: initial;
     &.sub {
       width: 300px;
       padding-right: 10px;
+      .menu-label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 250px;
+        display: inline-block;
+      }
+    }
+    &.selected {
+      background-color: #f2f2f2;
+      color: #0084ff;
     }
     &.disabled {
       color: #888;
       cursor: not-allowed;
     }
-    &:not(.disabled):hover {
-      background-color: #f2f2f2;
-      color: #0084ff;
-    }
+    // &:not(.disabled):hover {
+    //   background-color: #f2f2f2;
+    //   color: #0084ff;
+    // }
     .check-wrap {
       position: absolute;
       left: 0;

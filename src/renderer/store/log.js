@@ -4,7 +4,7 @@ export default {
     allLogs: []
   },
   mutations: {
-    allLogs(state, val) {
+    allLogs(state, val=[]) {
       state.allLogs = val;
     },
   },
@@ -12,15 +12,45 @@ export default {
     connect() {
       return window.SuanpanAPI.componentLogService.connect()
     },
-    register() {
+    register({ state, commit }) {
+      commit('allLogs', []);
       window.SuanpanAPI.componentLogService.registerLogProcessor((res) => {
-        console.log('++register++', res)
+        commit('allLogs', addLogs(state.allLogs, res.logs))      
       })
     },
-    query({ rootState }) {
+    query({ state, commit }) {
+      commit('allLogs', []);
       window.SuanpanAPI.componentLogService.query().then( res => {
-        console.log('++query++', res)
+        commit('allLogs', addLogs(state.allLogs, res.logs))  
       })
     }
   }
 };
+
+function addLogs(logs, newLogs=[]) {
+  // time
+  for(let i = 0; i < newLogs.length; i++) {
+    newLogs[i].ftime = convertUTCDateToLocalDate(newLogs[i].time);
+  }
+  logs = logs.concat(newLogs);
+  // sort
+  logs.sort((a, b) => {
+    return b.id - a.id;
+  })
+  // unique
+  let n = logs.length;
+  let newLen = 0;
+  for (let i = 0; i < n; i++) {
+    if (i < n - 1 && logs[i].id == logs[i + 1].id) {
+      continue;
+    }
+    logs[newLen++] = logs[i];
+  }
+  return logs.slice(0, newLen);
+}
+
+function convertUTCDateToLocalDate(dateStr) {
+  let date = new Date(dateStr);
+  var newDate = new Date(date.getTime() - date.getTimezoneOffset()*60*1000);
+  return newDate.toLocaleString();   
+}

@@ -11,7 +11,7 @@
         @blur="menuBlurHandler"
       >
         <span>{{ menuItem.label }}</span>
-        <drop-menu v-if="openedMenu === menuItem.value" class="menu-bottom" :datas="menuItem.items"></drop-menu>
+        <drop-menu v-show="openedMenu === menuItem.value" class="menu-bottom" :datas="menuItem.items"></drop-menu>
       </li>
     </ul>
   </div>
@@ -121,8 +121,6 @@ export default {
               label: "状态栏",
               value: "view-status",
               disabled: false,
-              checkable: true,
-              checked: this.$store.state.view.logPanelVisible
             },
             {
               label: "平台窗口",
@@ -132,7 +130,9 @@ export default {
             {
               label: "报警显示",
               value: "view-alarm",
-              disabled: false
+              disabled: false,
+              checkable: true,
+              checked: this.$store.state.view.logPanelVisible
             },
             {
               label: "刷新",
@@ -261,7 +261,7 @@ export default {
     },
     '$store.state.view.logPanelVisible': {
       handler() {
-        this.menus.view.items.find( item => item.value === 'view-status').checked = this.$store.state.view.logPanelVisible;
+        this.menus.view.items.find( item => item.value === 'view-alarm').checked = this.$store.state.view.logPanelVisible;
       }
     },
   },
@@ -322,6 +322,8 @@ export default {
           this.$store.commit('view/toolbarVisible', menuItem.checked)
           break;
         case "view-status":
+          break;
+        case "view-alarm":
           menuItem.checked = !this.$store.state.view.logPanelVisible;
           this.$store.commit('view/logPanelVisible', menuItem.checked)
           break;
@@ -351,11 +353,13 @@ export default {
 
 <style lang="scss" scoped>
 .menu-list {
+  position: relative;
   display: flex;
   align-items: center;
   background: #fff;
   padding: 4px 0 4px 6px;
   height: 38px;
+  z-index: 999;
   .menu-item {
     padding: 5px 10px;
     cursor: pointer;

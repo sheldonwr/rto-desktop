@@ -72,7 +72,7 @@ storeInst.watch(
   function () {
     if(storeInst.state.file.currentAppId) {
       storeInst.dispatch('status/getStatus')
-      storeInst.dispatch('log/connect').then(() => {
+      storeInst.dispatch('log/connect').then(res => {
         storeInst.dispatch('log/register')
         storeInst.dispatch('log/query')
       })
