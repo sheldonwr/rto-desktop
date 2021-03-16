@@ -47,7 +47,13 @@ function addLogs(logs, newLogs=[]) {
     }
     logs[newLen++] = logs[i];
   }
-  return logs.slice(0, newLen);
+  logs = logs.slice(0, newLen)
+  // slice
+  const MAX_LEN = 500
+  if(logs.length > MAX_LEN) {
+    logs = logs.slice(0, MAX_LEN);
+  }
+  return logs;
 }
 
 function convertUTCDateToLocalDate(dateStr) {
