@@ -9,16 +9,20 @@
         <li class="pull-left condition">状态</li>
       </ul>
       <div class="close-wrap" @click="close">
-         <span class="rto_iconfont icon-close"></span>
+        <span class="rto_iconfont icon-close"></span>
       </div>
     </div>
     <ul class="log-content-wrap">
-      <li class="clearfix" v-for="log in  $store.state.log.allLogs" :key="log.id">
-        <span class="pull-left source">{{ log.fnode }}</span>
-        <span class="pull-left time">{{ log.ftime }}</span>
-        <span class="pull-left message">{{ log.title }}</span>
-        <span class="pull-left severity">{{ log.level }}</span>
-        <span class="pull-left condition"></span>
+      <li
+        class="clearfix"
+        v-for="log in $store.state.log.allLogs"
+        :key="log.id"
+      >
+        <span class="pull-left single-line source">{{ log.fnode }}</span>
+        <span class="pull-left single-line time">{{ log.ftime }}</span>
+        <span class="pull-left single-line message">{{ log.title }}</span>
+        <span class="pull-left single-line severity">{{ log.level }}</span>
+        <span class="pull-left single-line condition"></span>
       </li>
     </ul>
   </div>
@@ -29,16 +33,24 @@ export default {
   name: "log",
   data() {
     return {
-      allLogs: []
-    }
+      allLogs: [],
+    };
   },
   methods: {
     close() {
-      this.$store.commit('view/logPanelVisible', false)
-    }
+      this.$store.commit("view/logPanelVisible", false);
+    },
   },
 };
 </script>
+
+<style lang="scss">
+.single-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
 
 <style lang="scss" scoped>
 .rto_log {
@@ -53,13 +65,13 @@ export default {
     float: left !important;
   }
   .source {
-    width: calc( 50% - 220px );
+    width: calc(50% - 220px);
   }
   .time {
     width: 200px;
   }
   .message {
-    width: calc( 50% - 140px );
+    width: calc(50% - 140px);
   }
   .severity {
     width: 80px;
@@ -94,7 +106,7 @@ export default {
   color: #333;
   background: #f2f2f2;
   padding: 0 30px 0 12px;
-  border-top: solid 1px #dcdcdc
+  border-top: solid 1px #dcdcdc;
 }
 .log-content-wrap {
   height: 242px;
