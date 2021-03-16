@@ -94,6 +94,7 @@ export default {
   color: #333;
   background: #f2f2f2;
   padding: 0 30px 0 12px;
+  border-top: solid 1px #dcdcdc
 }
 .log-content-wrap {
   height: 242px;

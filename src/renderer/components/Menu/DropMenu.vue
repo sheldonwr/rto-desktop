@@ -10,7 +10,7 @@
       <span class="check-wrap">
         <span v-if="dropItem.checkable && dropItem.checked" class="rto_iconfont icon-check"></span>
       </span>
-      <span class="menu-label" :title="dropItem.level === 2? dropItem.label: ''">{{ dropItem.label }}</span>
+      <div class="menu-label" :title="dropItem.level === 2? dropItem.label: ''">{{ dropItem.label }}</div>
       <span v-if="dropItem.items && dropItem.items.length>0" class="more-wrap">
         <span class="rto_iconfont icon-right-arrow"></span>
       </span>
@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 .drop-menu {
   padding: 0;
-  background: #fff;
+  background: rgba(250,250,250,1.0);
   border-radius: 2px;
   .drop-menu-item {
     width: 150px;
@@ -70,14 +70,14 @@ export default {
     font-size: 14px;
     color: initial;
     &.sub {
-      width: 300px;
+      width: 350px;
       padding-right: 10px;
       .menu-label {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 250px;
-        display: inline-block;
+        width: 300px;
+        // display: inline-block;
       }
     }
     &.selected {
