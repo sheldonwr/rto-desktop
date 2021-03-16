@@ -28,7 +28,7 @@ export default {
 };
 
 function addLogs(logs, newLogs=[]) {
-  // time
+  // format
   for(let i = 0; i < newLogs.length; i++) {
     newLogs[i].ftime = convertUTCDateToLocalDate(newLogs[i].time);
     newLogs[i].fnode = getNodeLabel(newLogs[i].data.node);
