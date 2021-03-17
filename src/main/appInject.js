@@ -5,6 +5,8 @@ import fs from "fs";
 import path from "path";
 import * as configs from "../configs";
 
+let appConfig = {};
+
 export async function appInjectDev(ac) {
   protocol.interceptStringProtocol("http", async (request, callback) => {
     protocol.uninterceptProtocol("http");
@@ -12,6 +14,19 @@ export async function appInjectDev(ac) {
     let htmlStr = await getHtmlString(url.href);
     callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, ac) });
   });
+  session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
+    let url = new URL(details.url);
+    if(url.origin.startsWith('http://localhost') && 
+      (url.pathname.startsWith('/common_public') ||
+      url.pathname.startsWith('/app/dashboard/plugin') || 
+      url.pathname.startsWith('/common_static'))){
+      callback({
+        redirectURL: `${configs.RtoOrigin}${url.pathname}${url.search}`
+      })
+    }else {
+      callback({})
+    }
+  })
 }
 
 function getHtmlString(url) {
@@ -27,8 +42,6 @@ function getHtmlString(url) {
     });
   });
 }
-
-let appConfig = {};
 
 export function getAppConfig() {
   return new Promise((resolve) => {
@@ -82,7 +95,15 @@ function injectAppConfig(htmlStr, ac) {
   let acNode = parse(
     `<script>window.appConfig = ${JSON.stringify(ac)}</script>`
   );
+  let sdkCssNode = parse(
+    `<link rel="stylesheet" href="${configs.RtoOrigin + ac.suanpanSdkCSSPath}">`
+  );
+  let sdkNode = parse(
+    `<script type="text/javascript" src="${configs.RtoOrigin + ac.suanpanSdkPath}"></script>`
+  );
   root.querySelector("head").appendChild(acNode);
+  root.querySelector("head").appendChild(sdkCssNode);
+  root.querySelector("body").appendChild(sdkNode);
   return root.toString();
 }
 

@@ -69,7 +69,16 @@
     <!-- <div class="page-loading">
   <img src="https://www.xuelangyun.com/static/log123100.gif" alt="loading" />
 </div> -->
-
+    <script>
+      function async_load(src, callback) {
+        var scriptElement = document.createElement("script");
+        scriptElement.type = "text/javascript";
+        scriptElement.async = true;
+        scriptElement.src = src;
+        document.body.appendChild(scriptElement);
+        scriptElement.addEventListener("load", callback);
+      }
+    </script>
     <script src="<%= BASE_URL %>assets/web/js/lib-302dcc8f15.js"></script>
 
     <script src="<%= BASE_URL %>assets/web/js/element.js"></script>
