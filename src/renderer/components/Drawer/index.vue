@@ -36,6 +36,7 @@ export default {
       this.$store.commit('drawer/changeDrawerVisible', false);
       this.$store.commit('drawer/changeIsModelAlgoManage', false);
       this.$store.commit('ci/updatePagination', { current: 1 });
+      this.$store.commit('drawer/changeIframURL', '');
     },
   }, 
 };

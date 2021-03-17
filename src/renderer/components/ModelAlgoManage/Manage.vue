@@ -55,6 +55,7 @@
           :key="item.key"
           :label="index === 0 ? '基本参数' : ''"
           prop="prop"
+          :style="index === 0 && 'margin-bottom: 0'"
         >
           <a-input
             v-model="item.label"
@@ -66,11 +67,11 @@
           />
           <a-select class="select_type" v-model="item.type" placeholder="类型">
             <a-select-option value="string">string</a-select-option>
-            <a-select-option value="int">int</a-select-option>
+            <a-select-option value="number">number</a-select-option>
             <a-select-option value="array">array</a-select-option>
           </a-select>
           <a-input-number
-            v-if="item.type === 'int'"
+            v-if="item.type === 'number'"
             v-model="item.value"
             placeholder="默认值"
           />
@@ -98,6 +99,7 @@
           :key="item.key"
           :label="index === 0 ? '参数配置' : ''"
           prop="param"
+          :style="index === 0 && 'margin-bottom: 0'"
         >
           <a-input
             v-model="item.label"
@@ -109,11 +111,11 @@
           />
           <a-select class="select_type" v-model="item.type" placeholder="类型">
             <a-select-option value="string">string</a-select-option>
-            <a-select-option value="int">int</a-select-option>
+            <a-select-option value="number">number</a-select-option>
             <a-select-option value="array">array</a-select-option>
           </a-select>
           <a-input-number
-            v-if="item.type === 'int'"
+            v-if="item.type === 'number'"
             v-model="item.defaultValue"
             placeholder="初始值"
           />
@@ -322,7 +324,11 @@ export default {
       padding-top: 10px;
 
       .ant-form-item {
-        margin-bottom: 0;
+        margin-bottom: 0px;
+      }
+
+      .prop, .param {
+        margin-bottom: 10px;
       }
 
       .prop .ant-form-item-children, .param .ant-form-item-children {
