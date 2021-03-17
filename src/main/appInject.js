@@ -103,16 +103,17 @@ export function setAppConfig(ac) {
   appConfig = ac;
 }
 
-function injectAppConfig(htmlStr, ac) {
+function injectAppConfig(htmlStr, ac, isProd=false) {
   const root = parse(htmlStr);
   let acNode = parse(
     `<script>window.appConfig = ${JSON.stringify(ac)}</script>`
   );
+  let origin = isProd ? 'app://.' : configs.RtoOrigin;
   let sdkCssNode = parse(
-    `<link rel="stylesheet" href="${configs.RtoOrigin + ac.suanpanSdkCSSPath}">`
+    `<link rel="stylesheet" href="${origin + ac.suanpanSdkCSSPath}">`
   );
   let sdkNode = parse(
-    `<script type="text/javascript" src="${configs.RtoOrigin + ac.suanpanSdkPath}"></script>`
+    `<script type="text/javascript" src="${origin + ac.suanpanSdkPath}"></script>`
   );
   root.querySelector("head").appendChild(acNode);
   root.querySelector("head").appendChild(sdkCssNode);
@@ -131,8 +132,8 @@ export function appInjectProd() {
         url.pathname.startsWith('/app/dashboard/plugin') ||
         url.pathname.startsWith('/common_static')) {
           // inject suanpan sdk
-          log.debug('+++', url)
         let urlContent = await getUrlContent(`${configs.RtoOrigin}${url.pathname}${url.search}`);
+          // log.debug('+++', urlContent)
         const extension = path.extname(pathName).toLowerCase();
         if (extension === ".js") {
           mimeType = "text/javascript";
@@ -156,7 +157,7 @@ export function appInjectProd() {
             } else if (extension === ".html") {
               mimeType = "text/html";
               if (pathName === "/index.html") {
-                data = Buffer.from(injectAppConfig(data.toString(), appConfig));
+                data = Buffer.from(injectAppConfig(data.toString(), appConfig, true));
               }
             } else if (extension === ".css") {
               mimeType = "text/css";
@@ -173,7 +174,7 @@ export function appInjectProd() {
     },
     (error) => {
       if (error) {
-        console.error(`Failed to register app protocol`, error);
+        log.error(`Failed to register app protocol`, error);
       }
     }
   );
