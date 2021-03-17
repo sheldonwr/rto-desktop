@@ -129,11 +129,11 @@ export function appInjectProd() {
       
       let pathName = url.pathname;
       if(url.pathname.startsWith('/common_public') ||
-        url.pathname.startsWith('/app/dashboard/plugin') ||
-        url.pathname.startsWith('/common_static')) {
-          // inject suanpan sdk
+      url.pathname.startsWith('/app/dashboard/plugin') ||
+      url.pathname.startsWith('/common_static')) {
+        // inject suanpan sdk
+        log.debug('++++++', `${configs.RtoOrigin}${url.pathname}${url.search}`)
         let urlContent = await getUrlContent(`${configs.RtoOrigin}${url.pathname}${url.search}`);
-          // log.debug('+++', urlContent)
         const extension = path.extname(pathName).toLowerCase();
         if (extension === ".js") {
           mimeType = "text/javascript";
