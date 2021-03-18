@@ -79,7 +79,9 @@ export default {
           })
         }else if(id === 1) {
           // do not save
-          dispatch('importDialog', fullpath)
+          dispatch('delete').then( () => {
+            dispatch('importDialog', fullpath)
+          })
         }else if(id === 2) {
           // cancel
         }
@@ -187,20 +189,38 @@ export default {
         }else if(id === 1) {
           // do not save
           this.dispatch('showLoading', { opacity: false});
-          return createEmpty().then(res => {
-            gotoPredict(res.id).then( () => {
-              commit("currentAppId", res.id);
-              commit("currentOpenedPath", null);
+          dispatch('delete').then( () => {
+            return createEmpty().then(res => {
+              gotoPredict(res.id).then( () => {
+                commit("currentAppId", res.id);
+                commit("currentOpenedPath", null);
+                this.dispatch('closeLoading');
+              })
+            }).catch((err) => {
+              console.error(err);
               this.dispatch('closeLoading');
-            })
-          }).catch((err) => {
-            console.error(err);
-            this.dispatch('closeLoading');
-          });
+            });
+          })
         }else if(id === 2) {
           // cancel
         }
       })
     },
+    delete({state, commit, dispatch}, showLoading=false) {
+      if(showLoading) {
+        this.dispatch('showLoading',{ opacity: false, msg: '关闭中...'});
+      }
+      return deleteApp(state.currentAppId).then( () => {
+        commit("currentAppId", null);
+        if(showLoading) {
+          this.dispatch('closeLoading');
+        }
+      }).catch( err => {
+        console.error(err)
+        if(showLoading) {
+          this.dispatch('closeLoading');
+        }
+      });
+    }
   },
 };

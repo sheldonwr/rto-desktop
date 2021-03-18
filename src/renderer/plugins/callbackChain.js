@@ -39,7 +39,9 @@ export default {
           store.dispatch('file/save', true).then(cb);
         }else if(res === 1) {
           // 不保存
-          cb();
+          store.dispatch('file/delete', true).finally( () => {
+            cb();
+          });
         }else if(res === 2) {
           // 取消
         }
