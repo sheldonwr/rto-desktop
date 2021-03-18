@@ -55,7 +55,7 @@ export default {
             {
               label: "关闭",
               value: "file-close",
-              disabled: false
+              disabled: true
             },
             {
               label: "终止",
@@ -102,7 +102,7 @@ export default {
             {
               label: "切换功能块状态",
               value: "edit-switchStatus",
-              disabled: false
+              disabled: true
             },
           ],
         },
@@ -120,12 +120,12 @@ export default {
             {
               label: "状态栏",
               value: "view-status",
-              disabled: false,
+              disabled: true,
             },
             {
               label: "平台窗口",
               value: "view-platform",
-              disabled: false
+              disabled: true
             },
             {
               label: "报警显示",
@@ -137,27 +137,27 @@ export default {
             {
               label: "刷新",
               value: "view-refresh",
-              disabled: false
+              disabled: true
             },
             {
               label: "设置",
               value: "view-setting",
-              disabled: false
+              disabled: true
             },
             {
               label: "事件日志",
               value: "view-log",
-              disabled: false
+              disabled: true
             },
             {
               label: "显示说明",
               value: "view-description",
-              disabled: false
+              disabled: true
             },
             {
               label: "溯源",
               value: "view-origin",
-              disabled: false
+              disabled: true
             },
           ],
         },
@@ -168,17 +168,17 @@ export default {
             {
               label: "连接",
               value: "action-connection",
-              disabled: false
+              disabled: true
             },
             {
               label: "路径",
               value: "edit-path",
-              disabled: false
+              disabled: true
             },
             {
               label: "更新",
               value: "edit-update",
-              disabled: false
+              disabled: true
             },
           ],
         },
@@ -189,17 +189,17 @@ export default {
             {
               label: "未注册",
               value: "tools-notRegister",
-              disabled: false
+              disabled: true
             },
             {
               label: "更新URT服务账户",
               value: "tools-urt",
-              disabled: false
+              disabled: true
             },
             {
               label: "管理组",
               value: "tools-manage",
-              disabled: false
+              disabled: true
             },
             {
               label: "模型管理",
@@ -220,12 +220,12 @@ export default {
             {
               label: "URT用户帮助",
               value: "help-urt",
-              disabled: false
+              disabled: true
             },
             {
               label: "关于UrtExplorer",
               value: "help-about",
-              disabled: false
+              disabled: true
             },
           ],
         },
