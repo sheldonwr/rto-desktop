@@ -25,6 +25,7 @@ export default {
       if(state.selectedNode) {
         let copied =  window.SuanpanAPI.nodeService.copyNode(state.selectedNode.id);
         commit('copiedNodeObj', copied);
+        this.dispatch('showMessage', { type: 'success', msg: '复制成功'});
       }
     },
     pasteNode({ state }) {

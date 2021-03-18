@@ -7,12 +7,12 @@ ipcMain.handle('window-getMaximize', async (event, opt) => {
   return BrowserWindow.getFocusedWindow().isMaximized();
 })
 
-function minimize() {
-  BrowserWindow.getFocusedWindow().minimize();
+function minimize(event) {
+  BrowserWindow.fromId(event.sender.id).minimize();
 }
 
-function maximize() {
-  let win = BrowserWindow.getFocusedWindow();
+function maximize(event) {
+  let win = BrowserWindow.fromId(event.sender.id);
   if (win.isMaximized()) {
     win.restore();
   } else {
@@ -24,7 +24,7 @@ function closeWindow(event) {
   // let win = BrowserWindow.getFocusedWindow();
   // event.preventDefault();
   // win.hide();
-  let win = BrowserWindow.getFocusedWindow();
+  let win = BrowserWindow.fromId(event.sender.id);
   win.destroy();
   app.quit();
 }

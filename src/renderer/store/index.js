@@ -55,6 +55,19 @@ export default {
         top: '24px'
       }, opts);
       this._vm.$notification[option.type](option);
+    },
+    showMessage({ state }, opts) {
+      if(typeof opts === 'string') {
+        opts = {
+          message: opts
+        }
+      }
+      let option = Object.assign({
+        type: 'error',
+        duration: 3,
+        msg: '',
+      }, opts);
+      this._vm.$message[option.type](option.msg, option.duration);
     }
   }
 };

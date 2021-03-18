@@ -135,6 +135,8 @@ export default {
             this.dispatch('showNotify', '保存失败');
             throw err;
           });
+        }else {
+          throw new Error('save dialog cancel')
         }
       });  
     },
