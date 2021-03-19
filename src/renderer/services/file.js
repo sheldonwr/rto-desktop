@@ -4,16 +4,16 @@ import { getFileNameAndExt } from "utils/index";
 /**
  * 新建一个空项目
  */
-export function createEmpty() {
+export function createApp(name) {
   return window.appService.create(
-    "tmp",
+    name,
     window.appConfig.defaultAppFolder,
     "predict"
   );
 }
 
 /**
- * 打开项目
+ * 导入项目
  */
 export function openFile(fullpath) {
   return invoke('file-load', fullpath).then((fileBuffer) => {
@@ -94,7 +94,7 @@ function getDownloadUrl(appId) {
 }
 
 /**
- * 保存文件
+ * 导出项目
  */
 export function saveFile(appId, fullpath) {
   return getDownloadUrl(appId).then( downloadUrl => {
@@ -102,11 +102,36 @@ export function saveFile(appId, fullpath) {
   })
 }
 
+/**
+ * 保存sp文件
+ */
+export function saveSpFile(appId, fullpath) {
+  return invoke('file-save-content', fullpath, JSON.stringify({
+    id: appId
+  }));
+}
+
+/**
+ * 读取sp文件
+ */
+export function readSpFile(fullpath) {
+  return invoke('file-read', fullpath).then( data => {
+    try {
+      let appid = JSON.parse(data).id;
+      if(appid) {
+        return appid
+      }else {
+        throw new Error('sp file content not valid')
+      }
+    } catch (error) {
+      throw new Error('sp file content not valid')
+    }
+  })
+}
 
 /**
  * 删除项目
  */
-
 export function deleteApp(appId) {
   return window.SuanpanAPI.appService.del(appId)
 }

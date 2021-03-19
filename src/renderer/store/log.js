@@ -13,13 +13,11 @@ export default {
       return window.SuanpanAPI.componentLogService.connect()
     },
     register({ state, commit }) {
-      commit('allLogs', []);
       window.SuanpanAPI.componentLogService.registerLogProcessor((res) => {
         commit('allLogs', addLogs(state.allLogs, res.logs))      
       })
     },
     query({ state, commit }) {
-      commit('allLogs', []);
       window.SuanpanAPI.componentLogService.query().then( res => {
         commit('allLogs', addLogs(state.allLogs, res.logs))  
       })

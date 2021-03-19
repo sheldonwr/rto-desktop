@@ -29,3 +29,11 @@ export const isDevelopment = process.env.NODE_ENV !== "production"
       ? path.join(process.resourcesPath, "assets")
       : path.join(".", "src", "main", "assets")
   );
+
+export const configPath = path.resolve(
+    !isDevelopment
+      ? path.join(process.resourcesPath, "config.ini")
+      : path.join("../../config.ini")
+  );
+
+export const idCachePath = path.join(app.getPath('userData'), './ids');

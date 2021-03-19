@@ -84,7 +84,6 @@ export default {
           this.loading = true
           window.ipcRenderer.invoke('config-app').then ( (res) => {
             window.ipcRenderer.invoke('config-set', this.config).finally( () => {
-              this.loading = false
               window.ipcRenderer.send('splash-over')
             })
           }).catch( err => {

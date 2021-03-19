@@ -4,6 +4,7 @@
     <menu-view></menu-view>
     <tool-bar v-show="$store.state.view.toolbarVisible"></tool-bar>
     <drawer></drawer>
+    <wizard></wizard>
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import TopHeader from "components/Header";
 import MenuView from "components/Menu/index";
 import ToolBar from "components/Toolbar";
 import Drawer from "components/Drawer";
+import Wizard from "components/Wizard";
 
 export default {
   name: 'App',
@@ -19,7 +21,8 @@ export default {
     TopHeader,
     MenuView,
     ToolBar,
-    Drawer
+    Drawer,
+    Wizard
   },
   mounted() {
     this.updateAppHeight();

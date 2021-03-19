@@ -8,7 +8,6 @@ import App from './App.vue';
 import LogApp from './LogApp.vue';
 import store from "./store";
 import Loading from "components/Loading"
-import CallbackChain from './plugins/callbackChain'
 
 Vue.config.productionTip = false;
 Vue.use(Vuex);
@@ -16,8 +15,6 @@ Vue.use(Antd);
 Vue.prototype.$loading = Loading;
 
 const storeInst = new Vuex.Store(store)
-
-Vue.use(CallbackChain, {store: storeInst});
 
 new Vue({
   store: storeInst,
@@ -62,9 +59,6 @@ window.addEventListener('load', () => {
   })
 });
 
-
-// 加载app
-storeInst.dispatch('file/startApp')
 storeInst.watch(
   function (state) {
       return state.file.currentAppId;
@@ -72,6 +66,7 @@ storeInst.watch(
   function () {
     if(storeInst.state.file.currentAppId) {
       storeInst.dispatch('status/getStatus')
+      storeInst.commit('log/allLogs', [])
       storeInst.dispatch('log/connect').then(res => {
         storeInst.dispatch('log/register')
         storeInst.dispatch('log/query')

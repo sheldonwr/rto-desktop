@@ -1,8 +1,7 @@
 import fs from "fs";
-import path from "path";
 import ini from "ini";
 import { ipcMain } from "electron";
-import { isDevelopment } from "../mainconfig";
+import { configPath } from "../mainconfig";
 import { getUrlContent } from "../utils";
 
 let config = {
@@ -11,12 +10,6 @@ let config = {
 };
 
 export let appConfig = {};
-
-const configPath = path.resolve(
-  !isDevelopment
-    ? path.join(process.resourcesPath, "config.ini")
-    : path.join("../../../config.ini")
-);
 
 ipcMain.handle("config-get", getConfig);
 ipcMain.handle("config-set", setConfig);

@@ -288,7 +288,7 @@ export default {
       if(menuItemId.indexOf('file-recent') === 0) {
         let arr = menuItemId.split('-');
         let idx = parseInt(arr[arr.length - 1]);
-        this.$store.dispatch('file/openDialog', this.recentPaths[idx].label);
+        this.$store.dispatch('file/openFile', this.recentPaths[idx].label);
       }
       switch(menuItemId) {
         case "file-new":
@@ -297,7 +297,7 @@ export default {
           break;
         case "file-open":
           // 打开
-          this.$store.dispatch('file/openDialog')
+          this.$store.dispatch('file/open')
           break;
         case "file-save":
           // 保存

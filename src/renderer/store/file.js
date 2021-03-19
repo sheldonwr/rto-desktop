@@ -1,6 +1,6 @@
 import { invoke, gotoPredict } from "../services";
-import { createEmpty, openFile, saveFile, deleteApp} from "services/file"
-import { uniqueArray } from "utils/"
+import { createApp, deleteApp, saveSpFile, readSpFile} from "services/file"
+import { uniqueArray, getFileNameAndExt } from "utils/"
 
 export default {
   namespaced: true,
@@ -11,7 +11,7 @@ export default {
   },
   getters: {
     title(state) {
-      return state.currentOpenedPath ? state.currentOpenedPath : '临时文件';
+      return state.currentOpenedPath ? state.currentOpenedPath : '';
     }
   },
   mutations: {
@@ -34,176 +34,54 @@ export default {
     }
   },
   actions: {
-    startApp({ state, commit, dispatch }) {
-      this.dispatch('showLoading');
-      window.addEventListener('load', () => {
-        let firstId = window.SuanpanAPI.eventService.on('sp:transition:success', (event, data) => {
-          window.SuanpanAPI.eventService.off(firstId)
-          if (state.currentOpenedPath) {
-            // open last file
-            openFile(state.currentOpenedPath).then( res => {
-              gotoPredict(res.appId).then( () => {
-                commit("currentAppId", res.appId);
-                this.dispatch('closeLoading');
-              })
-            }).catch(err => {
-              console.error(err);
-              this.dispatch('closeLoading');
-              this.dispatch('showNotify', `打开文件${state.currentOpenedPath}失败`);
-            })
-          } else {
-            // create an empty app
-            createEmpty().then(res => {
-              gotoPredict(res.id).then( () => {
-                commit("currentAppId", res.id);
-                commit("currentOpenedPath", null);
-                this.dispatch('closeLoading');
-              })
-            }).catch((err) => {
-              this.dispatch('closeLoading');
-              console.error(err);
-            });
-          }
-        });
-      })
-    },
-    openDialog({ state, commit, dispatch }, fullpath) {
-      if(fullpath && (fullpath === state.currentOpenedPath)) {
-        return;
-      }
-      dispatch('messageDialog').then( id => {
-        if(id === 0) {
-          // save
-          dispatch('save', true).then(() => {
-            dispatch('importDialog', fullpath)
-          })
-        }else if(id === 1) {
-          // do not save
-          dispatch('delete').then( () => {
-            dispatch('importDialog', fullpath)
-          })
-        }else if(id === 2) {
-          // cancel
+    open({ state, commit, dispatch }) {
+      return invoke("file-open").then( filePath => {
+        if(!filePath) {
+          throw new Error('file not selected')
         }
-      })
-    },
-    importDialog({ state, commit, dispatch }, fullpath) {
-      if(fullpath){
-        dispatch('openFile', fullpath)
-      }else {
-        invoke("file-open").then( filePath => {
-          if(filePath) {
-            dispatch('openFile', filePath)
-          }
-        });
-      }
+        return dispatch('openFile', filePath)
+      });
     },
     openFile({ state, commit, dispatch }, filePath) {
-      this.dispatch('showLoading', { opacity: false, msg: '打开中...'});
-        openFile(filePath).then( res => {
-          gotoPredict(res.appId).then( () => {
-            commit("currentAppId", res.appId);
-            commit("currentOpenedPath", filePath);
-            this.dispatch('closeLoading');
-          })
-          this.dispatch('closeLoading');
-        }).catch(err => {
-          console.error(err);
-          this.dispatch('closeLoading');
-          this.dispatch('showNotify', `打开文件${filePath}失败`);
-        })
-    },
-    saveDialog({ state, commit }, {savePath=true, isDelete=false}={}) {
-      return invoke("file-save-dialog").then(filePath => {
-        if(filePath) {
-          this.dispatch('showLoading', { opacity: false, msg: '保存中...'});
-          return saveFile(state.currentAppId, filePath).then(res => {
-            if(savePath) {
-              commit("currentOpenedPath", filePath);
-            }
-            if(isDelete) {
-              return deleteApp(state.currentAppId).then( () => {
-                commit("currentAppId", null);
-                this.dispatch('closeLoading');
-                this.dispatch('showNotify', {type: 'success', message: '保存成功'});
-              })
-            }else {
-              this.dispatch('closeLoading');
-              this.dispatch('showNotify', {type: 'success', message: '保存成功'});
-            }
-          }).catch(err => {
-            console.error(err);
-            this.dispatch('closeLoading');
-            this.dispatch('showNotify', '保存失败');
-            throw err;
-          });
-        }else {
-          throw new Error('save dialog cancel')
-        }
-      });  
-    },
-    save({ state, commit, dispatch }, isDelete=false) {
-      if(state.currentOpenedPath) {
-        this.dispatch('showLoading', { opacity: false, msg: '保存中...'});
-        return saveFile(state.currentAppId, state.currentOpenedPath).then(res => {
-          if(isDelete) {
-            return deleteApp(state.currentAppId).then( () => {
-              commit("currentAppId", null);
-              this.dispatch('closeLoading');
-              this.dispatch('showNotify', {type: 'success', message: '保存成功'});
-            })
-          }else {
-            this.dispatch('closeLoading');
-            this.dispatch('showNotify', {type: 'success', message: '保存成功'});
-          }
-        }).catch(err => {
-          console.error(err);
-          this.dispatch('closeLoading');
-          this.dispatch('showNotify', '保存失败');
-          throw err;
-        });
-      }else {
-        return dispatch('saveDialog', { savePath:true, isDelete: isDelete });
+      if(filePath === state.currentOpenedPath) {
+        return
       }
+      return readSpFile(filePath).then( appId => {
+        return gotoPredict(appId).then( () => {
+          commit("currentAppId", appId);
+          commit("currentOpenedPath", filePath);
+        });
+      })
     },
-    saveAs({ dispatch }) {
-      dispatch('saveDialog', { savePath:false });
+    save({ state, commit, dispatch }) {
+      this.dispatch('showMessage', { type: 'success', msg: '保存成功'})
     },
-    messageDialog() {
-      return invoke("file-message-dialog")
+    saveAs({ state, dispatch }) {
+      return invoke("file-save-dialog", '另存为').then(filePath => {
+        if(!filePath) {
+          throw new Error('file not selected')
+        }
+        return saveSpFile(state.currentAppId, filePath).then( () => {
+          this.dispatch('showMessage', { type: 'success', msg: '另存为成功'})
+        });
+      })
     },
     create({ state, commit, dispatch }) {
-      dispatch('messageDialog').then( id => {
-        if(id === 0) {
-          // save
-          dispatch('save', true).then(() => {
-            return createEmpty().then(res => {
-              gotoPredict(res.id).then( () => {
-                commit("currentAppId", res.id);
-                commit("currentOpenedPath", null);
-              })
-            }).catch((err) => {
-              console.error(err);
-            });
-          })
-        }else if(id === 1) {
-          // do not save
-          this.dispatch('showLoading', { opacity: false});
-          dispatch('delete').then( () => {
-            return createEmpty().then(res => {
-              gotoPredict(res.id).then( () => {
-                commit("currentAppId", res.id);
-                commit("currentOpenedPath", null);
-                this.dispatch('closeLoading');
-              })
-            }).catch((err) => {
-              console.error(err);
-              this.dispatch('closeLoading');
-            });
-          })
-        }else if(id === 2) {
-          // cancel
+      return invoke("file-save-dialog", '新建').then( filePath => {
+        if(!filePath) {
+          throw new Error('not select saved path')
         }
+        let { name } = getFileNameAndExt(filePath);
+        return createApp(name).then( res => {
+          return saveSpFile(res.id, filePath).then( () => {
+            return gotoPredict(res.id).then( () => {
+              commit("currentAppId", res.id);
+              commit("currentOpenedPath", filePath);
+            });
+          });
+        }).catch( err => {
+          console.error(err);
+        });
       })
     },
     delete({state, commit, dispatch}, showLoading=false) {

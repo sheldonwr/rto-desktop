@@ -68,7 +68,7 @@ export default {
       if(id === 'file-new') {
         this.$store.dispatch('file/create')
       }else if(id === 'file-open') {
-        this.$store.dispatch('file/openDialog')
+        this.$store.dispatch('file/open')
       }else if(id === 'file-save') {
         this.$store.dispatch('file/save')
       }else if(id === 'file-saveAs') {

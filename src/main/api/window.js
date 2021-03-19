@@ -7,16 +7,32 @@ ipcMain.handle('window-getMaximize', async (event, opt) => {
   return BrowserWindow.getFocusedWindow().isMaximized();
 })
 
+function getMainWindow() {
+  let wins = BrowserWindow.getAllWindows()
+  if(wins && wins.length > 0) {
+    return wins.reduce(function (p, v) {
+      return ( p.id < v.id ? p : v );
+    });
+  }
+  return null;
+}
+
 function minimize(event) {
-  BrowserWindow.fromId(event.sender.id).minimize();
+  let win = null
+  if(win = getMainWindow()) {
+    win.minimize();
+  }
+  // BrowserWindow.fromId(event.sender.id).minimize();
 }
 
 function maximize(event) {
-  let win = BrowserWindow.fromId(event.sender.id);
-  if (win.isMaximized()) {
-    win.restore();
-  } else {
-    win.maximize();
+  let win = null
+  if(win = getMainWindow()) {
+    if (win.isMaximized()) {
+      win.restore();
+    } else {
+      win.maximize();
+    }
   }
 }
 
@@ -24,7 +40,9 @@ function closeWindow(event) {
   // let win = BrowserWindow.getFocusedWindow();
   // event.preventDefault();
   // win.hide();
-  let win = BrowserWindow.fromId(event.sender.id);
-  win.destroy();
-  app.quit();
+  let win = null
+  if(win = getMainWindow()) {
+    win.destroy();
+    app.quit();
+  }
 }

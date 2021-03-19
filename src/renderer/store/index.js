@@ -22,11 +22,15 @@ export default {
     log
   },
   state: {
-    selectedNode: null
+    selectedNode: null,
+    wizardVisible: true
   },
   mutations: {
     selectedNode(state, val) {
       state.selectedNode = val;
+    },
+    wizardVisible(state, val) {
+      state.wizardVisible = val;
     }
   },
   actions: {
