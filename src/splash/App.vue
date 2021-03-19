@@ -6,19 +6,19 @@
     </div>
     <div class="form-wrap">
       <a-form-model
-        ref="ruleForm"
-        :model="ruleForm"
+        ref="config"
+        :model="config"
         :rules="rules"
         v-bind="layout"
       >
-        <a-form-model-item has-feedback label="host" prop="host">
-          <a-input addon-before="http://" v-model="ruleForm.host" />
+        <a-form-model-item label="host" prop="host">
+          <a-input v-model="config.host" />
         </a-form-model-item>
-        <a-form-model-item has-feedback label="port" prop="port">
-          <a-input-number v-model="ruleForm.port" :min="0" :max="65535" />
+        <a-form-model-item label="port" prop="port">
+          <a-input-number v-model="config.port" :min="0" :max="65535" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
-          <a-button type="primary" @click="submitForm('ruleForm')">
+          <a-button type="primary" @click="submitForm('config')">
             连接
           </a-button>
         </a-form-model-item>
@@ -47,7 +47,7 @@ export default {
       }
     };
     return {
-      ruleForm: {
+      config: {
         host: '',
         port: '',
       },
@@ -65,17 +65,32 @@ export default {
         labelCol: { span: 6 },
         wrapperCol: { span: 14 },
       },
-      loading: false
+      loading: true
     }
+  },
+  created() {
+    window.ipcRenderer.invoke('config-get').then( config => {
+      this.config = config
+      this.loading = false
+    })
   },
   components: {},
   mounted() {
-    // window.ipcRenderer.send('splash-start')
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.loading = true
+          window.ipcRenderer.invoke('config-app').then ( (res) => {
+            window.ipcRenderer.invoke('config-set', this.config).finally( () => {
+              this.loading = false
+              window.ipcRenderer.send('splash-over')
+            })
+          }).catch( err => {
+            this.$message.error("连接失败");
+            this.loading = false
+          })
         } else {
           return false;
         }

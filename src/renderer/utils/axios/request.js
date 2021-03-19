@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { notification } from 'ant-design-vue';
-import * as configs from '@/configs'
 
 const service = axios.create({
-  baseURL: configs.RtoOrigin,
+  baseURL: window.appConfig.RtoOrigin,
   timeout: 3 * 1000
 });
 

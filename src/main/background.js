@@ -5,7 +5,7 @@ import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "ele
 import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { getAppConfig, setAppConfig, appInjectDev, appInjectProd, interceptUrl } from "./appInject";
+import { appInjectDev, appInjectProd, interceptUrl } from "./appInject";
 import * as mainconfigs from "./mainconfig";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -155,12 +155,9 @@ app.on("ready", async () => {
   if(!isDevelopment) {
     appInjectProd();
   }
-  ipcMain.on('splash-start', async () => {
-    let appConfig = await getAppConfig();
-    if (!isDevelopment) {
-      setAppConfig(appConfig);
-    } else {
-      await appInjectDev(appConfig);
+  ipcMain.on('splash-over', async () => {
+    if (isDevelopment) {
+      await appInjectDev();
     }
     createWindow();
   // createTray()

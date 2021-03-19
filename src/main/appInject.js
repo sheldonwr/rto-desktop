@@ -3,14 +3,14 @@ import http from "http";
 import { parse } from "node-html-parser";
 import fs from "fs";
 import path from "path";
-import * as configs from "../configs";
+import { appConfig } from "./api/config"
 
-export async function appInjectDev(ac) {
+export async function appInjectDev() {
   protocol.interceptStringProtocol("http", async (request, callback) => {
     protocol.uninterceptProtocol("http");
     let url = new URL(request.url);
     let htmlStr = await getHtmlString(url.href);
-    callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, ac) });
+    callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, appConfig) });
   });
 }
 
@@ -26,55 +26,6 @@ function getHtmlString(url) {
       });
     });
   });
-}
-
-let appConfig = {};
-
-export function getAppConfig() {
-  return new Promise((resolve) => {
-    const req = http.request(
-      `${configs.RtoOrigin}/app/config`,
-      {
-        method: "POST",
-      },
-      (res) => {
-        let data = "";
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
-        res.on("end", () => {
-          resolve(convert2Appconfig((JSON.parse(data)).data))
-        });
-      }
-    );
-    req.end();
-  });
-}
-
-function convert2Appconfig(obj) {
-  const ac = Object.assign(
-    {
-      ...obj,
-      oss: {
-        bucket: obj.osBucket,
-        endpoint: obj.ossEndpoint,
-        ossAccessKey: obj.ossAccessKey,
-        ossAccessSecret: obj.ossAccessSecret,
-      },
-    },
-    {
-      redirectRequest: configs.RtoOrigin,
-      suanpanWebHost: configs.RtoOrigin
-    }
-  );
-  ac.defaultDirs = JSON.parse(ac.defaultDirs);
-  ac.appMenu = JSON.parse(ac.appMenu);
-  ac.services = JSON.parse(ac.services);
-  return ac;
-}
-
-export function setAppConfig(ac) {
-  appConfig = ac;
 }
 
 function injectAppConfig(htmlStr, ac) {
@@ -136,5 +87,5 @@ export function interceptUrl(url) {
   if(startIdx === -1) {
     return url;
   }
-  return path.join(configs.RtoOrigin, url.slice(startIdx));
+  return path.join(appConfig.RtoOrigin, url.slice(startIdx));
 }
