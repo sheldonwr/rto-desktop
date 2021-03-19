@@ -1,6 +1,6 @@
 <template>
     <div v-if="$store.state.wizardVisible" class="wizard-wrap">
-      <a-spin :spinning="loading">
+      <!-- <a-spin :spinning="loading"> -->
       <a-page-header title="项目列表">
         <template slot="extra">
           <a-button type="primary" @click="createApp">
@@ -26,7 +26,7 @@
           </a-col>
         </a-row> -->
       </a-page-header>
-  </a-spin>
+  <!-- </a-spin> -->
     </div>
 </template>
 
