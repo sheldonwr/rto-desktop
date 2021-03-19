@@ -29,7 +29,7 @@ export default {
   },
   created() {
     window.ipcRenderer.on('window-close', () => {
-      this.$callbackChain.exec('close');
+      this.$store.dispatch('window/closeWindow');
     })
   },
   methods: {
@@ -39,7 +39,7 @@ export default {
       }else if(type === 'maximize') {
         this.$store.dispatch('window/maximizeWindow');
       }else if(type === 'close') {
-        this.$callbackChain.exec('close');
+        this.$store.dispatch('window/closeWindow')
       }
     }
   }

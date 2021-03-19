@@ -192,7 +192,7 @@ export default {
               disabled: true
             },
             {
-              label: "更新URT服务账户",
+              label: "更新RTO服务账户",
               value: "tools-urt",
               disabled: true
             },
@@ -219,11 +219,11 @@ export default {
           items: [
             {
               label: "URT用户帮助",
-              value: "help-urt",
+              value: "help-rto",
               disabled: true
             },
             {
-              label: "关于UrtExplorer",
+              label: "关于RTOExplorer",
               value: "help-about",
               disabled: true
             },
@@ -308,7 +308,7 @@ export default {
           this.$store.dispatch('file/saveAs')
           break;
         case "file-quit":
-          this.$callbackChain.exec('close');
+          this.$store.dispatch('window/closeWindow')
           break;
         case "edit-cut":
           this.$store.dispatch('edit/cutNode');
