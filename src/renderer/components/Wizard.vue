@@ -7,7 +7,7 @@
             新建
           </a-button>
         </template>
-        <p>暂无项目</p>
+        <p v-if="appList.length === 0">暂无项目</p>
         <!-- <a-row :gutter="16">
           <a-col :span="6">
             <a-card title="Card title" :bordered="true">
@@ -36,7 +36,8 @@ import { invoke } from "services/";
 export default {
   data() {
     return {
-      loading: false
+      loading: false,
+      appList: []
     }
   },
   created() {
