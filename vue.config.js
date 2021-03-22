@@ -27,8 +27,7 @@ module.exports = {
             from: "./src/main/assets/",
             to: "assets",
             filter: ["**/*"]
-          },
-          "./config.ini"
+          }
         ]
       }
     },

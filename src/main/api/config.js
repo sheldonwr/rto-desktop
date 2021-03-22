@@ -5,7 +5,8 @@ import { configPath } from "../mainconfig";
 import { getUrlContent } from "../utils";
 
 let config = {
-  host: "http://58.215.216.238",
+  protocol: 'http',
+  host: "58.215.216.238",
   port: "48000",
 };
 
@@ -38,7 +39,7 @@ function setConfig(event, obj) {
 
 function getAppConfig() {
   return new Promise((resolve, reject) => {
-    getUrlContent(`${config.host}:${config.port}/app/config`, "POST").then(
+    getUrlContent(`${config.protocol}://${config.host}:${config.port}/app/config`, "POST").then(
       (rawData) => {
         appConfig = convert2Appconfig(JSON.parse(rawData).data)
         resolve(appConfig);
@@ -50,7 +51,7 @@ function getAppConfig() {
 }
 
 function convert2Appconfig(obj) {
-  let RtoOrigin = `${config.host}:${config.port}`;
+  let RtoOrigin = `${config.protocol}://${config.host}:${config.port}`;
   const ac = Object.assign(
     {
       ...obj,

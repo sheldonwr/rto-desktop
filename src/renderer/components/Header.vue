@@ -66,6 +66,9 @@ export default {
       height: 23px;
     }
   }
+  .title {
+    margin: 0;
+  }
   .window-controls {
     display: flex;
     width: 150px;

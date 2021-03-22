@@ -53,6 +53,20 @@ export function applist() {
   return window.SuanpanAPI.appService.list(9999, 'predict')
 }
 
+/**
+ * 拷贝项目
+ */
+export function copyApp(appid, name) {
+  return window.SuanpanAPI.appService.duplicate(appid, name, '', 'predict', false, window.appConfig.defaultAppFolder)
+}
+
+/**
+ * Metrics
+ */
+export function getMetricsList() {
+  return window.SuanpanAPI.appService.getMetricsList('service');
+}
+
 
 /**
  * 导入项目

@@ -1,17 +1,25 @@
 import { invoke, gotoPredict } from "../services";
-import { createApp, deleteApp, saveSpFile, readSpFile, applist} from "services/file"
+import { createApp, deleteApp, saveSpFile, readSpFile, applist, copyApp, getMetricsList } from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
+
+let cachedAppIds = []
 
 export default {
   namespaced: true,
   state: {
     currentOpenedPath: null,
     currentAppId: null,
+    currentAppName: '',
     recentOpenedPaths: [],
   },
   getters: {
     title(state) {
-      return state.currentOpenedPath ? state.currentOpenedPath : '';
+      if(state.currentOpenedPath) {
+        let { name } = getFileNameAndExt(state.currentOpenedPath);
+        return name
+      }else {
+        return state.currentAppName;
+      }
     }
   },
   mutations: {
@@ -31,7 +39,10 @@ export default {
     },
     recentOpenedPaths(state, val) {
       state.recentOpenedPaths = uniqueArray(val);
-    }
+    },
+    currentAppName(state, val) {
+      state.currentAppName = val;
+    },
   },
   actions: {
     open({ state, commit, dispatch }) {
@@ -48,7 +59,16 @@ export default {
       }
       return readSpFile(filePath).then( appId => {
         commit("currentOpenedPath", filePath);
-        return dispatch('openApp', appId);
+        if(cachedAppIds.includes(appId)) {
+          return dispatch('openApp', appId);
+        }else {
+          let { name } = getFileNameAndExt(filePath);
+          return copyApp(appId, name).then(res => {
+            return invoke('file-save-ids', res.id).then(() => {
+              return dispatch('openApp', res.id);
+            })
+          })
+        }
       })
     },
     openApp({ state, commit, dispatch }, appId) {
@@ -76,7 +96,8 @@ export default {
         }
         let { name } = getFileNameAndExt(filePath);
         return createApp(name).then( res => {
-          return saveSpFile(res.id, filePath).then( () => {
+          return saveSpFile(res.id, filePath).then( ids => {
+            cachedAppIds = ids;
             return invoke('file-save-ids', res.id).then(() => {
               return gotoPredict(res.id).then( () => {
                 commit("currentAppId", res.id);
@@ -89,36 +110,37 @@ export default {
         });
       })
     },
-    delete({state, commit, dispatch}, showLoading=false) {
-      if(showLoading) {
-        this.dispatch('showLoading',{ opacity: false, msg: '关闭中...'});
-      }
-      return deleteApp(state.currentAppId).then( () => {
+    delete({state, commit, dispatch}, id) {
+      return deleteApp(id).then( () => {
         commit("currentAppId", null);
-        if(showLoading) {
-          this.dispatch('closeLoading');
-        }
       }).catch( err => {
         console.error(err)
-        if(showLoading) {
-          this.dispatch('closeLoading');
-        }
       });
     },
     list({state, commit, dispatch}) {
       // applist()
-      return Promise.all([applist(), invoke('file-read-ids')]).then(res => {
+      return Promise.all([applist(), getMetricsList(),invoke('file-read-ids')]).then(res => {
         let apps = res[0].list || [];
-        let savedIds = res[1];
+        let runningApps = res[1].items || [];
+        let runningAppsMap = {};
+        for(let i = 0; i < runningApps.length; i++) {
+          runningAppsMap[runningApps[i].appId] = runningApps[i]
+        }
+        let savedIds = res[2];
+        cachedAppIds = savedIds;
         let saveIdsSet = new Set(savedIds);
         let filteredApps = [];
         for(let i = 0; i < apps.length; i++) {
           if(saveIdsSet.has(''+apps[i].id)) {
-            filteredApps.push(apps[i])
+            let app = apps[i];
+            if(runningAppsMap[app.id]) {
+              app.status = runningAppsMap[app.id].status;
+            }
+            filteredApps.push(app)
           }
         }
         return filteredApps;
       })
-    }
+    },
   },
 };
