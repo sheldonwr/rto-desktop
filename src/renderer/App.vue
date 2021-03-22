@@ -4,7 +4,7 @@
     <menu-view></menu-view>
     <tool-bar v-show="$store.state.view.toolbarVisible"></tool-bar>
     <drawer></drawer>
-    <wizard></wizard>
+    <wizard v-if="$store.state.view.wizardVisible"></wizard>
   </div>
 </template>
 

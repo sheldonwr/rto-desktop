@@ -3,7 +3,9 @@ export default {
   namespaced: true,
   state: {
     toolbarVisible: true,
-    logPanelVisible: false
+    logPanelVisible: false,
+    wizardVisible: true,
+    wizardClosable: false,
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -11,6 +13,12 @@ export default {
     },
     logPanelVisible(state, val) {
       state.logPanelVisible = val;
+    },
+    wizardVisible(state, val) {
+      state.wizardVisible = val;
+    },
+    wizardClosable(state, val) {
+      state.wizardClosable = val;
     }
   },
   actions: {

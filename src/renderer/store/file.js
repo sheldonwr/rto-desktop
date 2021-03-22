@@ -1,5 +1,5 @@
 import { invoke, gotoPredict } from "../services";
-import { createApp, deleteApp, saveSpFile, readSpFile} from "services/file"
+import { createApp, deleteApp, saveSpFile, readSpFile, applist} from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
 
 export default {
@@ -47,11 +47,14 @@ export default {
         return
       }
       return readSpFile(filePath).then( appId => {
-        return gotoPredict(appId).then( () => {
-          commit("currentAppId", appId);
-          commit("currentOpenedPath", filePath);
-        });
+        commit("currentOpenedPath", filePath);
+        return dispatch('openApp', appId);
       })
+    },
+    openApp({ state, commit, dispatch }, appId) {
+      return gotoPredict(appId).then( () => {
+        commit("currentAppId", appId);
+      }); 
     },
     save({ state, commit, dispatch }) {
       this.dispatch('showMessage', { type: 'success', msg: '保存成功'})
@@ -74,10 +77,12 @@ export default {
         let { name } = getFileNameAndExt(filePath);
         return createApp(name).then( res => {
           return saveSpFile(res.id, filePath).then( () => {
-            return gotoPredict(res.id).then( () => {
-              commit("currentAppId", res.id);
-              commit("currentOpenedPath", filePath);
-            });
+            return invoke('file-save-ids', res.id).then(() => {
+              return gotoPredict(res.id).then( () => {
+                commit("currentAppId", res.id);
+                commit("currentOpenedPath", filePath);
+              });
+            })
           });
         }).catch( err => {
           console.error(err);
@@ -99,6 +104,21 @@ export default {
           this.dispatch('closeLoading');
         }
       });
+    },
+    list({state, commit, dispatch}) {
+      // applist()
+      return Promise.all([applist(), invoke('file-read-ids')]).then(res => {
+        let apps = res[0].list || [];
+        let savedIds = res[1];
+        let saveIdsSet = new Set(savedIds);
+        let filteredApps = [];
+        for(let i = 0; i < apps.length; i++) {
+          if(saveIdsSet.has(''+apps[i].id)) {
+            filteredApps.push(apps[i])
+          }
+        }
+        return filteredApps;
+      })
     }
   },
 };
