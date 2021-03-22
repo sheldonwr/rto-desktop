@@ -13,7 +13,7 @@
             关闭
           </a-button>
         </template>
-        <p v-if="appList.length === 0">暂无历史项目</p>
+        <p v-if="appList.length === 0">暂无项目</p>
         <template v-else>
           <a-row :gutter="16">
             <a-col :span="6" v-for="app in appList" :key="app.id">
@@ -146,7 +146,7 @@ export default {
       top: 0;
       right: 0;
       height: 80px;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.4);
       display: flex;
       visibility: hidden;
       justify-content: center;

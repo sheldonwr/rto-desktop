@@ -64,7 +64,8 @@ export default {
         }else {
           let { name } = getFileNameAndExt(filePath);
           return copyApp(appId, name).then(res => {
-            return invoke('file-save-ids', res.id).then(() => {
+            return invoke('file-save-ids', res.id).then(ids => {
+              cachedAppIds = ids;
               return dispatch('openApp', res.id);
             })
           })
@@ -97,8 +98,8 @@ export default {
         let { name } = getFileNameAndExt(filePath);
         return createApp(name).then( res => {
           return saveSpFile(res.id, filePath).then( ids => {
-            cachedAppIds = ids;
-            return invoke('file-save-ids', res.id).then(() => {
+            return invoke('file-save-ids', res.id).then(ids => {
+              cachedAppIds = ids;
               return gotoPredict(res.id).then( () => {
                 commit("currentAppId", res.id);
                 commit("currentOpenedPath", filePath);

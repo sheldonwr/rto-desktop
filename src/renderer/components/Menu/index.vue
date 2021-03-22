@@ -115,7 +115,7 @@ export default {
               value: "view-app",
               disabled: false,
               checkable: true,
-              checked: this.$store.state.view.wizardVisible
+              checked: false
             },
             {
               label: "工具栏",
@@ -276,11 +276,6 @@ export default {
         this.menus.view.items.find( item => item.value === 'view-alarm').checked = this.$store.state.view.logPanelVisible;
       }
     },
-    '$store.state.view.wizardVisible': {
-      handler() {
-        this.menus.view.items.find( item => item.value === 'view-app').checked = this.$store.state.view.wizardVisible;
-      }
-    },
   },
   methods: {
     menuClickHandler(menuItem) {
@@ -335,7 +330,7 @@ export default {
           this.$store.dispatch('edit/deleteNode');
           break;
         case "view-app":
-          this.$store.commit('view/wizardVisible', !this.$store.state.view.wizardVisible)
+          this.$store.commit('view/wizardVisible', true)
           this.$store.commit('view/wizardClosable', true)
           break;
         case "view-tool":
@@ -379,6 +374,7 @@ export default {
   padding: 4px 0 4px 6px;
   height: 38px;
   z-index: 999;
+  margin: 0;
   .menu-item {
     padding: 5px 10px;
     cursor: pointer;

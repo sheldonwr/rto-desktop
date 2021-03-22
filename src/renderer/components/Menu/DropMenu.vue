@@ -5,7 +5,7 @@
       v-for="dropItem in datas"
       :key="dropItem.value"
       @mouseenter="menuMouseenterHandler(dropItem)"
-      @click.stop="menuClickHandler(dropItem)"
+      @mousedown.stop="menuClickHandler(dropItem)"
     >
       <span class="check-wrap">
         <span v-if="dropItem.checkable && dropItem.checked" class="rto_iconfont icon-check"></span>
