@@ -11,10 +11,10 @@
         :rules="rules"
         v-bind="layout"
       >
-        <a-form-model-item label="host" prop="host">
+        <a-form-model-item has-feedback label="host" prop="host">
           <a-input v-model="config.host" />
         </a-form-model-item>
-        <a-form-model-item label="port" prop="port">
+        <a-form-model-item has-feedback label="port" prop="port">
           <a-input-number v-model="config.port" :min="0" :max="65535" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
