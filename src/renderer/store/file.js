@@ -114,6 +114,9 @@ export default {
     delete({state, commit, dispatch}, id) {
       return deleteApp(id).then( () => {
         commit("currentAppId", null);
+        commit("currentOpenedPath", '');
+        commit("currentAppName", '');
+        return invoke('file-delete-ids', id);
       }).catch( err => {
         console.error(err)
       });

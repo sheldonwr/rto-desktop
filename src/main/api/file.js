@@ -5,6 +5,7 @@ import { idCachePath } from "../mainconfig";
 
 ipcMain.handle("file-read-ids", getCacheId);
 ipcMain.handle("file-save-ids", setCacheId);
+ipcMain.handle("file-delete-ids", deleteCacheId);
 ipcMain.handle("file-open", openFile);
 ipcMain.handle("file-load", loadFile);
 ipcMain.handle("file-save-dialog", saveFileDialog);
@@ -41,6 +42,20 @@ function setCacheId(event, appid) {
     // unique
     cacheIds.push(appid)
     cacheIds = [...new Set(cacheIds)]
+    fs.writeFile(idCachePath, JSON.stringify({
+      ids: cacheIds
+    }), () => {
+      resolve(cacheIds);
+    });
+  });
+}
+
+function deleteCacheId(event, appid) {
+  let idx = cacheIds.indexOf(appid)
+  if(idx > -1) {
+    cacheIds.splice(idx, 1)
+  }
+  return new Promise((resolve, reject) => {
     fs.writeFile(idCachePath, JSON.stringify({
       ids: cacheIds
     }), () => {
