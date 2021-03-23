@@ -1,10 +1,10 @@
 <template>
   <div class="wizard-wrap">
-    <a-spin :spinning="loading">
+    <a-spin :spinning="showLoading && loading">
       <a-page-header title="项目列表">
         <template slot="extra">
           <a-tooltip title="刷新">
-            <a-button class="reload" type="primary" icon="reload" @click="reload"/>
+            <a-button :loading="loading" class="reload" type="primary" icon="reload" @click="reload"/>
           </a-tooltip>
           <a-button type="primary" @click="createApp">
             新建
@@ -30,6 +30,11 @@
                   </div>
                 </div>
                 <template slot="actions" class="ant-card-actions">
+                  <a-tooltip :title="app.status === 'Running' ? '停止': '开启'">
+                    <a-button type="default" shape="circle" style="border:0;line-height:1" @click="changeStatus(app)">
+                      <span :class="['rto_iconfont', app.status === 'Running' ? 'icon-stop' : 'icon-start']" style="font-size: 26px;"></span>
+                    </a-button>
+                  </a-tooltip>
                   <a-button type="danger" icon="delete" @click="deleteApp(app)">
                     删除
                   </a-button>
@@ -44,19 +49,36 @@
 </template>
 
 <script>
+import { interval } from 'utils/'
+
 export default {
   data() {
     return {
+      showLoading: true,
       loading: false,
       appList: [],
+      refreshInterval: 5000
     };
   },
   created() {},
   mounted() {
-    this.reload();
+    this.reload(true);
+    this.refreshTimer = interval(
+      () => this.fetchApps(),
+      this.refreshInterval
+    );
+  },
+  beforeDestroy() {
+    this.refreshTimer.clear();
   },
   methods: {
-    fetchApps() {
+    fetchApps(showLoading) {
+      if(showLoading) {
+        this.showLoading = true;
+      }else {
+        this.showLoading = false;
+      }
+      this.loading = true;
       this.$store
         .dispatch("file/list")
         .then((list) => {
@@ -85,8 +107,8 @@ export default {
     deleteApp(app) {
       this.$confirm({
         title: `确定删除“${app.name}”这个项目吗？`,
-        okText: '',
-        cancelText: '',
+        okText: '确定',
+        cancelText: '取消',
         onOk: () => {
           return this.$store.dispatch('file/delete', app.id).then(() => {
             this.fetchApps();
@@ -98,14 +120,22 @@ export default {
     close() {
       this.$store.commit("view/wizardVisible", false);
     },
-    reload() {
-      this.loading = true;
+    reload(showLoading) {
       if (window.SuanpanAPI) {
-        this.fetchApps();
+        this.fetchApps(showLoading);
       } else {
         window.addEventListener("load", () => {
-          this.fetchApps();
+          this.fetchApps(showLoading);
         });
+      }
+    },
+    changeStatus(app) {
+      if(app.status === 'Running') {
+        this.$store.dispatch('showMessage', { type: 'info', msg: '停止中...'})
+        this.$store.dispatch('status/release', app.id)
+      } else {
+        this.$store.dispatch('showMessage', { type: 'info', msg: '开启中...'})
+        this.$store.dispatch('status/deploy', app.id)
       }
     }
   },

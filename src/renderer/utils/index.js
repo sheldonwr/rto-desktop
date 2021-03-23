@@ -47,7 +47,7 @@ export function throttle(func, wait, options) {
   if (!options)
     options = {
       leading: false,
-      trailing: true
+      trailing: true,
     };
 
   var later = function() {
@@ -115,17 +115,42 @@ export function findComponentsDownward(context, componentName) {
 }
 
 export function getFileNameAndExt(fullpath) {
-  let fileName = fullpath.replace(/^.*[\\\/]/, '');
-  const _index = fileName.lastIndexOf('.');
-  let ext = '';
-  let name = '';
+  let fileName = fullpath.replace(/^.*[\\\/]/, "");
+  const _index = fileName.lastIndexOf(".");
+  let ext = "";
+  let name = "";
   if (_index > -1) {
     name = fileName.slice(0, _index);
     ext = fileName.slice(_index);
   }
-  return { name, ext}
+  return { name, ext };
 }
 
 export function uniqueArray(array) {
   return [...new Set(array)];
+}
+
+/**
+ * 用 setTimeout 模拟 setInterval
+ * @param {*} fn
+ * @param {*} wait
+ */
+export function interval(fn, wait) {
+  let timeout;
+  let wrapFn = function() {
+    fn();
+    if (timeout != null) {
+      timeout = setTimeout(() => {
+        wrapFn();
+      }, wait);
+    }
+  };
+  wrapFn.clear = function() {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+  timeout = setTimeout(() => {
+    wrapFn();
+  }, wait);
+  return wrapFn;
 }

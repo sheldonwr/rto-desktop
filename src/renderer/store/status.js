@@ -29,5 +29,11 @@ export default {
         })
       }
     },
+    deploy({state}, id) {
+      return window.SuanpanAPI.predictService.deploy(id)
+    },
+    release({state}, id) {
+      return window.SuanpanAPI.predictService.release(id)
+    },
   },
 };

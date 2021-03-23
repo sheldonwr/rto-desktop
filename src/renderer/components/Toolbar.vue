@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="deploy-container">
-      <div class="toolbar-icon" :title="isRunning ? '释放': '部署'" @click="clickHandler('deploy')">
+      <div class="toolbar-icon" :title="isRunning ? '停止': '开启'" @click="clickHandler('deploy')">
         <span :class="['rto_iconfont', isRunning ? 'icon-stop' : 'icon-start']" style="font-size: 22px"></span>
       </div>
     </div>
