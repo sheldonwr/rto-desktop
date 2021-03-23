@@ -67,6 +67,13 @@ export function getMetricsList() {
   return window.SuanpanAPI.appService.getMetricsList('service');
 }
 
+/**
+ * 获取项目基本信息
+ */
+export function getApp(id) {
+  return window.SuanpanAPI.appService.get(id);
+}
+
 
 /**
  * 导入项目

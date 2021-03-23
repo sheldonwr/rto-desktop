@@ -1,5 +1,5 @@
 import { invoke, gotoPredict } from "../services";
-import { createApp, deleteApp, saveSpFile, readSpFile, applist, copyApp, getMetricsList } from "services/file"
+import { createApp, deleteApp, saveSpFile, readSpFile, applist, copyApp, getMetricsList, getApp } from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
 
 let cachedAppIds = []
@@ -58,15 +58,18 @@ export default {
         return
       }
       return readSpFile(filePath).then( appId => {
-        commit("currentOpenedPath", filePath);
         if(cachedAppIds.includes(appId)) {
+          commit("currentOpenedPath", filePath);
           return dispatch('openApp', appId);
         }else {
           let { name } = getFileNameAndExt(filePath);
-          return copyApp(appId, name).then(res => {
-            return invoke('file-save-ids', res.id).then(ids => {
-              cachedAppIds = ids;
-              return dispatch('openApp', res.id);
+          return dispatch('get', appId).then( () => {
+            return copyApp(appId, name).then(res => {
+              return invoke('file-save-ids', res.id).then(ids => {
+                cachedAppIds = ids;
+                commit("currentOpenedPath", filePath);
+                return dispatch('openApp', res.id);
+              })
             })
           })
         }
@@ -121,6 +124,9 @@ export default {
         console.error(err)
       });
     },
+    get({}, id) {
+      return getApp(id);
+    },
     list({state, commit, dispatch}) {
       // applist()
       return Promise.all([applist(), getMetricsList(),invoke('file-read-ids')]).then(res => {
@@ -137,6 +143,7 @@ export default {
         for(let i = 0; i < apps.length; i++) {
           if(saveIdsSet.has(''+apps[i].id)) {
             let app = apps[i];
+            app.id = '' + app.id;
             if(runningAppsMap[app.id]) {
               app.status = runningAppsMap[app.id].status;
             }

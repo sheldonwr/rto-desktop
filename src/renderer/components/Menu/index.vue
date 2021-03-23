@@ -304,7 +304,9 @@ export default {
           break;
         case "file-open":
           // 打开
-          this.$store.dispatch('file/open')
+          this.$store.dispatch('file/open').catch(() => {
+            this.$store.dispatch('showMessage', { type: 'error', msg: '打开文件失败'})
+          })
           break;
         case "file-save":
           // 保存
@@ -331,7 +333,6 @@ export default {
           break;
         case "view-app":
           this.$store.commit('view/wizardVisible', true)
-          this.$store.commit('view/wizardClosable', true)
           break;
         case "view-tool":
           this.$store.commit('view/toolbarVisible', !this.$store.state.view.toolbarVisible)

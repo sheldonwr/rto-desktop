@@ -95,6 +95,7 @@ export default {
         .dispatch("file/create")
         .then(() => {
           this.$store.commit("view/wizardVisible", false);
+          this.$store.commit('view/wizardClosable', true)
         })
         .catch(() => {});
     },
@@ -102,6 +103,7 @@ export default {
       this.$store.dispatch("file/openApp", "" + app.id).then(() => {
         this.$store.commit("file/currentAppName", app.name);
         this.$store.commit("view/wizardVisible", false);
+        this.$store.commit('view/wizardClosable', true)
       });
     },
     deleteApp(app) {
@@ -111,6 +113,7 @@ export default {
         cancelText: '取消',
         onOk: () => {
           return this.$store.dispatch('file/delete', app.id).then(() => {
+            this.$store.commit('view/wizardClosable', false)
             this.fetchApps();
           })
         },
