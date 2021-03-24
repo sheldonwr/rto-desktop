@@ -111,9 +111,8 @@ export default {
         });
       })
     },
-    delete({state, commit, dispatch}, id) {
+    delete({state, commit, dispatch}, {id,path}) {
       return deleteApp(id).then( () => {
-        let path = state.currentOpenedPath;
         commit("currentAppId", null);
         commit("currentOpenedPath", '');
         return invoke('file-delete-ids', {id, path});

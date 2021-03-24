@@ -74,6 +74,8 @@ function deleteCacheId(event, {id, path}) {
           });
         }
       })
+    }else {
+      reject(new Error(`path not exists`))
     }
     
   });

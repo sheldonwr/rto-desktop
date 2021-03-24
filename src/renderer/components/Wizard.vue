@@ -94,10 +94,13 @@ export default {
       this.$store
         .dispatch("file/create")
         .then(() => {
-          this.$store.commit("view/wizardVisible", false);
-          this.$store.commit('view/wizardClosable', true)
+          this.fetchApps();
+          // this.$store.commit("view/wizardVisible", false);
+          // this.$store.commit('view/wizardClosable', true)
         })
-        .catch(() => {});
+        .catch(err => {
+          console.error(err)
+        });
     },
     openApp(app) {
       this.$store.dispatch("file/openApp", {id: app.id, path:app.path}).then(() => {
@@ -111,9 +114,11 @@ export default {
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
-          return this.$store.dispatch('file/delete', app.id).then(() => {
+          return this.$store.dispatch('file/delete', {id:app.id,path:app.path}).then(() => {
             this.$store.commit('view/wizardClosable', false)
             this.fetchApps();
+          }).catch(err => {
+            console.error(err)
           })
         },
         onCancel() {},
