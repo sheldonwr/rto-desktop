@@ -26,10 +26,10 @@ function getCacheId() {
           reject(err)
         }else {
           try {
-            cacheIds = JSON.parse(data).ids;
+            cacheIds = JSON.parse(data).data;
             resolve(cacheIds)
           } catch (error) {
-            reject(error)
+            resolve([])
           }
         }
       })
@@ -37,30 +37,45 @@ function getCacheId() {
   });
 }
 
-function setCacheId(event, appid) {
+function setCacheId(event, {id, path}) {
   return new Promise((resolve, reject) => {
     // unique
-    cacheIds.push(appid)
-    cacheIds = [...new Set(cacheIds)]
+    let idx = cacheIds.findIndex(item => item.id === id)
+    if(idx > -1) {
+      cacheIds.splice(idx, 1)
+    }
+    cacheIds.push({
+      id,
+      path,
+    })
     fs.writeFile(idCachePath, JSON.stringify({
-      ids: cacheIds
+      data: cacheIds
     }), () => {
       resolve(cacheIds);
     });
   });
 }
 
-function deleteCacheId(event, appid) {
-  let idx = cacheIds.indexOf(appid)
+function deleteCacheId(event, {id, path}) {
+  let idx = cacheIds.findIndex(item => item.id === id)
   if(idx > -1) {
     cacheIds.splice(idx, 1)
   }
   return new Promise((resolve, reject) => {
-    fs.writeFile(idCachePath, JSON.stringify({
-      ids: cacheIds
-    }), () => {
-      resolve(cacheIds);
-    });
+    if(fs.existsSync(path)) {
+      fs.unlink(path, (err) => {
+        if (err) {
+          reject(err)
+        }else {
+          fs.writeFile(idCachePath, JSON.stringify({
+            data: cacheIds
+          }), () => {
+            resolve(cacheIds);
+          });
+        }
+      })
+    }
+    
   });
 }
 

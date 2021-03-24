@@ -11,7 +11,11 @@
         @blur="menuBlurHandler"
       >
         <span>{{ menuItem.label }}</span>
-        <drop-menu v-show="openedMenu === menuItem.value" class="menu-bottom" :datas="menuItem.items"></drop-menu>
+        <drop-menu
+          v-show="openedMenu === menuItem.value"
+          class="menu-bottom"
+          :datas="menuItem.items"
+        ></drop-menu>
       </li>
     </ul>
   </div>
@@ -21,7 +25,7 @@
 import DropMenu from "./DropMenu";
 
 export default {
-  name: 'app-menu',
+  name: "app-menu",
   components: {
     DropMenu,
   },
@@ -35,32 +39,32 @@ export default {
             {
               label: "新建",
               value: "file-new",
-              disabled: false
+              disabled: false,
             },
             {
               label: "打开",
               value: "file-open",
-              disabled: false
+              disabled: false,
             },
             {
               label: "保存",
               value: "file-save",
-              disabled: false
+              disabled: false,
             },
             {
               label: "另存为",
               value: "file-saveAs",
-              disabled: false
+              disabled: false,
             },
             {
               label: "关闭",
               value: "file-close",
-              disabled: true
+              disabled: true,
             },
             {
               label: "终止",
               value: "file-terminate",
-              disabled: true
+              disabled: true,
             },
             {
               label: "最近打开",
@@ -71,7 +75,7 @@ export default {
             {
               label: "退出",
               value: "file-quit",
-              disabled: false
+              disabled: false,
             },
           ],
         },
@@ -82,27 +86,27 @@ export default {
             {
               label: "剪切",
               value: "edit-cut",
-              disabled: false
+              disabled: false,
             },
             {
               label: "复制",
               value: "edit-copy",
-              disabled: false
+              disabled: false,
             },
             {
               label: "粘贴",
               value: "edit-paste",
-              disabled: false
+              disabled: false,
             },
             {
               label: "删除",
               value: "edit-delete",
-              disabled: false
+              disabled: false,
             },
             {
               label: "切换功能块状态",
               value: "edit-switchStatus",
-              disabled: true
+              disabled: true,
             },
           ],
         },
@@ -115,14 +119,14 @@ export default {
               value: "view-app",
               disabled: false,
               checkable: true,
-              checked: false
+              checked: false,
             },
             {
               label: "工具栏",
               value: "view-tool",
               disabled: false,
               checkable: true,
-              checked: this.$store.state.view.toolbarVisible
+              checked: this.$store.state.view.toolbarVisible,
             },
             {
               label: "状态栏",
@@ -132,39 +136,39 @@ export default {
             {
               label: "平台窗口",
               value: "view-platform",
-              disabled: true
+              disabled: true,
             },
             {
               label: "报警显示",
               value: "view-alarm",
               disabled: false,
               checkable: true,
-              checked: this.$store.state.view.logPanelVisible
+              checked: this.$store.state.view.logPanelVisible,
             },
             {
               label: "刷新",
               value: "view-refresh",
-              disabled: true
+              disabled: true,
             },
             {
               label: "设置",
               value: "view-setting",
-              disabled: true
+              disabled: true,
             },
             {
               label: "事件日志",
               value: "view-log",
-              disabled: true
+              disabled: true,
             },
             {
               label: "显示说明",
               value: "view-description",
-              disabled: true
+              disabled: true,
             },
             {
               label: "溯源",
               value: "view-origin",
-              disabled: true
+              disabled: true,
             },
           ],
         },
@@ -175,17 +179,17 @@ export default {
             {
               label: "连接",
               value: "action-connection",
-              disabled: true
+              disabled: true,
             },
             {
               label: "路径",
               value: "edit-path",
-              disabled: true
+              disabled: true,
             },
             {
               label: "更新",
               value: "edit-update",
-              disabled: true
+              disabled: true,
             },
           ],
         },
@@ -196,27 +200,27 @@ export default {
             {
               label: "未注册",
               value: "tools-notRegister",
-              disabled: true
+              disabled: true,
             },
             {
               label: "更新RTO服务账户",
               value: "tools-urt",
-              disabled: true
+              disabled: true,
             },
             {
               label: "管理组",
               value: "tools-manage",
-              disabled: true
+              disabled: true,
             },
             {
               label: "模型管理",
               value: "model-manage",
-              disabled: false
+              disabled: false,
             },
             {
               label: "算法管理",
               value: "algo-manage",
-              disabled: false
+              disabled: false,
             },
           ],
         },
@@ -227,17 +231,17 @@ export default {
             {
               label: "URT用户帮助",
               value: "help-rto",
-              disabled: true
+              disabled: true,
             },
             {
               label: "关于RTOExplorer",
               value: "help-about",
-              disabled: true
+              disabled: true,
             },
           ],
         },
       },
-      openedMenu: ''
+      openedMenu: "",
     };
   },
   computed: {
@@ -249,32 +253,38 @@ export default {
     recentPaths() {
       let paths = [];
       let _paths = this.$store.state.file.recentOpenedPaths;
-      for(let i = 0; i < _paths.length; i++) {
+      for (let i = 0; i < _paths.length; i++) {
         paths.push({
           label: _paths[i],
           value: `file-recent-${i}`,
-          level: 2
-        })
+          level: 2,
+        });
       }
       return paths;
-    }
+    },
   },
   watch: {
-    '$store.state.file.recentOpenedPaths': {
+    "$store.state.file.recentOpenedPaths": {
       handler() {
-        this.menus.file.items.find( item => item.value === 'file-recent').items = this.recentPaths;
+        this.menus.file.items.find(
+          (item) => item.value === "file-recent"
+        ).items = this.recentPaths;
       },
-      immediate: true
+      immediate: true,
     },
-    '$store.state.view.toolbarVisible': {
+    "$store.state.view.toolbarVisible": {
       handler() {
-        this.menus.view.items.find( item => item.value === 'view-tool').checked = this.$store.state.view.toolbarVisible;
-      }
+        this.menus.view.items.find(
+          (item) => item.value === "view-tool"
+        ).checked = this.$store.state.view.toolbarVisible;
+      },
     },
-    '$store.state.view.logPanelVisible': {
+    "$store.state.view.logPanelVisible": {
       handler() {
-        this.menus.view.items.find( item => item.value === 'view-alarm').checked = this.$store.state.view.logPanelVisible;
-      }
+        this.menus.view.items.find(
+          (item) => item.value === "view-alarm"
+        ).checked = this.$store.state.view.logPanelVisible;
+      },
     },
   },
   methods: {
@@ -282,87 +292,97 @@ export default {
       this.openedMenu = menuItem.value;
     },
     menuMouseenterHandler(menuItem) {
-      if(this.openedMenu) {
+      if (this.openedMenu) {
         this.openedMenu = menuItem.value;
       }
     },
     menuBlurHandler() {
-      this.openedMenu = '';
+      this.openedMenu = "";
     },
     menuItemClicked(menuItem) {
-      this.openedMenu = '';
+      this.openedMenu = "";
       let menuItemId = menuItem.value;
-      if(menuItemId.indexOf('file-recent') === 0) {
-        let arr = menuItemId.split('-');
+      if (menuItemId.indexOf("file-recent") === 0) {
+        let arr = menuItemId.split("-");
         let idx = parseInt(arr[arr.length - 1]);
-        this.$store.dispatch('file/openFile', this.recentPaths[idx].label);
+        this.$store
+          .dispatch("file/openFile", this.recentPaths[idx].label)
+          .catch(err => {
+            console.error(err)
+          });
       }
-      switch(menuItemId) {
+      switch (menuItemId) {
         case "file-new":
           // 新建
-          this.$store.dispatch('file/create')
+          this.$store.dispatch("file/create");
           break;
         case "file-open":
           // 打开
-          this.$store.dispatch('file/open').catch(() => {
-            this.$store.dispatch('showMessage', { type: 'error', msg: '打开文件失败'})
-          })
+          this.$store.dispatch("file/open").catch(err => {
+            console.error(err)
+          });
           break;
         case "file-save":
           // 保存
-          this.$store.dispatch('file/save')
+          this.$store.dispatch("file/save");
           break;
         case "file-saveAs":
           // 另存为
-          this.$store.dispatch('file/saveAs')
+          this.$store.dispatch("file/saveAs");
           break;
         case "file-quit":
-          this.$store.dispatch('window/closeWindow')
+          this.$store.dispatch("window/closeWindow");
           break;
         case "edit-cut":
-          this.$store.dispatch('edit/cutNode');
+          this.$store.dispatch("edit/cutNode");
           break;
         case "edit-copy":
-          this.$store.dispatch('edit/copyNode');
+          this.$store.dispatch("edit/copyNode");
           break;
         case "edit-paste":
-          this.$store.dispatch('edit/pasteNode');
+          this.$store.dispatch("edit/pasteNode");
           break;
         case "edit-delete":
-          this.$store.dispatch('edit/deleteNode');
+          this.$store.dispatch("edit/deleteNode");
           break;
         case "view-app":
-          this.$store.commit('view/wizardVisible', true)
+          this.$store.commit("view/wizardVisible", true);
           break;
         case "view-tool":
-          this.$store.commit('view/toolbarVisible', !this.$store.state.view.toolbarVisible)
+          this.$store.commit(
+            "view/toolbarVisible",
+            !this.$store.state.view.toolbarVisible
+          );
           break;
         case "view-status":
           break;
         case "view-alarm":
-          this.$store.commit('view/logPanelVisible', !this.$store.state.view.logPanelVisible)
+          this.$store.commit(
+            "view/logPanelVisible",
+            !this.$store.state.view.logPanelVisible
+          );
           break;
         case "model-manage": // 模型管理
-          this.$store.commit('drawer/changeDrawerVisible', true);
-          this.$store.commit('drawer/changeActiveTab', 'model');
-          this.$store.commit('drawer/changeIsModelAlgoManage', true);
-          this.$store.dispatch('ci/getList', {
-            type: 'model',
-            pagination: this.$store.getters['ci/getPagination']
+          this.$store.commit("drawer/changeDrawerVisible", true);
+          this.$store.commit("drawer/changeActiveTab", "model");
+          this.$store.commit("drawer/changeIsModelAlgoManage", true);
+          this.$store.dispatch("ci/getList", {
+            type: "model",
+            pagination: this.$store.getters["ci/getPagination"],
           });
           break;
         case "algo-manage": // 算法管理
-          this.$store.commit('drawer/changeDrawerVisible', true);
-          this.$store.commit('drawer/changeActiveTab', 'algo');
-          this.$store.commit('drawer/changeIsModelAlgoManage', true);
-          this.$store.dispatch('ci/getList', {
-            type: 'algo',
-            pagination: this.$store.getters['ci/getPagination']
+          this.$store.commit("drawer/changeDrawerVisible", true);
+          this.$store.commit("drawer/changeActiveTab", "algo");
+          this.$store.commit("drawer/changeIsModelAlgoManage", true);
+          this.$store.dispatch("ci/getList", {
+            type: "algo",
+            pagination: this.$store.getters["ci/getPagination"],
           });
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

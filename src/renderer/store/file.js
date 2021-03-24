@@ -7,19 +7,13 @@ let cachedAppIds = []
 export default {
   namespaced: true,
   state: {
-    currentOpenedPath: null,
+    currentOpenedPath: '',
     currentAppId: null,
-    currentAppName: '',
     recentOpenedPaths: [],
   },
   getters: {
     title(state) {
-      if(state.currentOpenedPath) {
-        let { name } = getFileNameAndExt(state.currentOpenedPath);
-        return name
-      }else {
-        return state.currentAppName;
-      }
+      return state.currentOpenedPath
     }
   },
   mutations: {
@@ -40,9 +34,6 @@ export default {
     recentOpenedPaths(state, val) {
       state.recentOpenedPaths = uniqueArray(val);
     },
-    currentAppName(state, val) {
-      state.currentAppName = val;
-    },
   },
   actions: {
     open({ state, commit, dispatch }) {
@@ -58,26 +49,25 @@ export default {
         return
       }
       return readSpFile(filePath).then( appId => {
-        if(cachedAppIds.includes(appId)) {
-          commit("currentOpenedPath", filePath);
-          return dispatch('openApp', appId);
+        let idx = cachedAppIds.findIndex(item => item.id == appId)
+        if(idx > -1) {
+          return dispatch('openApp', {id:appId, path: filePath});
         }else {
           let { name } = getFileNameAndExt(filePath);
-          return dispatch('get', appId).then( () => {
-            return copyApp(appId, name).then(res => {
-              return invoke('file-save-ids', res.id).then(ids => {
-                cachedAppIds = ids;
-                commit("currentOpenedPath", filePath);
-                return dispatch('openApp', res.id);
-              })
+          return copyApp(appId, name).then(res => {
+            return invoke('file-save-ids', {id:res.id, path: filePath}).then(ids => {
+              cachedAppIds = ids;
+              commit("currentOpenedPath", filePath);
+              return dispatch('openApp', {id:res.id, path: filePath});
             })
           })
         }
       })
     },
-    openApp({ state, commit, dispatch }, appId) {
+    openApp({ state, commit, dispatch }, {id:appId, path}) {
       return gotoPredict(appId).then( () => {
         commit("currentAppId", appId);
+        commit("currentOpenedPath", path);
       }); 
     },
     save({ state, commit, dispatch }) {
@@ -88,9 +78,16 @@ export default {
         if(!filePath) {
           throw new Error('file not selected')
         }
-        return saveSpFile(state.currentAppId, filePath).then( () => {
-          this.dispatch('showMessage', { type: 'success', msg: '另存为成功'})
-        });
+        let { name } = getFileNameAndExt(filePath);
+        return copyApp(state.currentAppId, name).then(res => {
+          return invoke('file-save-ids', {id:res.id, path: filePath}).then(ids => {
+            cachedAppIds = ids;
+            return saveSpFile(state.currentAppId, filePath).then( () => {
+              this.dispatch('showMessage', { type: 'success', msg: '另存为成功'})
+            });
+          })
+        })
+        
       })
     },
     create({ state, commit, dispatch }) {
@@ -101,7 +98,7 @@ export default {
         let { name } = getFileNameAndExt(filePath);
         return createApp(name).then( res => {
           return saveSpFile(res.id, filePath).then( ids => {
-            return invoke('file-save-ids', res.id).then(ids => {
+            return invoke('file-save-ids', {id:res.id, path:filePath}).then(ids => {
               cachedAppIds = ids;
               return gotoPredict(res.id).then( () => {
                 commit("currentAppId", res.id);
@@ -116,10 +113,10 @@ export default {
     },
     delete({state, commit, dispatch}, id) {
       return deleteApp(id).then( () => {
+        let path = state.currentOpenedPath;
         commit("currentAppId", null);
         commit("currentOpenedPath", '');
-        commit("currentAppName", '');
-        return invoke('file-delete-ids', id);
+        return invoke('file-delete-ids', {id, path});
       }).catch( err => {
         console.error(err)
       });
@@ -129,27 +126,33 @@ export default {
     },
     list({state, commit, dispatch}) {
       // applist()
-      return Promise.all([applist(), getMetricsList(),invoke('file-read-ids')]).then(res => {
+      return Promise.all([applist(), getMetricsList(), invoke('file-read-ids')]).then(res => {
         let apps = res[0].list || [];
         let runningApps = res[1].items || [];
         let runningAppsMap = {};
         for(let i = 0; i < runningApps.length; i++) {
           runningAppsMap[runningApps[i].appId] = runningApps[i]
         }
-        let savedIds = res[2];
-        cachedAppIds = savedIds;
-        let saveIdsSet = new Set(savedIds);
+        cachedAppIds = res[2];
+        let saveIdsSet = {};
+        for(let i = 0; i < cachedAppIds.length; i++) {
+          saveIdsSet[cachedAppIds[i].id] = cachedAppIds[i]
+        }
         let filteredApps = [];
         for(let i = 0; i < apps.length; i++) {
-          if(saveIdsSet.has(''+apps[i].id)) {
+          if(saveIdsSet[apps[i].id]) {
             let app = apps[i];
             app.id = '' + app.id;
+            app.c_htime = new Date(app.gmt_create);
+            app.path = saveIdsSet[apps[i].id].path;
             if(runningAppsMap[app.id]) {
               app.status = runningAppsMap[app.id].status;
             }
             filteredApps.push(app)
           }
         }
+        // sort by create time
+        filteredApps.sort((a, b) => b.c_htime - a.c_htime);
         return filteredApps;
       })
     },

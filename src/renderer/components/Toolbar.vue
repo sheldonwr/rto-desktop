@@ -68,8 +68,8 @@ export default {
       if(id === 'file-new') {
         this.$store.dispatch('file/create')
       }else if(id === 'file-open') {
-        this.$store.dispatch('file/open').catch(() => {
-          this.$store.dispatch('showMessage', { type: 'error', msg: '打开文件失败'})
+        this.$store.dispatch('file/open').catch(err => {
+          console.error(err)
         })
       }else if(id === 'file-save') {
         this.$store.dispatch('file/save')

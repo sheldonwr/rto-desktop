@@ -100,8 +100,7 @@ export default {
         .catch(() => {});
     },
     openApp(app) {
-      this.$store.dispatch("file/openApp", "" + app.id).then(() => {
-        this.$store.commit("file/currentAppName", app.name);
+      this.$store.dispatch("file/openApp", {id: app.id, path:app.path}).then(() => {
         this.$store.commit("view/wizardVisible", false);
         this.$store.commit('view/wizardClosable', true)
       });
