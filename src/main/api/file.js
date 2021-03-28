@@ -75,7 +75,11 @@ function deleteCacheId(event, {id, path}) {
         }
       })
     }else {
-      reject(new Error(`path not exists`))
+      fs.writeFile(idCachePath, JSON.stringify({
+        data: cacheIds
+      }), () => {
+        reject(new Error(`${path} not exists`))
+      });
     }
     
   });
