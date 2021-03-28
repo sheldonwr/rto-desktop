@@ -2,6 +2,7 @@ import { ipcMain, dialog, BrowserWindow, app } from "electron";
 import fs from 'fs';
 const http = require('http');
 import { idCachePath } from "../mainconfig";
+import log from '../log'
 
 ipcMain.handle("file-read-ids", getCacheId);
 ipcMain.handle("file-save-ids", setCacheId);
@@ -78,7 +79,9 @@ function deleteCacheId(event, {id, path}) {
       fs.writeFile(idCachePath, JSON.stringify({
         data: cacheIds
       }), () => {
-        reject(new Error(`${path} not exists`))
+        // reject(new Error(`${path} not exists`))
+        log.error(`${path} not exists`);
+        resolve(cacheIds);
       });
     }
     
