@@ -18,8 +18,8 @@ export default {
   },
   actions: {
     getStatus({ state, commit, rootState }) {
-      if(rootState.file.currentAppId) {
-        return window.SuanpanAPI.predictService.getNetworkStatus(rootState.file.currentAppId).then( res => {
+      if(rootState.file.currentApp.id) {
+        return window.SuanpanAPI.predictService.getNetworkStatus(rootState.file.currentApp.id).then( res => {
           if(res.map && (res.map.status != null)) {
             commit('appStatus', res.map.status)
           }else {

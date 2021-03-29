@@ -63,10 +63,10 @@ window.addEventListener('load', () => {
 
 storeInst.watch(
   function (state) {
-      return state.file.currentAppId;
+      return state.file.currentApp.id;
   },
   function () {
-    if(storeInst.state.file.currentAppId) {
+    if(storeInst.state.file.currentApp.id) {
       storeInst.dispatch('status/getStatus')
       storeInst.commit('log/allLogs', [])
       storeInst.dispatch('log/connect').then(res => {
