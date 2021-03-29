@@ -136,8 +136,6 @@ export default {
           app.c_htime = new Date(app.gmt_create);
           if(runningAppsMap[app.id]) {
             app.status = runningAppsMap[app.id].status;
-          }else {
-            app.status = '';
           }
         }
         // sort by create time
