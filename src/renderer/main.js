@@ -28,18 +28,40 @@ new Vue({
   render: h => h(LogApp),
 }).$mount('.rto_log');
 
-window.addEventListener('load', () => {
-  // 监听组件选中
-  window.SuanpanAPI.eventService.on('sp:node:select', (event, data) => {
-    if (data && data.length > 1) {
-      const nodeInfo = data[1];
-      //  判断当前选中组件是否为rto组件
-      if (nodeInfo.metadata.def.type ===  601) {
+window.addEventListener('mousedown', () => {
+  if (storeInst.state.drawer.menuInfo.visible) {
+    storeInst.commit('drawer/changeMenuVisible', { visible: false });
+  }
+});
 
+window.addEventListener('load', () => {
+  // 组件右键菜单
+  window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = {}) => {
+    const { item, itemKey } = options;
+    // 判断当前选中组件是否为rto组件
+    if (item && item.metadata.def) {
+      const { type, actionList } = item.metadata.def;
+      if (type === 601 && actionList && actionList.length > 0 && actionList[0].hasOwnProperty('url')) {
+        const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
+        const { url } = actionList[0];
+        storeInst.commit('drawer/changeMenuVisible', {
+          visible: true,
+          location: { x: x + width, y: y + height / 2},
+          detail: [
+            { key: 'openRtoDrawer', name: '操作页面', function: () => {
+              storeInst.commit('drawer/changeDrawerVisible', true);
+              storeInst.commit('drawer/changeMenuVisible', { visible: false });
+              storeInst.commit('drawer/changeIsModelAlgoManage', false);
+              storeInst.commit('drawer/changeIframURL', `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`);
+            }}
+          ]
+        });
+      } else if (type !== 601 && storeInst.state.drawer.menuInfo.visible) {
+        storeInst.commit('drawer/changeMenuVisible', { visible: false });
       }
     }
   });
-  
+
   // 监听rto组件打开操作面板
   window.SuanpanAPI.eventService.on('rto:setting:params', (event, data) => {
     console.log(event, data)
