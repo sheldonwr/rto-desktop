@@ -5,6 +5,7 @@
     <tool-bar v-show="$store.state.view.toolbarVisible"></tool-bar>
     <drawer></drawer>
     <wizard v-if="$store.state.view.wizardVisible"></wizard>
+    <AppCreateForm v-if="createAppDialog" v-model="createAppDialog"></AppCreateForm>
   </div>
 </template>
 
@@ -31,6 +32,16 @@ export default {
     });
   },
   created() {
+  },
+  computed: {
+    createAppDialog: {
+      get() {
+        return this.$store.state.view.createAppDialog;
+      },
+      set(val) {
+        this.$store.commit('view/createAppDialog', val);
+      }
+    }
   },
   watch: {
     "$store.state.view.toolbarVisible" : {

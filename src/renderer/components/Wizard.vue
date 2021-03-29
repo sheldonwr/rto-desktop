@@ -3,24 +3,35 @@
     <a-spin :spinning="showLoading && loading">
       <a-page-header title="项目列表">
         <template slot="extra">
-          <a-tooltip title="刷新">
-            <a-button :loading="loading" class="reload" type="primary" icon="reload" @click="reload"/>
+            <a-tooltip placement="left">
+            <template slot="title">
+              <span>上次更新时间：</span>
+              <span>{{ updatedAt.toLocaleTimeString() }}</span>
+            </template>
+            <a-button type="link" @click="reload">
+              <a-icon type="sync" :spin="loading" />
+              <span>刷新</span>
+            </a-button>
           </a-tooltip>
-          <a-button type="primary" @click="createApp">
+          <a-button type="primary" @click="createAppModal">
             新建
           </a-button>
           <a-button v-if="$store.state.view.wizardClosable" @click="close">
             关闭
           </a-button>
         </template>
-        <p v-if="appList.length === 0">暂无项目</p>
-        <template v-else>
+      </a-page-header>
+      <p v-if="appList.length === 0">暂无项目</p>
+      <template v-else>
+        <div class="app-card-wrapper">
           <a-row :gutter="16">
-            <a-col :span="6" v-for="app in appList" :key="app.id">
+            <a-col class="app-card" :span="6" v-for="app in appList" :key="app.id">
               <a-card :bordered="true">
-                <div class="cover-wrap" slot="cover" @click="openApp(app)">
+                <div class="cover-wrap" slot="cover" @click="enterApp(app)">
                   <div class="title-wrap">
-                    <a-badge :status="app.status === 'Running' ? 'success' : 'default'"></a-badge>
+                    <a-badge
+                      :status="app.status === 'Running' ? 'success' : 'default'"
+                    ></a-badge>
                     <p class="title">{{ app.name }}</p>
                   </div>
                   <div class="inner-wrap">
@@ -30,9 +41,22 @@
                   </div>
                 </div>
                 <template slot="actions" class="ant-card-actions">
-                  <a-tooltip :title="app.status === 'Running' ? '停止': '开启'">
-                    <a-button type="default" shape="circle" style="border:0;line-height:1" @click="changeStatus(app)">
-                      <span :class="['rto_iconfont', app.status === 'Running' ? 'icon-stop' : 'icon-start']" style="font-size: 26px;"></span>
+                  <a-tooltip
+                    :title="app.status === 'Running' ? '停止' : '开启'"
+                  >
+                    <a-button
+                      type="default"
+                      shape="circle"
+                      style="border:0;line-height:1"
+                      @click="changeStatus(app)"
+                    >
+                      <span
+                        :class="[
+                          'rto_iconfont',
+                          app.status === 'Running' ? 'icon-stop' : 'icon-start',
+                        ]"
+                        style="font-size: 26px;"
+                      ></span>
                     </a-button>
                   </a-tooltip>
                   <a-button type="danger" icon="delete" @click="deleteApp(app)">
@@ -42,46 +66,50 @@
               </a-card>
             </a-col>
           </a-row>
-        </template>
-      </a-page-header>
+        </div>
+      </template>
     </a-spin>
   </div>
 </template>
 
 <script>
-import { interval } from 'utils/'
+import { interval } from "utils/";
+import AppCreateForm from "components/AppCreateForm"
 
 export default {
+  components: {
+    AppCreateForm
+  },
   data() {
     return {
       showLoading: true,
       loading: false,
       appList: [],
-      refreshInterval: 5000
+      refreshInterval: 5000,
+      createAppVisible: false,
+      updatedAt: new Date()
     };
   },
   created() {},
   mounted() {
     this.reload(true);
-    this.refreshTimer = interval(
-      () => this.fetchApps(),
-      this.refreshInterval
-    );
+    this.refreshTimer = interval(() => this.fetchApps(), this.refreshInterval);
   },
   beforeDestroy() {
     this.refreshTimer.clear();
   },
   methods: {
     fetchApps(showLoading) {
-      if(showLoading) {
+      if (showLoading) {
         this.showLoading = true;
-      }else {
+      } else {
         this.showLoading = false;
       }
       this.loading = true;
       this.$store
         .dispatch("file/list")
         .then((list) => {
+          this.updatedAt = new Date();
           this.appList = list;
           this.loading = false;
         })
@@ -90,36 +118,32 @@ export default {
           this.loading = false;
         });
     },
-    createApp() {
-      this.$store
-        .dispatch("file/create")
-        .then(() => {
-          this.fetchApps();
-          // this.$store.commit("view/wizardVisible", false);
-          // this.$store.commit('view/wizardClosable', true)
-        })
-        .catch(err => {
-          console.error(err)
-        });
+    createAppModal() {
+      this.createAppVisible = true;
     },
-    openApp(app) {
-      this.$store.dispatch("file/openApp", {id: app.id, path:app.path}).then(() => {
-        this.$store.commit("view/wizardVisible", false);
-        this.$store.commit('view/wizardClosable', true)
-      });
+    enterApp(app) {
+      this.$store
+        .dispatch("file/enterApp", app)
+        .then(() => {
+          this.$store.commit("view/wizardVisible", false);
+          this.$store.commit("view/wizardClosable", true);
+        });
     },
     deleteApp(app) {
       this.$confirm({
         title: `确定删除“${app.name}”这个项目吗？`,
-        okText: '确定',
-        cancelText: '取消',
+        okText: "确定",
+        cancelText: "取消",
         onOk: () => {
-          return this.$store.dispatch('file/delete', {id:app.id,path:app.path}).then(() => {
-            this.$store.commit('view/wizardClosable', false)
-            this.fetchApps();
-          }).catch(err => {
-            console.error(err)
-          })
+          return this.$store
+            .dispatch("file/delete", app)
+            .then(() => {
+              this.$store.commit("view/wizardClosable", false);
+              this.fetchApps();
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         },
         onCancel() {},
       });
@@ -137,17 +161,32 @@ export default {
       }
     },
     changeStatus(app) {
-      if(app.status === 'Running') {
-        this.$store.dispatch('showMessage', { type: 'info', msg: '停止中...'})
-        this.$store.dispatch('status/release', app.id)
+      if (app.status === "Running") {
+        this.$store.dispatch("showMessage", { type: "info", msg: "停止中..." });
+        this.$store.dispatch("status/release", app.id);
       } else {
-        this.$store.dispatch('showMessage', { type: 'info', msg: '开启中...'})
-        this.$store.dispatch('status/deploy', app.id)
+        this.$store.dispatch("showMessage", { type: "info", msg: "开启中..." });
+        this.$store.dispatch("status/deploy", app.id);
       }
-    }
+    },
+    hideCreateAppModal() {
+      this.createAppVisible = false;
+    },
   },
 };
 </script>
+
+<style lang="scss">
+.app-card-wrapper {
+  padding: 0 10px;
+  height: calc(100vh - 37px - 65.5px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.app-card {
+  margin-bottom: 8px;
+}
+</style>
 
 <style lang="scss" scoped>
 .wizard-wrap {

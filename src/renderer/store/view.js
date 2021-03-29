@@ -6,6 +6,7 @@ export default {
     logPanelVisible: false,
     wizardVisible: true,
     wizardClosable: false,
+    createAppDialog: false,
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -19,6 +20,9 @@ export default {
     },
     wizardClosable(state, val) {
       state.wizardClosable = val;
+    },
+    createAppDialog(state, val) {
+      state.createAppDialog = val;
     }
   },
   actions: {

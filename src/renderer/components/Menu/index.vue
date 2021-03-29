@@ -70,7 +70,7 @@ export default {
               label: "最近打开",
               value: "file-recent",
               disabled: false,
-              items: this.recentPaths,
+              items: this.recentApps,
             },
             {
               label: "退出",
@@ -250,25 +250,26 @@ export default {
         ...this.menus[menuKey],
       }));
     },
-    recentPaths() {
-      let paths = [];
-      let _paths = this.$store.state.file.recentOpenedPaths;
-      for (let i = 0; i < _paths.length; i++) {
-        paths.push({
-          label: _paths[i],
+    recentApps() {
+      let apps = [];
+      let _apps = this.$store.state.file.recentOpenedApps;
+      for (let i = 0; i < _apps.length; i++) {
+        apps.push({
+          label: _apps[i].name,
+          _model: _apps[i],
           value: `file-recent-${i}`,
           level: 2,
         });
       }
-      return paths;
+      return apps;
     },
   },
   watch: {
-    "$store.state.file.recentOpenedPaths": {
+    "$store.state.file.recentOpenedApps": {
       handler() {
         this.menus.file.items.find(
           (item) => item.value === "file-recent"
-        ).items = this.recentPaths;
+        ).items = this.recentApps;
       },
       immediate: true,
     },
@@ -306,8 +307,9 @@ export default {
         let arr = menuItemId.split("-");
         let idx = parseInt(arr[arr.length - 1]);
         this.$store
-          .dispatch("file/openFile", this.recentPaths[idx].label)
+          .dispatch("file/enterRecentApp", this.recentApps[idx]._model)
           .catch(err => {
+            this.dispatch('showMessage', { type: "error", msg: "打开失败" });
             console.error(err)
           });
       }

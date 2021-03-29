@@ -31,5 +31,3 @@ export const isDevelopment = process.env.NODE_ENV !== "production"
   );
 
 export const configPath = path.join(app.getPath('userData'), 'config.ini');
-
-export const idCachePath = path.join(app.getPath('userData'), './idcache');

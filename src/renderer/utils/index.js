@@ -126,8 +126,21 @@ export function getFileNameAndExt(fullpath) {
   return { name, ext };
 }
 
-export function uniqueArray(array) {
-  return [...new Set(array)];
+export function uniqueArray(array, cb) {
+  if(cb) {
+    let newArr = [];
+    let cache = {};
+    for(let i = 0; i < array.length; i++) {
+      let key = cb(array[i])
+      if(!cache[key]) {
+        newArr.push(array[i])
+      }
+      cache[key] = true
+    }
+    return newArr;
+  }else {
+    return [...new Set(array)];
+  }
 }
 
 /**

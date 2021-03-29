@@ -70,13 +70,13 @@ export default {
     font-size: 14px;
     color: initial;
     &.sub {
-      width: 350px;
+      width: 200px;
       padding-right: 10px;
       .menu-label {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 300px;
+        width: 150px;
         // display: inline-block;
       }
     }
