@@ -21,7 +21,9 @@
           </a-button>
         </template>
       </a-page-header>
-      <p v-if="appList.length === 0">暂无项目</p>
+      <div v-if="appList.length === 0" class="app-card-wrapper">
+        <p>暂无项目</p> 
+      </div>
       <template v-else>
         <div class="app-card-wrapper">
           <a-row :gutter="16">
@@ -74,19 +76,14 @@
 
 <script>
 import { interval } from "utils/";
-import AppCreateForm from "components/AppCreateForm"
 
 export default {
-  components: {
-    AppCreateForm
-  },
   data() {
     return {
       showLoading: true,
       loading: false,
       appList: [],
       refreshInterval: 5000,
-      createAppVisible: false,
       updatedAt: new Date()
     };
   },
@@ -119,7 +116,7 @@ export default {
         });
     },
     createAppModal() {
-      this.createAppVisible = true;
+      this.$store.commit('view/createAppDialog', true);
     },
     enterApp(app) {
       this.$store
@@ -138,10 +135,12 @@ export default {
           return this.$store
             .dispatch("file/delete", app)
             .then(() => {
+              this.$store.dispatch("showMessage", { type: "success", msg: "删除成功" });
               this.$store.commit("view/wizardClosable", false);
               this.fetchApps();
             })
             .catch((err) => {
+              this.$store.dispatch("showMessage", { type: "error", msg: "删除成功" });
               console.error(err);
             });
         },
@@ -168,9 +167,6 @@ export default {
         this.$store.dispatch("showMessage", { type: "info", msg: "开启中..." });
         this.$store.dispatch("status/deploy", app.id);
       }
-    },
-    hideCreateAppModal() {
-      this.createAppVisible = false;
     },
   },
 };

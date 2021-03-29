@@ -15,6 +15,7 @@ import MenuView from "components/Menu/index";
 import ToolBar from "components/Toolbar";
 import Drawer from "components/Drawer";
 import Wizard from "components/Wizard";
+import AppCreateForm from "components/AppCreateForm"
 
 export default {
   name: 'App',
@@ -23,7 +24,8 @@ export default {
     MenuView,
     ToolBar,
     Drawer,
-    Wizard
+    Wizard,
+    AppCreateForm
   },
   mounted() {
     this.updateAppHeight();

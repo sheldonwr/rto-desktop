@@ -79,11 +79,12 @@ export default {
       this.loading = true;
       this.$store.dispatch('file/create', this.appCreateForm.name).then( () => {
         this.loading = false
+        this.$store.dispatch("showMessage", { type: "success", msg: "创建成功" });
         this.$emit("input", false);
       }).catch( err => {
         console.error(err);
         this.loading = false;
-        this.$message.error("创建失败");
+        this.$store.dispatch("showMessage", { type: "error", msg: "创建失败" });
       });
     },
   },

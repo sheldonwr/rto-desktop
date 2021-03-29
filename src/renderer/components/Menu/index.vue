@@ -316,7 +316,7 @@ export default {
       switch (menuItemId) {
         case "file-new":
           // 新建
-          this.$store.dispatch("file/create");
+          this.$store.commit('view/createAppDialog', true);
           break;
         case "file-open":
           // 打开

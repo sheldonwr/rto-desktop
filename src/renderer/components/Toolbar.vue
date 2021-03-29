@@ -66,7 +66,7 @@ export default {
   methods: {
     clickHandler(id) {
       if(id === 'file-new') {
-        this.$store.dispatch('file/create')
+        this.$store.commit('view/createAppDialog', true);
       }else if(id === 'file-open') {
         this.$store.dispatch('file/open').catch(err => {
           console.error(err)
