@@ -96,10 +96,10 @@ window.addEventListener('load', () => {
 
 storeInst.watch(
   function (state) {
-      return state.file.currentApp.id;
+      return state.file.currentApp;
   },
   function () {
-    if(storeInst.state.file.currentApp.id) {
+    if(storeInst.state.file.currentApp && storeInst.state.file.currentApp.id) {
       storeInst.dispatch('status/getStatus')
       storeInst.commit('log/allLogs', [])
       storeInst.dispatch('log/connect').then(res => {
