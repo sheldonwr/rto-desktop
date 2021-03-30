@@ -3,7 +3,13 @@
     <a-spin :spinning="showLoading && loading">
       <a-page-header title="项目列表">
         <template slot="extra">
-            <a-tooltip placement="left">
+          <a-input-search
+            style="width: 200px"
+            v-model.trim="searchValue"
+            placeholder="请输入搜索内容"
+            allowClear
+          />
+          <a-tooltip placement="left">
             <template slot="title">
               <span>上次更新时间：</span>
               <span>{{ updatedAt.toLocaleTimeString() }}</span>
@@ -21,13 +27,18 @@
           </a-button>
         </template>
       </a-page-header>
-      <div v-if="appList.length === 0" class="app-card-wrapper">
-        <p>暂无项目</p> 
+      <div v-if="filteredAppList.length === 0" class="app-card-wrapper">
+        <p>无项目</p>
       </div>
       <template v-else>
         <div class="app-card-wrapper">
           <a-row :gutter="16">
-            <a-col class="app-card" :span="6" v-for="app in appList" :key="app.id">
+            <a-col
+              class="app-card"
+              :span="6"
+              v-for="app in filteredAppList"
+              :key="app.id"
+            >
               <a-card :bordered="true">
                 <div class="cover-wrap" slot="cover" @click="enterApp(app)">
                   <div class="title-wrap">
@@ -84,10 +95,22 @@ export default {
       loading: false,
       appList: [],
       refreshInterval: 5000,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      searchValue: ''
     };
   },
   created() {},
+  computed: {
+    filteredAppList() {
+      if(this.searchValue) {
+        return this.appList.filter( app => {
+          return app.name.indexOf(this.searchValue) > -1
+        });
+      }else {
+        return this.appList;
+      }
+    }
+  },
   mounted() {
     this.reload(true);
     this.refreshTimer = interval(() => this.fetchApps(), this.refreshInterval);
@@ -116,15 +139,13 @@ export default {
         });
     },
     createAppModal() {
-      this.$store.commit('view/createAppDialog', true);
+      this.$store.commit("view/createAppDialog", true);
     },
     enterApp(app) {
-      this.$store
-        .dispatch("file/enterApp", app)
-        .then(() => {
-          this.$store.commit("view/wizardVisible", false);
-          this.$store.commit("view/wizardClosable", true);
-        });
+      this.$store.dispatch("file/enterApp", app).then(() => {
+        this.$store.commit("view/wizardVisible", false);
+        this.$store.commit("view/wizardClosable", true);
+      });
     },
     deleteApp(app) {
       this.$confirm({
@@ -135,12 +156,18 @@ export default {
           return this.$store
             .dispatch("file/delete", app)
             .then(() => {
-              this.$store.dispatch("showMessage", { type: "success", msg: "删除成功" });
+              this.$store.dispatch("showMessage", {
+                type: "success",
+                msg: "删除成功",
+              });
               this.$store.commit("view/wizardClosable", false);
               this.fetchApps();
             })
             .catch((err) => {
-              this.$store.dispatch("showMessage", { type: "error", msg: "删除成功" });
+              this.$store.dispatch("showMessage", {
+                type: "error",
+                msg: "删除成功",
+              });
               console.error(err);
             });
         },
