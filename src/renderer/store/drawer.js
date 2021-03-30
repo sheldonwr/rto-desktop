@@ -28,7 +28,6 @@ export default {
       state.menuInfo.visible = visible;
       state.menuInfo.location = location;
       state.menuInfo.detail = detail;
-      console.log(state.menuInfo.location.x)
     }
   },
   actions: {

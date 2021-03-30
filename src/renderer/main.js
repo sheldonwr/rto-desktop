@@ -28,7 +28,7 @@ new Vue({
   render: h => h(LogApp),
 }).$mount('.rto_log');
 
-window.addEventListener('mousedown', () => {
+window.addEventListener('click', () => {
   if (storeInst.state.drawer.menuInfo.visible) {
     storeInst.commit('drawer/changeMenuVisible', { visible: false });
   }
@@ -36,28 +36,36 @@ window.addEventListener('mousedown', () => {
 
 window.addEventListener('load', () => {
   // 组件右键菜单
-  window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = {}) => {
-    const { item, itemKey } = options;
-    // 判断当前选中组件是否为rto组件
-    if (item && item.metadata.def) {
-      const { type, actionList } = item.metadata.def;
-      if (type === 601 && actionList && actionList.length > 0 && actionList[0].hasOwnProperty('url')) {
-        const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
-        const { url } = actionList[0];
-        storeInst.commit('drawer/changeMenuVisible', {
-          visible: true,
-          location: { x: x + width, y: y + height / 2},
-          detail: [
-            { key: 'openRtoDrawer', name: '操作页面', function: () => {
-              storeInst.commit('drawer/changeDrawerVisible', true);
-              storeInst.commit('drawer/changeMenuVisible', { visible: false });
-              storeInst.commit('drawer/changeIsModelAlgoManage', false);
-              storeInst.commit('drawer/changeIframURL', `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`);
-            }}
-          ]
-        });
-      } else if (type !== 601 && storeInst.state.drawer.menuInfo.visible) {
-        storeInst.commit('drawer/changeMenuVisible', { visible: false });
+  window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = []) => {
+    if (options.length > 0) {
+      const { item, itemKey } = options[0];
+      // 判断当前选中组件是否为rto组件
+      console.log(options)
+      if (item && item.metadata && item.metadata.def) {
+        const { type, actionList } = item.metadata.def;
+        if (type === 601 && actionList && actionList.length > 0 && actionList[0].hasOwnProperty('url')) {
+          const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
+          const { url } = actionList[0];
+          const { appId, userId } = window.appConfig;
+          const iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
+                          .replace('{{userId}}', userId)
+                          .replace('{{appId}}', appId)
+                          .replace('{{nodeId}}', itemKey);
+          storeInst.commit('drawer/changeMenuVisible', {
+            visible: true,
+            location: { x: x + width, y: y + height / 2},
+            detail: [
+              { key: 'openRtoDrawer', name: '操作页面', function: (event) => {
+                storeInst.commit('drawer/changeDrawerVisible', true);
+                storeInst.commit('drawer/changeMenuVisible', { visible: false });
+                storeInst.commit('drawer/changeIsModelAlgoManage', false);
+                storeInst.commit('drawer/changeIframURL', iframeUrl);
+              }}
+            ]
+          });
+        } else if (type !== 601 && storeInst.state.drawer.menuInfo.visible) {
+          storeInst.commit('drawer/changeMenuVisible', { visible: false });
+        }
       }
     }
   });
@@ -77,6 +85,9 @@ window.addEventListener('load', () => {
 
   window.SuanpanAPI.eventService.on('sp:node:select', (event, data) => {
     storeInst.commit('edit/selectedNode', data[1])
+    if (storeInst.state.drawer.menuInfo.visible) {
+      storeInst.commit('drawer/changeMenuVisible', { visible: false });
+    }
   })
   window.SuanpanAPI.eventService.on('sp:node:deselect', (event, data) => {
     storeInst.commit('edit/selectedNode', null)
