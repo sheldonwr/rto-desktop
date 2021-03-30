@@ -9,6 +9,7 @@ import App from './App.vue';
 import LogApp from './LogApp.vue';
 import store from "./store";
 import Loading from "components/Loading"
+import { interval } from "utils/";
 
 
 Vue.config.productionTip = false;
@@ -92,6 +93,11 @@ window.addEventListener('load', () => {
   window.SuanpanAPI.eventService.on('sp:node:deselect', (event, data) => {
     storeInst.commit('edit/selectedNode', null)
   })
+
+  // interval get status
+  interval(() => {
+    storeInst.dispatch('status/getStatus')
+  }, 1000);
 });
 
 storeInst.watch(

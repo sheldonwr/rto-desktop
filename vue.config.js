@@ -22,6 +22,9 @@ module.exports = {
           target: "AppImage",
           category: "Utility"
         },
+        mac: {
+          identity: null
+        },
         extraResources: [
           {
             from: "./src/main/assets/",
