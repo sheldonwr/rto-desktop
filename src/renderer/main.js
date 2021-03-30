@@ -39,33 +39,71 @@ window.addEventListener('load', () => {
   // 组件右键菜单
   window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = []) => {
     if (options.length > 0) {
+      const commonMenu = [{
+        key: 'cut',
+        name: '剪切',
+        active: true,
+        function: () => {
+          storeInst.dispatch("edit/cutNode");
+        }
+      }, {
+        key: 'copy',
+        name: '复制',
+        active: true,
+        function: () => {
+          storeInst.dispatch("edit/copyNode");
+        }
+      }, {
+        key: 'paste',
+        name: '粘贴',
+        active: true,
+        function: () => {
+          storeInst.dispatch("edit/pasteNode");
+        }
+      }, {
+        key: 'delete',
+        name: '删除',
+        active: true,
+        function: () => {
+          storeInst.dispatch("edit/deleteNode");
+        }
+      }];
       const { item, itemKey } = options[0];
-      // 判断当前选中组件是否为rto组件
-      console.log(options)
+      storeInst.commit('edit/selectedNode', item);
+      let detail = [...commonMenu];
       if (item && item.metadata && item.metadata.def) {
         const { type, actionList } = item.metadata.def;
-        if (type === 601 && actionList && actionList.length > 0 && actionList[0].hasOwnProperty('url')) {
-          const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
+        const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
+
+        // 判断当前选中组件是否为rto组件
+        if ( type === 601 && actionList && actionList.length > 0 && actionList[0].hasOwnProperty('url')) {
           const { url } = actionList[0];
           const { appId, userId } = window.appConfig;
           const iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
                           .replace('{{userId}}', userId)
                           .replace('{{appId}}', appId)
-                          .replace('{{nodeId}}', itemKey);
+                          .replace('{{nodeId}}', itemKey)
+          detail.push({ 
+            key: 'openRtoDrawer', 
+            name: '操作页面',
+            active: storeInst.getters['status/isRunning'],
+            function: () => {
+              storeInst.commit('drawer/changeDrawerVisible', true);
+              storeInst.commit('drawer/changeMenuVisible', { visible: false });
+              storeInst.commit('drawer/changeIsModelAlgoManage', false);
+              storeInst.commit('drawer/changeIframURL', iframeUrl);
+            }
+          });
+        }
+
+        if (storeInst.state.drawer.menuInfo.visible) {
+          storeInst.commit('drawer/changeMenuVisible', { visible: false });
+        } else {
           storeInst.commit('drawer/changeMenuVisible', {
             visible: true,
             location: { x: x + width, y: y + height / 2},
-            detail: [
-              { key: 'openRtoDrawer', name: '操作页面', function: (event) => {
-                storeInst.commit('drawer/changeDrawerVisible', true);
-                storeInst.commit('drawer/changeMenuVisible', { visible: false });
-                storeInst.commit('drawer/changeIsModelAlgoManage', false);
-                storeInst.commit('drawer/changeIframURL', iframeUrl);
-              }}
-            ]
+            detail
           });
-        } else if (type !== 601 && storeInst.state.drawer.menuInfo.visible) {
-          storeInst.commit('drawer/changeMenuVisible', { visible: false });
         }
       }
     }
