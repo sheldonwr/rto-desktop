@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div
+      class="menu" 
+      :style="{ display: getMenuInfo.visible ? 'block' : 'none', left: `${getMenuInfo.location.x}px`, top: `${getMenuInfo.location.y}px`  }"
+    >
+      <div class="menuItem" v-for="item in getMenuInfo.detail" :key="item.key" @click="() => item.function()">
+        {{ item.name }}
+      </div>
+    </div>
     <a-drawer
       wrapClassName="drawer-wrap"
       placement="right"
@@ -24,6 +32,9 @@ export default {
     isDrawerVisible() {
       return this.$store.state.drawer.drawerVisible;
     },
+    getMenuInfo() {
+      return this.$store.state.drawer.menuInfo;
+    },
     isModelAlgoManage() {
       return this.$store.state.drawer.isModelAlgoManage;
     },
@@ -42,6 +53,19 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+  .menu {
+    position: absolute;
+    background: #fff;
+    box-shadow: 0 0 5px 1px #e8e8e8;
+    .menuItem {
+      padding: 10px;
+      cursor: pointer;
+      
+      &:hover {
+        color: royalblue;
+      }
+    }
+  }
   :global {
     .ant-drawer-body {
       border-radius: 8px;
