@@ -4,7 +4,13 @@
       class="menu" 
       :style="{ display: getMenuInfo.visible ? 'block' : 'none', left: `${getMenuInfo.location.x}px`, top: `${getMenuInfo.location.y}px`  }"
     >
-      <div class="menuItem" v-for="item in getMenuInfo.detail" :key="item.key" @click="() => item.function()">
+      <div
+        class="menuItem"
+        v-for="item in getMenuInfo.detail"
+        :key="item.key"
+        @click="() => item.function()"
+        :style="!item.active && {color: '#b9b5b5', 'pointer-events': 'none'}"
+      >
         {{ item.name }}
       </div>
     </div>
