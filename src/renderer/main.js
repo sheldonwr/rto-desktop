@@ -72,30 +72,29 @@ window.addEventListener('load', () => {
       storeInst.commit('edit/selectedNode', item);
       let detail = [...commonMenu];
       if (item && item.metadata && item.metadata.def) {
-        const { type, actionList } = item.metadata.def;
+        const { actionList } = item.metadata.def;
         const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
-
-        // 判断当前选中组件是否为rto组件
-        if ( type === 601 && actionList && actionList.length > 0 && actionList[0].hasOwnProperty('url')) {
-          const { url } = actionList[0];
-          const { appId, userId } = window.appConfig;
-          const iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
-                          .replace('{{userId}}', userId)
-                          .replace('{{appId}}', appId)
-                          .replace('{{nodeId}}', itemKey)
-          detail.push({ 
-            key: 'openRtoDrawer', 
-            name: '操作页面',
-            active: storeInst.getters['status/isRunning'],
-            function: () => {
-              storeInst.commit('drawer/changeDrawerVisible', true);
-              storeInst.commit('drawer/changeMenuVisible', { visible: false });
-              storeInst.commit('drawer/changeIsModelAlgoManage', false);
-              storeInst.commit('drawer/changeIframURL', iframeUrl);
-            }
-          });
-        }
-
+        if (_.isEmpty(actionList) || actionList.length === 0) return;
+        actionList.map((action, index) => {
+          if (action.hasOwnProperty('url')) {
+            const { url } = actionList[0];
+            const { appId, userId } = window.appConfig;
+            const iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
+                            .replace('{{userId}}', userId)
+                            .replace('{{appId}}', appId)
+                            .replace('{{nodeId}}', itemKey)    
+            detail.push({ 
+              key: `action${index}`, 
+              name: action.label || '操作页面',
+              active: storeInst.getters['status/isRunning'],
+              function: () => {
+                storeInst.commit('drawer/changeMenuVisible', { visible: false });
+                storeInst.commit('drawer/changeIsModelAlgoManage', false);
+                window.open(iframeUrl, '', 'width=1024,height=600,top=150,left=250');
+              }
+            });
+          }
+        });
         if (storeInst.state.drawer.menuInfo.visible) {
           storeInst.commit('drawer/changeMenuVisible', { visible: false });
         } else {
@@ -115,9 +114,8 @@ window.addEventListener('load', () => {
     if (data && data.length > 0 && data[0].hasOwnProperty('url')) {
       const { url } = data[0];
       if (url && url !== '') {
-        storeInst.commit('drawer/changeDrawerVisible', true);
         storeInst.commit('drawer/changeIsModelAlgoManage', false);
-        storeInst.commit('drawer/changeIframURL', `${appConfig.redirectRequest}${url.match(/\/proxr[\S]*/)}`);
+        window.open(`${appConfig.redirectRequest}${url.match(/\/proxr[\S]*/)}`, '', 'width=1024,height=600,top=150,left=250');
       }
     }
   });
