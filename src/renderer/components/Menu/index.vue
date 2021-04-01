@@ -23,6 +23,7 @@
 
 <script>
 import DropMenu from "./DropMenu";
+import ModelAlgoManage from '../ModelAlgoManage';
 
 export default {
   name: "app-menu",
@@ -365,22 +366,24 @@ export default {
           );
           break;
         case "model-manage": // 模型管理
-          this.$store.commit("drawer/changeDrawerVisible", true);
+          // this.$store.commit("drawer/changeDrawerVisible", true);
           this.$store.commit("drawer/changeActiveTab", "model");
           this.$store.commit("drawer/changeIsModelAlgoManage", true);
           this.$store.dispatch("ci/getList", {
             type: "model",
             pagination: this.$store.getters["ci/getPagination"],
           });
+          window.open(`${window.location.href}/modelAlgoManage`);
           break;
         case "algo-manage": // 算法管理
-          this.$store.commit("drawer/changeDrawerVisible", true);
+          // this.$store.commit("drawer/changeDrawerVisible", true);
           this.$store.commit("drawer/changeActiveTab", "algo");
           this.$store.commit("drawer/changeIsModelAlgoManage", true);
           this.$store.dispatch("ci/getList", {
             type: "algo",
             pagination: this.$store.getters["ci/getPagination"],
           });
+          window.open(`${window.location.href}/modelAlgoManage`);
           break;
       }
     },
