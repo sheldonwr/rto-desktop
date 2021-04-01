@@ -366,7 +366,6 @@ export default {
           );
           break;
         case "model-manage": // 模型管理
-          // this.$store.commit("drawer/changeDrawerVisible", true);
           this.$store.commit("drawer/changeActiveTab", "model");
           this.$store.commit("drawer/changeIsModelAlgoManage", true);
           process.env.NODE_ENV !== "production" ? 
@@ -374,7 +373,6 @@ export default {
           window.open(`${window.location.origin}/modelAlgoManage.html?tab=model`)
           break;
         case "algo-manage": // 算法管理
-          // this.$store.commit("drawer/changeDrawerVisible", true);
           this.$store.commit("drawer/changeActiveTab", "algo");
           this.$store.commit("drawer/changeIsModelAlgoManage", true);
           process.env.NODE_ENV !== "production" ? 
