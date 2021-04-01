@@ -53,7 +53,7 @@ async function createWindow() {
         titleBarStyle: "default",
         frame: true,
       });
-      event.newGuest = new BrowserWindow(options);
+      event.newGuest = new BrowserWindow({ ...options, width: 1024, height:600, y: '50%', x: '50%' });
       // Menu.setApplicationMenu(null)
       // event.newGuest.removeMenu();
       event.newGuest.loadURL(interceptUrl(url));
