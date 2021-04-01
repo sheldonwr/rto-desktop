@@ -99,7 +99,7 @@ export default {
     createDir() {
       this.loading = true;
       this.$store
-        .dispatch("file/create", this.dirCreateForm)
+        .dispatch("file/createDir", this.dirCreateForm)
         .then(() => {
           this.loading = false;
           this.$store.dispatch("showMessage", {

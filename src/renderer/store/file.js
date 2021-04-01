@@ -1,5 +1,5 @@
 import { invoke, gotoPredict } from "../services";
-import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp, userConfig } from "services/file"
+import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp, getUserConfig, saveUserConfig } from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
 
 export default {
@@ -123,7 +123,7 @@ export default {
       });
     },
     list({state, commit, dispatch}) {
-      return Promise.all([applist(), getMetricsList(), userConfig()]).then(res => {
+      return Promise.all([applist(), getMetricsList(), getUserConfig()]).then(res => {
         let apps = res[0].list || [];
         // traverse status
         let runningApps = res[1].items || [];
@@ -182,9 +182,47 @@ export default {
       })
     },
     dirList() {
-      return userConfig().then( res => {
+      return getUserConfig().then( res => {
         let predictDirs = res.predictDirs;
         return predictDirs[1]
+      })
+    },
+    createDir({}, {name, dir: dirId}) {
+      return getUserConfig().then( res => {
+        // traverse predict dir
+        let predictDirs = res.predictDirs;
+        let predictQueue = [];
+        let predictDirsMap = {};
+        let maxId = 0;
+        for(let i = 0; i < predictDirs.length; i++) {
+          predictQueue.push(predictDirs[i])
+          while(true) {
+            let dir = predictQueue.shift();
+            if(parseInt(dir.id) > maxId) {
+              maxId = parseInt(dir.id)
+            }
+            predictDirsMap[dir.id] = dir;
+            if(dir.children && dir.children.length > 0) {
+              for(let j = 0; j < dir.children.length; j++) {
+                predictQueue.push(dir.children[j]);
+              }
+            }
+            if(predictQueue.length === 0) {
+              break;
+            }
+          }
+        }
+        let parentDir = predictDirsMap[dirId]
+        if(!parentDir.children) {
+          parentDir.children = []
+        }
+        parentDir.children.push({
+          children: [],
+          folder: true,
+          id: maxId + 1,
+          label: name
+        })
+        return saveUserConfig(res);
       })
     }
   },

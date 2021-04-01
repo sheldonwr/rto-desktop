@@ -137,8 +137,15 @@ export function saveFile(appId, fullpath) {
 }
 
 /**
- * userconfig
+ * get userconfig
  */
-export function userConfig() {
+export function getUserConfig() {
   return window.SuanpanAPI.userService.getConfig();
+}
+
+/**
+ * save userconfig
+ */
+export function saveUserConfig(json) {
+  return window.SuanpanAPI.userService.saveConfig(json);
 }
