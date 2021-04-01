@@ -70,6 +70,7 @@ export default {
   },
   created() {
     bus.on('app-create-success', this.fetchApps)
+    bus.on('dir-create-success', this.fetchApps)
   },
   mounted() {
     this.reload(true);
@@ -78,6 +79,7 @@ export default {
   beforeDestroy() {
     this.refreshTimer.clear();
     bus.off('app-create-success', this.fetchApps)
+    bus.off('dir-create-success', this.fetchApps)
   },
   methods: {
     fetchApps(showLoading) {

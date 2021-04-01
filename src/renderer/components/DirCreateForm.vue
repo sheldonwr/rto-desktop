@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import bus from "utils/bus"
+
 export default {
   props: {
     value: {
@@ -105,6 +107,7 @@ export default {
             msg: "创建成功",
           });
           this.$emit("input", false);
+          bus.emit("dir-create-success")
         })
         .catch((err) => {
           console.error(err);
