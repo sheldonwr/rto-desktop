@@ -34,6 +34,7 @@
             showIcon
             :treeData="appList"
             @select="selectHandler"
+            @rightClick="rightClickHandler"
             :defaultExpandedKeys="['dir-2']"
           >
           <template slot="dir" slot-scope="item">
@@ -51,14 +52,21 @@
         </div>
       </template>
     </a-spin>
+    <context-menu ref="ctxMenu">
+      <li class="wizard-menu-item" v-for="(item, idx) in contextItems" :key="idx">{{ item.label }}</li>
+    </context-menu>
   </div>
 </template>
 
 <script>
 import { interval } from "utils/";
 import bus from "utils/bus"
+import contextMenu from 'vue-context-menu'
 
 export default {
+  components: {
+    contextMenu
+  },
   data() {
     return {
       showLoading: true,
@@ -66,11 +74,34 @@ export default {
       appList: [],
       refreshInterval: 5000,
       updatedAt: new Date(),
+      contextItem: null
     };
   },
   created() {
-    bus.on('app-create-success', this.fetchApps)
-    bus.on('dir-create-success', this.fetchApps)
+    bus.on('app-create-success', this.fetchAppsLoading)
+    bus.on('dir-create-success', this.fetchAppsLoading)
+  },
+  computed: {
+    contextItems() {
+      if(!this.contextItem) {
+        return []
+      }
+      if(this.contextItem.isLeaf) {
+        return [{
+          label: this.contextItem.dataRef.status === 'Running' ? '停止' : '开启',
+        }, {
+          label: '删除'
+        }]
+      }else {
+        if(this.contextItem.dataRef.id == 1 || this.contextItem.dataRef.id == 2) {
+          return []
+        }else {
+          return [{
+            label: '删除'
+          }]
+        }
+      }
+    }
   },
   mounted() {
     this.reload(true);
@@ -78,10 +109,13 @@ export default {
   },
   beforeDestroy() {
     this.refreshTimer.clear();
-    bus.off('app-create-success', this.fetchApps)
-    bus.off('dir-create-success', this.fetchApps)
+    bus.off('app-create-success', this.fetchAppsLoading)
+    bus.off('dir-create-success', this.fetchAppsLoading)
   },
   methods: {
+    fetchAppsLoading() {
+      this.fetchApps(true)
+    },
     fetchApps(showLoading) {
       if (showLoading) {
         this.showLoading = true;
@@ -168,6 +202,10 @@ export default {
     },
     dblclickHandler(item) {
       this.enterApp(item.dataRef)
+    },
+    rightClickHandler({event, node}) {
+      this.contextItem = node
+      this.$refs.ctxMenu.open(event)
     }
   },
 };
@@ -187,6 +225,20 @@ export default {
   .ant-tree-title {
     display: inline-block;
     width: calc(100% - 24px);
+  }
+}
+.ctx-menu {
+  font-size: 14px;
+}
+.wizard-menu-item {
+  cursor: pointer;
+  line-height: 28px;
+  padding: 0 12px;
+  &:hover {
+    background: #ddd;
+  }
+  &.disabled {
+    cursor: not-allowed;
   }
 }
 </style>

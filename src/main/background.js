@@ -58,7 +58,7 @@ async function createWindow() {
       // event.newGuest.removeMenu();
       if(url.indexOf('modelAlgoManage') > -1) {
         if (isDevelopment) {
-          await appInjectDev2();
+          await appInjectModelAlgoManage();
         }else {
           appInjectProd();
         }

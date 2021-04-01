@@ -9,16 +9,14 @@ export async function appInjectDev() {
   protocol.interceptStringProtocol("http", async (request, callback) => {
     protocol.uninterceptProtocol("http");
     let url = new URL(request.url);
-    console.log('++++', url)
     let htmlStr = await getHtmlString(url.href);
     callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, appConfig) });
   });
 }
 
-export async function appInjectDev2() {
+export async function appInjectModelAlgoManage() {
   protocol.interceptStringProtocol("http", async (request, callback) => {
     let url = new URL(request.url);
-    console.log('====', url)
     if(url.pathname.indexOf('modelAlgoManage')) {
       protocol.uninterceptProtocol("http");
       let htmlStr = await getHtmlString(process.env.WEBPACK_DEV_SERVER_URL);
