@@ -3,12 +3,6 @@
     <a-spin :spinning="showLoading && loading">
       <a-page-header title="项目列表">
         <template slot="extra">
-          <a-input-search
-            style="width: 200px"
-            v-model.trim="searchValue"
-            placeholder="请输入搜索内容"
-            allowClear
-          />
           <a-tooltip placement="left">
             <template slot="title">
               <span>上次更新时间：</span>
@@ -19,66 +13,41 @@
               <span>刷新</span>
             </a-button>
           </a-tooltip>
+          <a-button type="primary">
+            <a-icon type="plus" />文件夹
+          </a-button>
           <a-button type="primary" @click="createAppModal">
-            新建
+            <a-icon type="plus" />项目
           </a-button>
           <a-button v-if="$store.state.view.wizardClosable" @click="close">
             关闭
           </a-button>
         </template>
       </a-page-header>
-      <div v-if="filteredAppList.length === 0" class="app-card-wrapper">
+      <div v-if="appList.length === 0" class="app-card-wrapper">
         <p>无项目</p>
       </div>
       <template v-else>
         <div class="app-card-wrapper">
-          <a-row :gutter="16">
-            <a-col
-              class="app-card"
-              :span="6"
-              v-for="app in filteredAppList"
-              :key="app.id"
-            >
-              <a-card :bordered="true">
-                <div class="cover-wrap" slot="cover" @click="enterApp(app)">
-                  <div class="title-wrap">
-                    <a-badge
-                      :status="app.status === 'Running' ? 'success' : 'default'"
-                    ></a-badge>
-                    <p class="title">{{ app.name }}</p>
-                  </div>
-                  <div class="inner-wrap">
-                    <a-button type="link">
-                      打开
-                    </a-button>
-                  </div>
-                </div>
-                <template slot="actions" class="ant-card-actions">
-                  <a-tooltip
-                    :title="app.status === 'Running' ? '停止' : '开启'"
-                  >
-                    <a-button
-                      type="default"
-                      shape="circle"
-                      style="border:0;line-height:1"
-                      @click="changeStatus(app)"
-                    >
-                      <span
-                        :class="[
-                          'rto_iconfont',
-                          app.status === 'Running' ? 'icon-stop' : 'icon-start',
-                        ]"
-                        style="font-size: 26px;"
-                      ></span>
-                    </a-button>
-                  </a-tooltip>
-                  <a-button type="danger" icon="delete" @click="deleteApp(app)">
-                    删除
-                  </a-button>
-                </template>
-              </a-card>
-            </a-col>
-          </a-row>
+          <a-tree
+            blockNode
+            showIcon
+            default-expand-all
+            :treeData="appList"
+            @select="selectHandler"
+          >
+          <template slot="dir" slot-scope="item">
+            <a-icon :type="item.expanded ? 'folder-open' : 'folder'" />
+          </template>
+          <template slot="app" slot-scope="item">
+            <a-badge :status="item.status === 'Running' ? 'success' : 'default'"></a-badge>
+          </template>
+          <template slot="appTitle" slot-scope="item">
+            <span class="app-title-wrapper">
+              <span>{{ item.title }}</span>
+              </span>
+          </template>
+          </a-tree>
         </div>
       </template>
     </a-spin>
@@ -96,21 +65,9 @@ export default {
       appList: [],
       refreshInterval: 5000,
       updatedAt: new Date(),
-      searchValue: ''
     };
   },
   created() {},
-  computed: {
-    filteredAppList() {
-      if(this.searchValue) {
-        return this.appList.filter( app => {
-          return app.name.indexOf(this.searchValue) > -1
-        });
-      }else {
-        return this.appList;
-      }
-    }
-  },
   mounted() {
     this.reload(true);
     this.refreshTimer = interval(() => this.fetchApps(), this.refreshInterval);
@@ -129,6 +86,7 @@ export default {
       this.$store
         .dispatch("file/list")
         .then((list) => {
+          console.log(list);
           this.updatedAt = new Date();
           this.appList = list;
           this.loading = false;
@@ -195,6 +153,14 @@ export default {
         this.$store.dispatch("status/deploy", app.id);
       }
     },
+    selectHandler(selectedKeys, e) {
+      console.log('+++', e)
+      if(!e.node.isLeaf) {
+        e.node.onExpand(!e.node.expanded)
+      }else{
+        this.enterApp(e.node.dataRef);
+      }
+    }
   },
 };
 </script>
@@ -223,40 +189,14 @@ export default {
     position: relative;
     top: 2px;
   }
-  .cover-wrap {
-    height: 80px;
-    cursor: pointer;
-    .title-wrap {
-      overflow: hidden;
-      padding-top: 30px;
-      padding-left: 20px;
-      display: flex;
-      .title {
-        color: rgba(0, 0, 0, 0.85);
-        font-weight: 500;
-        font-size: 16px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
-    .inner-wrap {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      height: 80px;
-      background: rgba(0, 0, 0, 0.4);
-      display: flex;
-      visibility: hidden;
-      justify-content: center;
-      align-items: center;
-      transition: transform 0.3s;
-      transform: translateY(-150px);
+  .app-title-wrapper {
+    display: inline-block;
+    .app-actions {
+      display: none;
     }
     &:hover {
-      .inner-wrap {
-        visibility: visible;
-        transform: translateY(0);
+      .app-actions {
+        display: inline-block;
       }
     }
   }

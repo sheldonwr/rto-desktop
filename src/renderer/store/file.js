@@ -1,5 +1,5 @@
 import { invoke, gotoPredict } from "../services";
-import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp } from "services/file"
+import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp, userConfig } from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
 
 export default {
@@ -123,24 +123,60 @@ export default {
       });
     },
     list({state, commit, dispatch}) {
-      return Promise.all([applist(), getMetricsList()]).then(res => {
+      return Promise.all([applist(), getMetricsList(), userConfig()]).then(res => {
         let apps = res[0].list || [];
+        // traverse status
         let runningApps = res[1].items || [];
         let runningAppsMap = {};
         for(let i = 0; i < runningApps.length; i++) {
           runningAppsMap[runningApps[i].appId] = runningApps[i]
         }
+        // traverse predict dir
+        let predictDirs = res[2].predictDirs;
+        let predictQueue = [];
+        let predictDirsMap = {};
+        for(let i = 0; i < predictDirs.length; i++) {
+          predictQueue.push(predictDirs[i])
+          while(true) {
+            let dir = predictQueue.shift();
+            dir.key = `dir-${dir.id}`;
+            dir.title = dir.label;
+            dir.scopedSlots = {
+              icon: 'dir'
+            }
+            predictDirsMap[dir.id] = dir;
+            if(dir.children && dir.children.length > 0) {
+              for(let j = 0; j < dir.children; j++) {
+                predictQueue.push(dir.children[j]);
+              }
+              dir.children = [];
+            }
+            if(predictQueue.length === 0) {
+              break;
+            }
+          }
+        }
+        // put apps into dir
         for(let i = 0; i < apps.length; i++) {
           let app = apps[i];
           app.id = '' + app.id;
-          app.c_htime = new Date(app.gmt_create);
+          app.key = `app-${app.id}`;
+          app.title = app.name;
+          app.isLeaf = true;
+          app.scopedSlots = {
+            icon: 'app',
+            title: 'appTitle'
+          }
           if(runningAppsMap[app.id]) {
             app.status = runningAppsMap[app.id].status;
           }
+          let dir = predictDirsMap[app.dir];
+          if(!dir) {
+            continue;
+          }
+          dir.children.push(app);
         }
-        // sort by create time
-        apps.sort((a, b) => b.c_htime - a.c_htime);
-        return apps;
+        return predictDirs;
       })
     },
   },

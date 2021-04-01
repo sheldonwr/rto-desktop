@@ -1,7 +1,7 @@
 <template>
   <div class="header-wrap drag">
     <div class="logo-wrap">
-      <img :src="require('assets/img/logo.png')">
+      <p class="logo-title">工业实时优化平台</p>
     </div>
     <div class="title-wrap">
       <p class="title">{{ $store.getters['file/title'] }}</p>
@@ -60,10 +60,18 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 16px;
-    width: 150px;
+    width: 200px;
     img {
       width: 88px;
       height: 23px;
+    }
+    .logo-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+      background: linear-gradient(#4470f7, #2183f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   }
   .title {
@@ -71,7 +79,7 @@ export default {
   }
   .window-controls {
     display: flex;
-    width: 150px;
+    width: 200px;
     justify-content: flex-end;
     .window-icon {
       cursor: pointer;
