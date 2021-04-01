@@ -9,8 +9,21 @@ export async function appInjectDev() {
   protocol.interceptStringProtocol("http", async (request, callback) => {
     protocol.uninterceptProtocol("http");
     let url = new URL(request.url);
+    console.log('++++', url)
     let htmlStr = await getHtmlString(url.href);
     callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, appConfig) });
+  });
+}
+
+export async function appInjectDev2() {
+  protocol.interceptStringProtocol("http", async (request, callback) => {
+    let url = new URL(request.url);
+    console.log('====', url)
+    if(url.pathname.indexOf('modelAlgoManage')) {
+      protocol.uninterceptProtocol("http");
+      let htmlStr = await getHtmlString(process.env.WEBPACK_DEV_SERVER_URL);
+      callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, appConfig) });
+    }
   });
 }
 
@@ -43,7 +56,10 @@ export function appInjectProd() {
     (request, respond) => {
       let pathName = new URL(request.url).pathname;
       pathName = decodeURI(pathName); // Needed in case URL contains spaces
-
+      let pathNameOrigin = pathName;
+      if(pathName === '/modelAlgoManage.html') {
+        pathName = '/index.html'
+      }
       fs.readFile(path.join(__dirname, pathName), (error, data) => {
         if (error) {
           console.error(`Failed to read ${pathName} on app protocol`, error);
@@ -55,7 +71,9 @@ export function appInjectProd() {
           mimeType = "text/javascript";
         } else if (extension === ".html") {
           mimeType = "text/html";
-          if (pathName === "/index.html") {
+          if (pathNameOrigin === "/index.html") {
+            data = Buffer.from(injectAppConfig(data.toString(), appConfig));
+          }else if(pathNameOrigin === '/modelAlgoManage.html') {
             data = Buffer.from(injectAppConfig(data.toString(), appConfig));
           }
         } else if (extension === ".css") {

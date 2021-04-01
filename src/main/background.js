@@ -5,7 +5,7 @@ import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "ele
 import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { appInjectDev, appInjectProd, interceptUrl } from "./appInject";
+import { appInjectDev, appInjectProd, interceptUrl, appInjectDev2 } from "./appInject";
 import * as mainconfigs from "./mainconfig";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -47,7 +47,7 @@ async function createWindow() {
   // https://www.electronjs.org/docs/api/window-open
   win.webContents.on(
     "new-window",
-    (event, url, frameName, disposition, options, additionalFeatures) => {
+    async (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault();
       Object.assign(options, {
         titleBarStyle: "default",
@@ -56,6 +56,13 @@ async function createWindow() {
       event.newGuest = new BrowserWindow({ ...options, width: 1024, height:600, y: '50%', x: '50%' });
       // Menu.setApplicationMenu(null)
       // event.newGuest.removeMenu();
+      if(url.indexOf('modelAlgoManage') > -1) {
+        if (isDevelopment) {
+          await appInjectDev2();
+        }else {
+          appInjectProd();
+        }
+      }
       event.newGuest.loadURL(interceptUrl(url));
     }
   );

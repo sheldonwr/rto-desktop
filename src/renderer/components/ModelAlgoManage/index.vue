@@ -21,6 +21,12 @@ export default {
       currentTab: 'model'
     };
   },
+  mounted() {
+    this.$store.dispatch('ci/getList', {
+      type: this.getActiveTab,
+      pagination: this.$store.getters['ci/getPagination']
+    });
+  },
   computed: {
     getActiveTab: function () {
       return this.$store.state.drawer.activeTab;

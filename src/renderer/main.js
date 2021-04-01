@@ -6,6 +6,7 @@ import Antd from 'ant-design-vue';
 import Vue from 'vue';
 import Vuex from "vuex";
 import App from './App.vue';
+import ModelAlgoManage from './components/ModelAlgoManage';
 import LogApp from './LogApp.vue';
 import store from "./store";
 import Loading from "components/Loading"
@@ -19,9 +20,36 @@ Vue.prototype.$loading = Loading;
 
 const storeInst = new Vuex.Store(store)
 
+const routes = {
+  '/': App,
+  '/index.html': App,
+  '/modelAlgoManage': ModelAlgoManage,
+  '/modelAlgoManage.html': ModelAlgoManage
+};
+
+if(['/modelAlgoManage', '/modelAlgoManage.html'].indexOf(window.location.pathname) > -1) {
+  let queryString = window.location.search;
+  let params = new URLSearchParams(queryString);
+  let tab = params.get("tab");
+  storeInst.commit('drawer/changeActiveTab', tab)
+}
+
 new Vue({
   store: storeInst,
   render: h => h(App),
+  data: {
+    currentRoute: window.location.pathname,
+  },
+  computed: {
+    ViewComponent () {
+      const matchingView = routes[this.currentRoute]
+      console.log(matchingView)
+      return matchingView;
+    }
+  },
+  render (h) {
+    return h(this.ViewComponent)
+  }
 }).$mount('.rto_header');
 
 new Vue({
@@ -90,7 +118,7 @@ window.addEventListener('load', () => {
               function: () => {
                 storeInst.commit('drawer/changeMenuVisible', { visible: false });
                 storeInst.commit('drawer/changeIsModelAlgoManage', false);
-                window.open(iframeUrl, '', 'width=1024,height=600,top=150,left=250');
+                window.open(iframeUrl);
               }
             });
           }
@@ -115,7 +143,7 @@ window.addEventListener('load', () => {
       const { url } = data[0];
       if (url && url !== '') {
         storeInst.commit('drawer/changeIsModelAlgoManage', false);
-        window.open(`${appConfig.redirectRequest}${url.match(/\/proxr[\S]*/)}`, '', 'width=1024,height=600,top=150,left=250');
+        window.open(`${appConfig.redirectRequest}${url.match(/\/proxr[\S]*/)}`);
       }
     }
   });
