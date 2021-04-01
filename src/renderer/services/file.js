@@ -135,3 +135,10 @@ export function saveFile(appId, fullpath) {
     return invoke("file-save", fullpath, downloadUrl.data)
   })
 }
+
+/**
+ * userconfig
+ */
+export function userConfig() {
+  return window.SuanpanAPI.userService.getConfig();
+}
