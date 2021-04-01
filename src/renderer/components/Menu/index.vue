@@ -369,21 +369,17 @@ export default {
           // this.$store.commit("drawer/changeDrawerVisible", true);
           this.$store.commit("drawer/changeActiveTab", "model");
           this.$store.commit("drawer/changeIsModelAlgoManage", true);
-          // this.$store.dispatch("ci/getList", {
-          //   type: "model",
-          //   pagination: this.$store.getters["ci/getPagination"],
-          // });
-          window.open(`http://localhost:8080/modelAlgoManage`);
+          process.env.NODE_ENV !== "production" ? 
+          window.open(`${window.location.origin}/modelAlgoManage?tab=model`):
+          window.open(`${window.location.origin}/modelAlgoManage.html?tab=model`)
           break;
         case "algo-manage": // 算法管理
           // this.$store.commit("drawer/changeDrawerVisible", true);
           this.$store.commit("drawer/changeActiveTab", "algo");
           this.$store.commit("drawer/changeIsModelAlgoManage", true);
-          this.$store.dispatch("ci/getList", {
-            type: "algo",
-            pagination: this.$store.getters["ci/getPagination"],
-          });
-          window.open(`${window.location.href}/modelAlgoManage`);
+          process.env.NODE_ENV !== "production" ? 
+          window.open(`${window.location.origin}/modelAlgoManage?tab=algo`):
+          window.open(`${window.location.origin}/modelAlgoManage.html?tab=algo`)
           break;
       }
     },

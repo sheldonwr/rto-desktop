@@ -22,14 +22,23 @@ const storeInst = new Vuex.Store(store)
 
 const routes = {
   '/': App,
-  '/modelAlgoManage': ModelAlgoManage
+  '/index.html': App,
+  '/modelAlgoManage': ModelAlgoManage,
+  '/modelAlgoManage.html': ModelAlgoManage
 };
+
+if(['/modelAlgoManage', '/modelAlgoManage.html'].indexOf(window.location.pathname) > -1) {
+  let queryString = window.location.search;
+  let params = new URLSearchParams(queryString);
+  let tab = params.get("tab");
+  storeInst.commit('drawer/changeActiveTab', tab)
+}
 
 new Vue({
   store: storeInst,
   render: h => h(App),
   data: {
-    currentRoute: window.location.pathname
+    currentRoute: window.location.pathname,
   },
   computed: {
     ViewComponent () {

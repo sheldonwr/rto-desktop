@@ -59,6 +59,8 @@ async function createWindow() {
       if(url.indexOf('modelAlgoManage') > -1) {
         if (isDevelopment) {
           await appInjectDev2();
+        }else {
+          appInjectProd();
         }
       }
       event.newGuest.loadURL(interceptUrl(url));
