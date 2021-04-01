@@ -6,6 +6,7 @@
     <drawer></drawer>
     <wizard v-if="$store.state.view.wizardVisible"></wizard>
     <AppCreateForm v-if="createAppDialog" v-model="createAppDialog"></AppCreateForm>
+    <DirCreateForm v-if="createDirDialog" v-model="createDirDialog"></DirCreateForm>
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import ToolBar from "components/Toolbar";
 import Drawer from "components/Drawer";
 import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm"
+import DirCreateForm from "components/DirCreateForm"
 
 export default {
   name: 'App',
@@ -25,7 +27,8 @@ export default {
     ToolBar,
     Drawer,
     Wizard,
-    AppCreateForm
+    AppCreateForm,
+    DirCreateForm
   },
   mounted() {
     this.updateAppHeight();
@@ -42,6 +45,14 @@ export default {
       },
       set(val) {
         this.$store.commit('view/createAppDialog', val);
+      }
+    },
+    createDirDialog: {
+      get() {
+        return this.$store.state.view.createDirDialog;
+      },
+      set(val) {
+        this.$store.commit('view/createDirDialog', val);
       }
     }
   },

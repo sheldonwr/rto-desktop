@@ -13,7 +13,7 @@
               <span>刷新</span>
             </a-button>
           </a-tooltip>
-          <a-button type="primary">
+          <a-button type="primary" @click="createDirModal">
             <a-icon type="plus" />文件夹
           </a-button>
           <a-button type="primary" @click="createAppModal">
@@ -32,9 +32,9 @@
           <a-tree
             blockNode
             showIcon
-            default-expand-all
             :treeData="appList"
             @select="selectHandler"
+            :defaultExpandedKeys="['dir-2']"
           >
           <template slot="dir" slot-scope="item">
             <a-icon :type="item.expanded ? 'folder-open' : 'folder'" />
@@ -43,7 +43,7 @@
             <a-badge :status="item.status === 'Running' ? 'success' : 'default'"></a-badge>
           </template>
           <template slot="appTitle" slot-scope="item">
-            <span class="app-title-wrapper">
+            <span class="app-title-wrapper" @dblclick="dblclickHandler(item)">
               <span>{{ item.title }}</span>
               </span>
           </template>
@@ -56,6 +56,7 @@
 
 <script>
 import { interval } from "utils/";
+import bus from "utils/bus"
 
 export default {
   data() {
@@ -67,13 +68,16 @@ export default {
       updatedAt: new Date(),
     };
   },
-  created() {},
+  created() {
+    bus.on('app-create-success', this.fetchApps)
+  },
   mounted() {
     this.reload(true);
     this.refreshTimer = interval(() => this.fetchApps(), this.refreshInterval);
   },
   beforeDestroy() {
     this.refreshTimer.clear();
+    bus.off('app-create-success', this.fetchApps)
   },
   methods: {
     fetchApps(showLoading) {
@@ -86,7 +90,6 @@ export default {
       this.$store
         .dispatch("file/list")
         .then((list) => {
-          console.log(list);
           this.updatedAt = new Date();
           this.appList = list;
           this.loading = false;
@@ -98,6 +101,9 @@ export default {
     },
     createAppModal() {
       this.$store.commit("view/createAppDialog", true);
+    },
+    createDirModal() {
+      this.$store.commit("view/createDirDialog", true);
     },
     enterApp(app) {
       this.$store.dispatch("file/enterApp", app).then(() => {
@@ -154,12 +160,12 @@ export default {
       }
     },
     selectHandler(selectedKeys, e) {
-      console.log('+++', e)
       if(!e.node.isLeaf) {
         e.node.onExpand(!e.node.expanded)
-      }else{
-        this.enterApp(e.node.dataRef);
       }
+    },
+    dblclickHandler(item) {
+      this.enterApp(item.dataRef)
     }
   },
 };
@@ -174,6 +180,12 @@ export default {
 }
 .app-card {
   margin-bottom: 8px;
+}
+.wizard-wrap {
+  .ant-tree-title {
+    display: inline-block;
+    width: calc(100% - 24px);
+  }
 }
 </style>
 
@@ -191,14 +203,7 @@ export default {
   }
   .app-title-wrapper {
     display: inline-block;
-    .app-actions {
-      display: none;
-    }
-    &:hover {
-      .app-actions {
-        display: inline-block;
-      }
-    }
+    width: 100%;
   }
 }
 </style>

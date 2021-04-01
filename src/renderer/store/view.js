@@ -7,6 +7,7 @@ export default {
     wizardVisible: true,
     wizardClosable: false,
     createAppDialog: false,
+    createDirDialog: false,
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -23,6 +24,9 @@ export default {
     },
     createAppDialog(state, val) {
       state.createAppDialog = val;
+    },
+    createDirDialog(state, val) {
+      state.createDirDialog = val;
     }
   },
   actions: {

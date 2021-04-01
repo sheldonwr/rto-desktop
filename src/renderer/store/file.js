@@ -102,8 +102,8 @@ export default {
         throw err;
       });
     },
-    create({ state, commit, dispatch }, name) {
-      return createApp(name).then( res => {
+    create({ state, commit, dispatch }, {name, dir}) {
+      return createApp(name, dir).then( res => {
         return gotoPredict(res.id).then( () => {
           commit("currentApp", {
             id: res.id,
@@ -146,10 +146,9 @@ export default {
             }
             predictDirsMap[dir.id] = dir;
             if(dir.children && dir.children.length > 0) {
-              for(let j = 0; j < dir.children; j++) {
+              for(let j = 0; j < dir.children.length; j++) {
                 predictQueue.push(dir.children[j]);
               }
-              dir.children = [];
             }
             if(predictQueue.length === 0) {
               break;
@@ -174,10 +173,19 @@ export default {
           if(!dir) {
             continue;
           }
+          if(!dir.children) {
+            dir.children = []
+          }
           dir.children.push(app);
         }
         return predictDirs;
       })
     },
+    dirList() {
+      return userConfig().then( res => {
+        let predictDirs = res.predictDirs;
+        return predictDirs[1]
+      })
+    }
   },
 };

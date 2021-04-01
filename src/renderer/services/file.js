@@ -3,10 +3,10 @@ import { invoke } from "./index";
 /**
  * 新建一个项目
  */
-export function createApp(name) {
+export function createApp(name, dir) {
   return window.appService.create(
     name,
-    window.appConfig.defaultAppFolder,
+    dir,
     "predict"
   );
 }
