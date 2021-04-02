@@ -371,7 +371,7 @@ export default {
   }
 }
 .ctx-menu {
-  font-size: 14px;
+  font-size: 14px !important;
 }
 .wizard-menu-item {
   cursor: pointer;
