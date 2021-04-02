@@ -24,11 +24,11 @@
           </a-button>
         </template>
       </a-page-header>
-      <div v-if="appList.length === 0" class="app-card-wrapper">
+      <div v-if="appList.length === 0" class="app-tree-wrapper">
         <p>无项目</p>
       </div>
       <template v-else>
-        <div class="app-card-wrapper">
+        <div class="app-tree-wrapper">
           <a-tree
             blockNode
             showIcon
@@ -204,7 +204,7 @@ export default {
       }
     },
     changeStatus(app) {
-      let title = app.status === "Running" ? '确定停止该项目？' : '确定开启该项目？';
+      let title = app.status === "Running" ? `确定停止${app.name}项目？` : `确定开启${app.name}项目？`;
       this.$confirm({
         title: title,
         okText: "确定",
@@ -240,20 +240,11 @@ export default {
 </script>
 
 <style lang="scss">
-.app-card-wrapper {
+.app-tree-wrapper {
   padding: 0 10px;
-  height: calc(100vh - 37px - 65.5px);
+  height: calc(100vh - 37px - 65.5px - 23px);
   overflow-y: auto;
   overflow-x: hidden;
-}
-.app-card {
-  margin-bottom: 8px;
-}
-.wizard-wrap {
-  .ant-tree-title {
-    display: inline-block;
-    width: calc(100% - 24px);
-  }
 }
 .ctx-menu {
   font-size: 14px;
@@ -277,7 +268,7 @@ export default {
   position: absolute;
   top: 37px;
   z-index: 999;
-  height: calc(100vh - 37px);
+  height: calc(100vh - 37px - 23px);
   background: #fff;
   .reload {
     position: relative;

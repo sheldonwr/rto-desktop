@@ -75,19 +75,19 @@ export default {
   methods: {
     updateAppHeight() {
       let appH = '';
-      let rightPanelH = 'calc(100vh - (50px + 38px + 60px))';
+      let rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px + 24px))';
       if(this.$store.state.view.toolbarVisible && this.$store.state.view.logPanelVisible) {
-        appH = 'calc(100% - 115px - 280px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px + 280px))';
+        appH = 'calc(100% - 115px - 280px - 24px)';
+        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px + 280px + 24px))';
       }else if(this.$store.state.view.toolbarVisible) {
-        appH = 'calc(100% - 115px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px))';
+        appH = 'calc(100% - 115px - 24px)';
+        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px + 24px))';
       }else if(this.$store.state.view.logPanelVisible) {
-        appH = 'calc(100% - 115px + 40px - 280px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px - 40px + 280px))';
+        appH = 'calc(100% - 115px + 40px - 280px - 24px)';
+        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px - 40px + 280px + 24px))';
       }else {
-        appH = 'calc(100% - 115px + 40px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px - 40px))';
+        appH = 'calc(100% - 115px + 40px - 24px)';
+        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px - 40px + 24px))';
       }
       document.getElementById('app').style.height = appH;
       let rightPabelEl = document.querySelector('.tab-pane.ng-scope');

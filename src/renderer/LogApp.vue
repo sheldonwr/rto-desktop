@@ -79,6 +79,9 @@ export default {
   .condition {
     width: 80px;
   }
+  ul {
+    margin-bottom: 0;
+  }
 }
 .log-head {
   position: relative;
@@ -101,6 +104,7 @@ export default {
   }
 }
 .log-head-inner {
+  box-sizing: border-box;
   line-height: 38px;
   font-size: 12px;
   color: #333;
@@ -109,6 +113,7 @@ export default {
   border-top: solid 1px #dcdcdc;
 }
 .log-content-wrap {
+  box-sizing: border-box;
   height: 242px;
   background: #fff;
   padding: 0 30px 0 12px;
