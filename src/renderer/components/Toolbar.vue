@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="deploy-container">
-      <div class="toolbar-icon" :title="isRunning ? '停止': '开启'" @click="clickHandler('deploy')">
+      <div class="toolbar-icon" :class="[isRunning ? 'deploy-stop' : 'deploy-running']" :title="isRunning ? '停止': '开启'" @click="clickHandler('deploy')">
         <span :class="['rto_iconfont', isRunning ? 'icon-stop' : 'icon-start']" style="font-size: 22px"></span>
       </div>
     </div>
@@ -76,9 +76,18 @@ export default {
       }else if(id === 'file-saveAs') {
         this.$store.dispatch('file/saveAs')
       }else if(id === 'deploy') {
-        let deployBtn = document.querySelector('.sp-app-actions .footer-item');
-        deployBtn.click()
-        this.isRunning = !this.isRunning
+        let title = this.isRunning ? '确定停止该项目？' : '确定开启该项目？';
+        this.$confirm({
+          title: title,
+          okText: "确定",
+          cancelText: "取消",
+          onOk: () => {
+            let deployBtn = document.querySelector('.sp-app-actions .footer-item');
+            deployBtn.click()
+            this.isRunning = !this.isRunning
+          },
+          onCancel() {},
+        });
       }else if(id === 'edit-cut') {
         this.$store.dispatch('edit/cutNode');
       }else if(id === 'edit-copy') {
@@ -90,6 +99,15 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.deploy-stop {
+  color: #f5222d !important;
+}
+.deploy-running {
+  color: #52c41a !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .toolbar {

@@ -35,6 +35,8 @@ export default {
     window.addEventListener('resize', () => {
       this.$store.dispatch('window/getMaximizedState');
     });
+    // global keycuts
+    window.addEventListener('keydown', this.keycutsHandler);
   },
   created() {
   },
@@ -91,6 +93,17 @@ export default {
       let rightPabelEl = document.querySelector('.tab-pane.ng-scope');
       if(rightPabelEl) {
         rightPabelEl.style.height = rightPanelH;
+      }
+    },
+    keycutsHandler(event) {
+      if(event.keyCode === 118) {
+        // 'F7'
+        if(this.$store.state.view.wizardVisible && this.$store.state.view.wizardClosable) {
+          this.$store.commit("view/wizardVisible", false);
+        }else if(!this.$store.state.view.wizardVisible) {
+          this.$store.commit("view/logPanelVisible", false);
+          this.$store.commit("view/wizardVisible", true);
+        }
       }
     }
   }

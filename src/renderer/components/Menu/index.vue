@@ -23,7 +23,6 @@
 
 <script>
 import DropMenu from "./DropMenu";
-import ModelAlgoManage from '../ModelAlgoManage';
 
 export default {
   name: "app-menu",
@@ -60,12 +59,10 @@ export default {
             {
               label: "关闭",
               value: "file-close",
-              disabled: true,
             },
             {
               label: "终止",
               value: "file-terminate",
-              disabled: true,
             },
             {
               label: "最近打开",
@@ -104,24 +101,12 @@ export default {
               value: "edit-delete",
               disabled: false,
             },
-            {
-              label: "切换功能块状态",
-              value: "edit-switchStatus",
-              disabled: true,
-            },
           ],
         },
         view: {
           label: "视图",
           value: "view",
           items: [
-            {
-              label: "项目列表",
-              value: "view-app",
-              disabled: false,
-              checkable: true,
-              checked: false,
-            },
             {
               label: "工具栏",
               value: "view-tool",
@@ -135,9 +120,12 @@ export default {
               disabled: true,
             },
             {
-              label: "平台窗口",
-              value: "view-platform",
-              disabled: true,
+              label: "项目列表",
+              value: "view-app",
+              disabled: false,
+              checkable: true,
+              checked: false,
+              keycut: 'F7'
             },
             {
               label: "报警显示",
@@ -164,11 +152,6 @@ export default {
             {
               label: "显示说明",
               value: "view-description",
-              disabled: true,
-            },
-            {
-              label: "溯源",
-              value: "view-origin",
               disabled: true,
             },
           ],
@@ -230,7 +213,7 @@ export default {
           value: "help",
           items: [
             {
-              label: "URT用户帮助",
+              label: "RTO用户帮助",
               value: "help-rto",
               disabled: true,
             },
@@ -333,7 +316,28 @@ export default {
           // 另存为
           this.$store.dispatch("file/saveAs");
           break;
+        case "file-close":
+          // 关闭
+          this.$store.commit('file/currentApp', {id:null, name:''});
+          this.$store.commit('view/wizardClosable', false);
+          this.$store.commit("view/wizardVisible", true);
+          break;
+        case "file-terminate":
+          if(this.$store.getters['status/isRunning']) {
+            this.$confirm({
+              title: '确定终止该项目吗？',
+              okText: "确定",
+              cancelText: "取消",
+              onOk: () => {
+                let deployBtn = document.querySelector('.sp-app-actions .footer-item');
+                deployBtn.click()
+              },
+              onCancel() {},
+            })
+          }
+          break;
         case "file-quit":
+          // 退出
           this.$store.dispatch("window/closeWindow");
           break;
         case "edit-cut":
@@ -346,9 +350,18 @@ export default {
           this.$store.dispatch("edit/pasteNode");
           break;
         case "edit-delete":
-          this.$store.dispatch("edit/deleteNode");
+          this.$confirm({
+            title: `确定删除这个组件吗？`,
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+              this.$store.dispatch("edit/deleteNode");
+            },
+            onCancel() {},
+          });
           break;
         case "view-app":
+          this.$store.commit("view/logPanelVisible", false);
           this.$store.commit("view/wizardVisible", true);
           break;
         case "view-tool":

@@ -52,8 +52,8 @@
         </div>
       </template>
     </a-spin>
-    <context-menu ref="ctxMenu">
-      <li class="wizard-menu-item" v-for="(item, idx) in contextItems" :key="idx">{{ item.label }}</li>
+    <context-menu ref="ctxMenu" v-show="contextItems.length > 0">
+      <li class="wizard-menu-item" v-for="(item, idx) in contextItems" :key="idx" @click="item.onclick">{{ item.label }}</li>
     </context-menu>
   </div>
 </template>
@@ -87,17 +87,34 @@ export default {
         return []
       }
       if(this.contextItem.isLeaf) {
+        // 项目
         return [{
+          label: '进入',
+          onclick: () => {
+            this.enterApp(this.contextItem.dataRef)
+          }
+        },{
           label: this.contextItem.dataRef.status === 'Running' ? '停止' : '开启',
+          onclick: () => {
+            this.changeStatus(this.contextItem.dataRef)
+          }
         }, {
-          label: '删除'
+          label: '删除',
+          onclick: () => {
+            this.deleteApp(this.contextItem.dataRef)
+          }
         }]
       }else {
         if(this.contextItem.dataRef.id == 1 || this.contextItem.dataRef.id == 2) {
+          // 根文件夹
           return []
         }else {
+          // 文件夹
           return [{
-            label: '删除'
+            label: '删除',
+            onclick: () => {
+            
+            }
           }]
         }
       }
@@ -109,8 +126,8 @@ export default {
   },
   beforeDestroy() {
     this.refreshTimer.clear();
-    bus.off('app-create-success', this.fetchAppsLoading)
-    bus.off('dir-create-success', this.fetchAppsLoading)
+    bus.off('app-create-success')
+    bus.off('dir-create-success')
   },
   methods: {
     fetchAppsLoading() {
@@ -187,13 +204,22 @@ export default {
       }
     },
     changeStatus(app) {
-      if (app.status === "Running") {
-        this.$store.dispatch("showMessage", { type: "info", msg: "停止中..." });
-        this.$store.dispatch("status/release", app.id);
-      } else {
-        this.$store.dispatch("showMessage", { type: "info", msg: "开启中..." });
-        this.$store.dispatch("status/deploy", app.id);
-      }
+      let title = app.status === "Running" ? '确定停止该项目？' : '确定开启该项目？';
+      this.$confirm({
+        title: title,
+        okText: "确定",
+        cancelText: "取消",
+        onOk: () => {
+          if (app.status === "Running") {
+            this.$store.dispatch("showMessage", { type: "info", msg: "停止中..." });
+            this.$store.dispatch("status/release", app.id);
+          } else {
+            this.$store.dispatch("showMessage", { type: "info", msg: "开启中..." });
+            this.$store.dispatch("status/deploy", app.id);
+          }
+        },
+        onCancel() {},
+      });
     },
     selectHandler(selectedKeys, e) {
       if(!e.node.isLeaf) {
@@ -205,7 +231,9 @@ export default {
     },
     rightClickHandler({event, node}) {
       this.contextItem = node
-      this.$refs.ctxMenu.open(event)
+      if(this.$refs.ctxMenu) {
+        this.$refs.ctxMenu.open(event)
+      }
     }
   },
 };

@@ -93,7 +93,15 @@ window.addEventListener('load', () => {
         name: '删除',
         active: true,
         function: () => {
-          storeInst.dispatch("edit/deleteNode");
+          Vue.prototype.$confirm({
+            title: `确定删除这个组件吗？`,
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+              storeInst.dispatch("edit/deleteNode");
+            },
+            onCancel() {},
+          });
         }
       }];
       const { item, itemKey } = options[0];

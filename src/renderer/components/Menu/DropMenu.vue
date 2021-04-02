@@ -11,6 +11,9 @@
         <span v-if="dropItem.checkable && dropItem.checked" class="rto_iconfont icon-check"></span>
       </span>
       <div class="menu-label" :title="dropItem.level === 2? dropItem.label: ''">{{ dropItem.label }}</div>
+      <span class="keycut-wrap">
+        <span>{{ dropItem.keycut ? dropItem.keycut : '' }}</span>
+      </span>
       <span v-if="dropItem.items && dropItem.items.length>0" class="more-wrap">
         <span class="rto_iconfont icon-right-arrow"></span>
       </span>
@@ -105,12 +108,22 @@ export default {
         font-size: 13px;
       }
     }
+    .keycut-wrap {
+      position: absolute;
+      right: 20px;
+      top: 0;
+      bottom: 0;
+      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
     .more-wrap {
       position: absolute;
       right: 0;
       top: 0;
       bottom: 0;
-      width: 28px;
+      width: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
