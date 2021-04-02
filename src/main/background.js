@@ -5,7 +5,7 @@ import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "ele
 import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { appInjectDev, appInjectProd, interceptUrl, appInjectDev2 } from "./appInject";
+import { appInjectDev, appInjectProd, interceptUrl, appInjectModelAlgoManage } from "./appInject";
 import * as mainconfigs from "./mainconfig";
 
 const isDevelopment = process.env.NODE_ENV !== "production";

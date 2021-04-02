@@ -1,6 +1,7 @@
 @font-face {
   font-family: "rto_iconfont";
-  src: url('iconfont.woff?t=1615189611999') format('woff');
+  src: 
+  url('iconfont.woff?t=1617354501972') format('woff');
 }
 
 .rto_iconfont {
@@ -9,6 +10,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-recycle:before {
+  content: "\e700";
 }
 
 .icon-check:before {

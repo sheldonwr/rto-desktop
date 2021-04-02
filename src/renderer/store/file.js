@@ -122,6 +122,11 @@ export default {
         console.error(err)
       });
     },
+    runningList() {
+      return getMetricsList().then( res => {
+        return res.items || []
+      })
+    },
     list({state, commit, dispatch}) {
       return Promise.all([applist(), getMetricsList(), getUserConfig()]).then(res => {
         let apps = res[0].list || [];

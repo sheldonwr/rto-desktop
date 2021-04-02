@@ -24,107 +24,183 @@
           </a-button>
         </template>
       </a-page-header>
-      <div v-if="appList.length === 0" class="app-tree-wrapper" :style="{ height: treeWrapperHeight }">
+      <div
+        v-if="appList.length === 0"
+        class="app-wrapper"
+        :style="{ height: treeWrapperHeight }"
+      >
         <p>无项目</p>
       </div>
       <template v-else>
-        <div class="app-tree-wrapper" :style="{ height: treeWrapperHeight }">
-          <a-tree
-            blockNode
-            showIcon
-            :treeData="appList"
-            @select="selectHandler"
-            @rightClick="rightClickHandler"
-            :defaultExpandedKeys="['dir-2']"
-          >
-          <template slot="dir" slot-scope="item">
-            <a-icon :type="item.expanded ? 'folder-open' : 'folder'" />
-          </template>
-          <template slot="app" slot-scope="item">
-            <a-badge :status="item.status === 'Running' ? 'success' : 'default'"></a-badge>
-          </template>
-          <template slot="appTitle" slot-scope="item">
-            <span class="app-title-wrapper" @dblclick="dblclickHandler(item)">
-              <span>{{ item.title }}</span>
-              </span>
-          </template>
-          </a-tree>
+        <div
+          class="app-wrapper clearfix"
+          :style="{ height: treeWrapperHeight }"
+        >
+          <div class="app-tree-wrapper">
+            <a-tree
+              blockNode
+              showIcon
+              :treeData="appList"
+              @select="selectHandler"
+              @rightClick="rightClickHandler"
+              :defaultExpandedKeys="['dir-2']"
+            >
+              <template slot="dir" slot-scope="item">
+                <a-icon :type="item.expanded ? 'folder-open' : 'folder'" theme="filled" :style="{ fontSize: '20px', color: '#ffca28' }" />
+              </template>
+              <template slot="app" slot-scope="item">
+                <span
+                  class="rto_iconfont icon-recycle"
+                  :style="{ color: item.status === 'Running' ? '#52c41a' : '#d9d9d9' }"
+                ></span>
+              </template>
+              <template slot="appTitle" slot-scope="item">
+                <span
+                  class="app-title-wrapper"
+                  @dblclick="dblclickHandler(item)"
+                >
+                  <span>{{ item.title }}</span>
+                </span>
+              </template>
+            </a-tree>
+          </div>
+          <div class="app-table-wrapper">
+            <a-table :columns="columns" :data-source="runningAppList" rowKey="appId">
+              <span slot="status" slot-scope="status">
+                <a-badge
+                  :status="status === 'Running' ? 'success' : 'default'"
+                ></a-badge>{{ status === 'Running' ? '运行中' : '已停止' }}</span>
+            </a-table>
+          </div>
         </div>
       </template>
     </a-spin>
     <context-menu ref="ctxMenu" v-show="contextItems.length > 0">
-      <li class="wizard-menu-item" v-for="(item, idx) in contextItems" :key="idx" @click="item.onclick">{{ item.label }}</li>
+      <li
+        class="wizard-menu-item"
+        v-for="(item, idx) in contextItems"
+        :key="idx"
+        @click="item.onclick"
+      >
+        {{ item.label }}
+      </li>
     </context-menu>
   </div>
 </template>
 
 <script>
 import { interval } from "utils/";
-import bus from "utils/bus"
-import contextMenu from 'vue-context-menu'
+import bus from "utils/bus";
+import contextMenu from "vue-context-menu";
 
 export default {
   components: {
-    contextMenu
+    contextMenu,
   },
   data() {
     return {
       showLoading: true,
       loading: false,
       appList: [],
+      runningAppList: [],
       refreshInterval: 5000,
       updatedAt: new Date(),
       contextItem: null,
+      columns: [
+        {
+          title: "项目名称",
+          dataIndex: "appName",
+          key: "appName",
+        },
+        {
+          title: "项目ID",
+          dataIndex: "appId",
+          key: "appId",
+        },
+        {
+          title: "状态",
+          dataIndex: "status",
+          key: "status",
+          scopedSlots: { customRender: 'status' },
+        },
+        {
+          title: "时长",
+          dataIndex: "age",
+          key: "age"
+        },
+        {
+          title: "CPU占用(毫核)",
+          dataIndex: "resources.cpu",
+          key: "resources.cpu"
+        },
+        {
+          title: "内存占用(M)",
+          dataIndex: "resources.mem",
+          key: "resources.mem",
+        },
+      ],
     };
   },
   created() {
-    bus.on('app-create-success', this.fetchAppsLoading)
-    bus.on('dir-create-success', this.fetchAppsLoading)
+    bus.on("app-create-success", this.fetchAppsLoading);
+    bus.on("dir-create-success", this.fetchAppsLoading);
   },
   computed: {
     wrapperHeight() {
-      return this.$store.state.view.statusVisible ? 'calc(100vh - 37px - 23px)' : 'calc(100vh - 37px)'
+      return this.$store.state.view.statusVisible
+        ? "calc(100vh - 37px - 23px)"
+        : "calc(100vh - 37px)";
     },
     treeWrapperHeight() {
-      return this.$store.state.view.statusVisible ? 'calc(100vh - 37px - 65.5px - 23px)' : 'calc(100vh - 37px - 65.5px)'
+      return this.$store.state.view.statusVisible
+        ? "calc(100vh - 37px - 65.5px - 23px)"
+        : "calc(100vh - 37px - 65.5px)";
     },
     contextItems() {
-      if(!this.contextItem) {
-        return []
+      if (!this.contextItem) {
+        return [];
       }
-      if(this.contextItem.isLeaf) {
+      if (this.contextItem.isLeaf) {
         // 项目
-        return [{
-          label: '进入',
-          onclick: () => {
-            this.enterApp(this.contextItem.dataRef)
-          }
-        },{
-          label: this.contextItem.dataRef.status === 'Running' ? '停止' : '开启',
-          onclick: () => {
-            this.changeStatus(this.contextItem.dataRef)
-          }
-        }, {
-          label: '删除',
-          onclick: () => {
-            this.deleteApp(this.contextItem.dataRef)
-          }
-        }]
-      }else {
-        if(this.contextItem.dataRef.id == 1 || this.contextItem.dataRef.id == 2) {
-          // 根文件夹
-          return []
-        }else {
-          // 文件夹
-          return [{
-            label: '删除',
+        return [
+          {
+            label: "进入",
             onclick: () => {
-            
-            }
-          }]
+              this.enterApp(this.contextItem.dataRef);
+            },
+          },
+          {
+            label:
+              this.contextItem.dataRef.status === "Running" ? "停止" : "开启",
+            onclick: () => {
+              this.changeStatus(this.contextItem.dataRef);
+            },
+          },
+          {
+            label: "删除",
+            onclick: () => {
+              this.deleteApp(this.contextItem.dataRef);
+            },
+          },
+        ];
+      } else {
+        if (
+          this.contextItem.dataRef.id == 1 ||
+          this.contextItem.dataRef.id == 2
+        ) {
+          // 根文件夹
+          return [];
+        } else {
+          // 文件夹
+          return [
+            {
+              label: "删除",
+              onclick: () => {},
+            },
+          ];
         }
       }
-    }
+    },
   },
   mounted() {
     this.reload(true);
@@ -132,15 +208,13 @@ export default {
   },
   beforeDestroy() {
     this.refreshTimer.clear();
-    bus.off('app-create-success')
-    bus.off('dir-create-success')
+    bus.off("app-create-success");
+    bus.off("dir-create-success");
   },
   methods: {
-    updateAppHeight() {
-
-    },
+    updateAppHeight() {},
     fetchAppsLoading() {
-      this.fetchApps(true)
+      this.fetchApps(true);
     },
     fetchApps(showLoading) {
       if (showLoading) {
@@ -159,6 +233,14 @@ export default {
         .catch((err) => {
           console.error(err);
           this.loading = false;
+        });
+      this.$store
+        .dispatch("file/runningList")
+        .then((list) => {
+          this.runningAppList = list;
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
     createAppModal() {
@@ -213,17 +295,26 @@ export default {
       }
     },
     changeStatus(app) {
-      let title = app.status === "Running" ? `确定停止${app.name}项目？` : `确定开启${app.name}项目？`;
+      let title =
+        app.status === "Running"
+          ? `确定停止${app.name}项目？`
+          : `确定开启${app.name}项目？`;
       this.$confirm({
         title: title,
         okText: "确定",
         cancelText: "取消",
         onOk: () => {
           if (app.status === "Running") {
-            this.$store.dispatch("showMessage", { type: "info", msg: "停止中..." });
+            this.$store.dispatch("showMessage", {
+              type: "info",
+              msg: "停止中...",
+            });
             this.$store.dispatch("status/release", app.id);
           } else {
-            this.$store.dispatch("showMessage", { type: "info", msg: "开启中..." });
+            this.$store.dispatch("showMessage", {
+              type: "info",
+              msg: "开启中...",
+            });
             this.$store.dispatch("status/deploy", app.id);
           }
         },
@@ -231,29 +322,43 @@ export default {
       });
     },
     selectHandler(selectedKeys, e) {
-      if(!e.node.isLeaf) {
-        e.node.onExpand(!e.node.expanded)
+      if (!e.node.isLeaf) {
+        e.node.onExpand(!e.node.expanded);
       }
     },
     dblclickHandler(item) {
-      this.enterApp(item.dataRef)
+      this.enterApp(item.dataRef);
     },
-    rightClickHandler({event, node}) {
-      this.contextItem = node
-      if(this.$refs.ctxMenu) {
-        this.$refs.ctxMenu.open(event)
+    rightClickHandler({ event, node }) {
+      this.contextItem = node;
+      if (this.$refs.ctxMenu) {
+        this.$refs.ctxMenu.open(event);
       }
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.app-tree-wrapper {
+.app-wrapper {
   padding: 0 10px;
   height: calc(100vh - 37px - 65.5px);
-  overflow-y: auto;
-  overflow-x: hidden;
+  .app-tree-wrapper {
+    float: left;
+    height: 100%;
+    width: 40%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 1px solid rgb(232, 232, 232);
+  }
+  .app-table-wrapper {
+    float: left;
+    height: 100%;
+    width: 60%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 20px;
+  }
 }
 .ctx-menu {
   font-size: 14px;
@@ -268,6 +373,9 @@ export default {
   &.disabled {
     cursor: not-allowed;
   }
+}
+.ant-tree li .ant-tree-node-content-wrapper {
+  color: rgb(31,31,31);
 }
 </style>
 
