@@ -65,6 +65,12 @@ export default {
       },
       immediate: true
     },
+    "$store.state.view.statusVisible" : {
+      handler() {
+        this.updateAppHeight();
+      },
+      immediate: true
+    },
     "$store.state.view.logPanelVisible" : {
       handler() {
         this.updateAppHeight();
@@ -74,25 +80,24 @@ export default {
   },
   methods: {
     updateAppHeight() {
-      let appH = '';
-      let rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px + 24px))';
-      if(this.$store.state.view.toolbarVisible && this.$store.state.view.logPanelVisible) {
-        appH = 'calc(100% - 115px - 280px - 24px)';
-        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px + 280px + 24px))';
-      }else if(this.$store.state.view.toolbarVisible) {
-        appH = 'calc(100% - 115px - 24px)';
-        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px + 24px))';
-      }else if(this.$store.state.view.logPanelVisible) {
-        appH = 'calc(100% - 115px + 40px - 280px - 24px)';
-        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px - 40px + 280px + 24px))';
-      }else {
-        appH = 'calc(100% - 115px + 40px - 24px)';
-        rightPanelH = 'calc(100vh - 6px - (50px + 38px + 60px - 40px + 24px))';
+      let appDiffH = 75;
+      let rightPanelDiffH = 108;
+      if(this.$store.state.view.toolbarVisible) {
+        appDiffH += 40
+        rightPanelDiffH += 40
       }
-      document.getElementById('app').style.height = appH;
+      if(this.$store.state.view.logPanelVisible) {
+        appDiffH += 280
+        rightPanelDiffH += 280
+      }
+      if(this.$store.state.view.statusVisible) {
+        appDiffH += 24
+        rightPanelDiffH += 24
+      }
+      document.getElementById('app').style.height = `calc(100% - ${appDiffH}px)`;
       let rightPabelEl = document.querySelector('.tab-pane.ng-scope');
       if(rightPabelEl) {
-        rightPabelEl.style.height = rightPanelH;
+        rightPabelEl.style.height = `calc(100vh - 6px - ${rightPanelDiffH}px)`;
       }
     },
     keycutsHandler(event) {

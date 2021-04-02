@@ -1,5 +1,5 @@
 <template>
-  <div class="rto_custom rto_status">
+  <div v-if="$store.state.view.statusVisible" class="rto_custom rto_status">
     <span class="status-title">{{ $store.state.statustooltip.status }}</span>
   </div>
 </template>

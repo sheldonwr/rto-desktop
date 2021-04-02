@@ -1,5 +1,5 @@
 <template>
-  <div class="wizard-wrap">
+  <div class="wizard-wrap" :style="{ height: wrapperHeight }">
     <a-spin :spinning="showLoading && loading">
       <a-page-header title="项目列表">
         <template slot="extra">
@@ -24,11 +24,11 @@
           </a-button>
         </template>
       </a-page-header>
-      <div v-if="appList.length === 0" class="app-tree-wrapper">
+      <div v-if="appList.length === 0" class="app-tree-wrapper" :style="{ height: treeWrapperHeight }">
         <p>无项目</p>
       </div>
       <template v-else>
-        <div class="app-tree-wrapper">
+        <div class="app-tree-wrapper" :style="{ height: treeWrapperHeight }">
           <a-tree
             blockNode
             showIcon
@@ -74,7 +74,7 @@ export default {
       appList: [],
       refreshInterval: 5000,
       updatedAt: new Date(),
-      contextItem: null
+      contextItem: null,
     };
   },
   created() {
@@ -82,6 +82,12 @@ export default {
     bus.on('dir-create-success', this.fetchAppsLoading)
   },
   computed: {
+    wrapperHeight() {
+      return this.$store.state.view.statusVisible ? 'calc(100vh - 37px - 23px)' : 'calc(100vh - 37px)'
+    },
+    treeWrapperHeight() {
+      return this.$store.state.view.statusVisible ? 'calc(100vh - 37px - 65.5px - 23px)' : 'calc(100vh - 37px - 65.5px)'
+    },
     contextItems() {
       if(!this.contextItem) {
         return []
@@ -130,6 +136,9 @@ export default {
     bus.off('dir-create-success')
   },
   methods: {
+    updateAppHeight() {
+
+    },
     fetchAppsLoading() {
       this.fetchApps(true)
     },
@@ -242,7 +251,7 @@ export default {
 <style lang="scss">
 .app-tree-wrapper {
   padding: 0 10px;
-  height: calc(100vh - 37px - 65.5px - 23px);
+  height: calc(100vh - 37px - 65.5px);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -268,8 +277,8 @@ export default {
   position: absolute;
   top: 37px;
   z-index: 999;
-  height: calc(100vh - 37px - 23px);
   background: #fff;
+  height: calc(100vh - 37px);
   .reload {
     position: relative;
     top: 2px;

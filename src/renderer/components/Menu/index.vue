@@ -118,6 +118,9 @@ export default {
               label: "状态栏",
               value: "view-status",
               disabled: true,
+              disabled: false,
+              checkable: true,
+              checked: this.$store.state.view.statusVisible,
             },
             {
               label: "项目列表",
@@ -182,9 +185,9 @@ export default {
           value: "tools",
           items: [
             {
-              label: "未注册",
-              value: "tools-notRegister",
-              disabled: true,
+              label: "注销组件",
+              value: "edit-delete",
+              disabled: false,
             },
             {
               label: "更新RTO服务账户",
@@ -262,6 +265,13 @@ export default {
         this.menus.view.items.find(
           (item) => item.value === "view-tool"
         ).checked = this.$store.state.view.toolbarVisible;
+      },
+    },
+    "$store.state.view.statusVisible": {
+      handler() {
+        this.menus.view.items.find(
+          (item) => item.value === "view-status"
+        ).checked = this.$store.state.view.statusVisible;
       },
     },
     "$store.state.view.logPanelVisible": {
@@ -371,6 +381,10 @@ export default {
           );
           break;
         case "view-status":
+          this.$store.commit(
+            "view/statusVisible",
+            !this.$store.state.view.statusVisible
+          );
           break;
         case "view-alarm":
           this.$store.commit(
