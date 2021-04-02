@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import bus from "utils/bus"
+
 export default {
   props: {
     defaultHeight: {
@@ -32,12 +34,13 @@ export default {
         return;
       }
       e.preventDefault();
-      let diff = e.clientY - this.dragPre;
+      let diff = this.dragPre - e.clientY;
       let maxHeight = window.innerHeight * 0.5;
       this.height = Math.min(
         maxHeight,
         Math.max(this.defaultHeight, this.orgHeight + diff)
       );
+      bus.emit('log-view-resize', [this.height - this.defaultHeight])
     },
     resizeMouseUp(e) {
       if (!this.startDrag) {

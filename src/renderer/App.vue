@@ -18,6 +18,7 @@ import Drawer from "components/Drawer";
 import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm"
 import DirCreateForm from "components/DirCreateForm"
+import bus from "utils/bus"
 
 export default {
   name: 'App',
@@ -39,6 +40,12 @@ export default {
     window.addEventListener('keydown', this.keycutsHandler);
   },
   created() {
+    bus.on('log-view-resize', d => {
+      this.updateAppHeight(d)
+    })
+  },
+  beforeDestroy() {
+    bus.off('log-view-resize')
   },
   computed: {
     createAppDialog: {
@@ -79,9 +86,9 @@ export default {
     },
   },
   methods: {
-    updateAppHeight() {
-      let appDiffH = 75;
-      let rightPanelDiffH = 108;
+    updateAppHeight(diff=0) {
+      let appDiffH = 75 + diff;
+      let rightPanelDiffH = 108 + diff;
       if(this.$store.state.view.toolbarVisible) {
         appDiffH += 40
         rightPanelDiffH += 40
