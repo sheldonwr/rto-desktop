@@ -19,6 +19,12 @@
   .no-drag {
     -webkit-app-region: no-drag;
   }
+  .clearfix:after {
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+ }
 }
 
 
@@ -36,7 +42,7 @@
   top: 0;
 }
 .sp-app-right .sp-app-tabs-content .tab-pane {
-  height: calc(100vh - (50px + 38px + 60px));
+  height: calc(100vh - 6px - (50px + 38px + 60px));
 }
 // .sp-toggle.ng-scope {
 //   display: none;

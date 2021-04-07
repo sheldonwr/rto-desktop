@@ -8,6 +8,7 @@ import Vuex from "vuex";
 import App from './App.vue';
 import ModelAlgoManage from './components/ModelAlgoManage';
 import LogApp from './LogApp.vue';
+import StatusApp from './StatusApp.vue'
 import store from "./store";
 import Loading from "components/Loading"
 import { interval } from "utils/";
@@ -36,7 +37,6 @@ if(['/modelAlgoManage', '/modelAlgoManage.html'].indexOf(window.location.pathnam
 
 new Vue({
   store: storeInst,
-  render: h => h(App),
   data: {
     currentRoute: window.location.pathname,
   },
@@ -56,6 +56,11 @@ new Vue({
   store: storeInst,
   render: h => h(LogApp),
 }).$mount('.rto_log');
+
+new Vue({
+  store: storeInst,
+  render: h => h(StatusApp),
+}).$mount('.rto_status');
 
 window.addEventListener('click', () => {
   if (storeInst.state.drawer.menuInfo.visible) {
@@ -93,7 +98,15 @@ window.addEventListener('load', () => {
         name: '删除',
         active: true,
         function: () => {
-          storeInst.dispatch("edit/deleteNode");
+          Vue.prototype.$confirm({
+            title: `确定删除这个组件吗？`,
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+              storeInst.dispatch("edit/deleteNode");
+            },
+            onCancel() {},
+          });
         }
       }];
       const { item, itemKey } = options[0];

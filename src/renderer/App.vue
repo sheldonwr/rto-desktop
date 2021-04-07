@@ -18,6 +18,7 @@ import Drawer from "components/Drawer";
 import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm"
 import DirCreateForm from "components/DirCreateForm"
+import bus from "utils/bus"
 
 export default {
   name: 'App',
@@ -35,8 +36,16 @@ export default {
     window.addEventListener('resize', () => {
       this.$store.dispatch('window/getMaximizedState');
     });
+    // global keycuts
+    window.addEventListener('keydown', this.keycutsHandler);
   },
   created() {
+    bus.on('log-view-resize', d => {
+      this.updateAppHeight(d)
+    })
+  },
+  beforeDestroy() {
+    bus.off('log-view-resize')
   },
   computed: {
     createAppDialog: {
@@ -63,6 +72,12 @@ export default {
       },
       immediate: true
     },
+    "$store.state.view.statusVisible" : {
+      handler() {
+        this.updateAppHeight();
+      },
+      immediate: true
+    },
     "$store.state.view.logPanelVisible" : {
       handler() {
         this.updateAppHeight();
@@ -71,26 +86,36 @@ export default {
     },
   },
   methods: {
-    updateAppHeight() {
-      let appH = '';
-      let rightPanelH = 'calc(100vh - (50px + 38px + 60px))';
-      if(this.$store.state.view.toolbarVisible && this.$store.state.view.logPanelVisible) {
-        appH = 'calc(100% - 115px - 280px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px + 280px))';
-      }else if(this.$store.state.view.toolbarVisible) {
-        appH = 'calc(100% - 115px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px))';
-      }else if(this.$store.state.view.logPanelVisible) {
-        appH = 'calc(100% - 115px + 40px - 280px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px - 40px + 280px))';
-      }else {
-        appH = 'calc(100% - 115px + 40px)';
-        rightPanelH = 'calc(100vh - (50px + 38px + 60px - 40px))';
+    updateAppHeight(diff=0) {
+      let appDiffH = 75 + diff;
+      let rightPanelDiffH = 108 + diff;
+      if(this.$store.state.view.toolbarVisible) {
+        appDiffH += 40
+        rightPanelDiffH += 40
       }
-      document.getElementById('app').style.height = appH;
+      if(this.$store.state.view.logPanelVisible) {
+        appDiffH += 280
+        rightPanelDiffH += 280
+      }
+      if(this.$store.state.view.statusVisible) {
+        appDiffH += 24
+        rightPanelDiffH += 24
+      }
+      document.getElementById('app').style.height = `calc(100% - ${appDiffH}px)`;
       let rightPabelEl = document.querySelector('.tab-pane.ng-scope');
       if(rightPabelEl) {
-        rightPabelEl.style.height = rightPanelH;
+        rightPabelEl.style.height = `calc(100vh - 6px - ${rightPanelDiffH}px)`;
+      }
+    },
+    keycutsHandler(event) {
+      if(event.keyCode === 118) {
+        // 'F7'
+        if(this.$store.state.view.wizardVisible && this.$store.state.view.wizardClosable) {
+          this.$store.commit("view/wizardVisible", false);
+        }else if(!this.$store.state.view.wizardVisible) {
+          this.$store.commit("view/logPanelVisible", false);
+          this.$store.commit("view/wizardVisible", true);
+        }
       }
     }
   }

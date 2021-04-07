@@ -1,47 +1,110 @@
 <template>
   <div class="toolbar">
     <div class="toolbar-list">
-      <div class="toolbar-icon" title="新建" @click="clickHandler('file-new')">
+      <div
+        class="toolbar-icon"
+        title="新建"
+        @click="clickHandler('file-new')"
+        @mouseover="mouseoverHandler('file-new')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-xinjian"></span>
       </div>
-      <div class="toolbar-icon" title="打开" @click="clickHandler('file-open')">
+      <div
+        class="toolbar-icon"
+        title="打开"
+        @click="clickHandler('file-open')"
+        @mouseover="mouseoverHandler('file-open')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-dakai"></span>
       </div>
-      <div class="toolbar-icon" title="保存" @click="clickHandler('file-save')">
+      <div
+        class="toolbar-icon"
+        title="保存"
+        @click="clickHandler('file-save')"
+        @mouseover="mouseoverHandler('file-save')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-baocun"></span>
       </div>
       <div
         class="toolbar-icon"
         title="另存为"
         @click="clickHandler('file-saveAs')"
+        @mouseover="mouseoverHandler('file-saveAs')"
+        @mouseout="mouseoutHandler"
       >
         <span class="rto_iconfont icon-lingcunwei"></span>
       </div>
       <div class="separator"></div>
-      <div class="toolbar-icon" title="剪切" @click="clickHandler('edit-cut')">
+      <div
+        class="toolbar-icon"
+        title="剪切"
+        @click="clickHandler('edit-cut')"
+        @mouseover="mouseoverHandler('edit-cut')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-jianqie"></span>
       </div>
-      <div class="toolbar-icon" title="复制" @click="clickHandler('edit-copy')">
+      <div
+        class="toolbar-icon"
+        title="复制"
+        @click="clickHandler('edit-copy')"
+        @mouseover="mouseoverHandler('edit-copy')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-fuzhi"></span>
       </div>
       <div class="separator"></div>
-      <div class="toolbar-icon" title="设置">
+      <div
+        class="toolbar-icon"
+        title="设置"
+        @mouseover="mouseoverHandler('view-setting')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-shezhi"></span>
       </div>
-      <div class="toolbar-icon" title="日志" @click="clickHandler('view-alarm')">
+      <div
+        class="toolbar-icon"
+        title="日志"
+        @click="clickHandler('view-alarm')"
+        @mouseover="mouseoverHandler('view-alarm')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-rizhi"></span>
       </div>
       <div class="separator"></div>
-      <div class="toolbar-icon" title="帮助">
+      <div
+        class="toolbar-icon"
+        title="帮助"
+        @mouseover="mouseoverHandler('view-help')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-bangzhu"></span>
       </div>
-      <div class="toolbar-icon" title="关于">
+      <div
+        class="toolbar-icon"
+        title="关于"
+        @mouseover="mouseoverHandler('view-about')"
+        @mouseout="mouseoutHandler"
+      >
         <span class="rto_iconfont icon-about"></span>
       </div>
     </div>
     <div class="deploy-container">
-      <div class="toolbar-icon" :title="isRunning ? '停止': '开启'" @click="clickHandler('deploy')">
-        <span :class="['rto_iconfont', isRunning ? 'icon-stop' : 'icon-start']" style="font-size: 22px"></span>
+      <div
+        class="toolbar-icon"
+        :class="[isRunning ? 'deploy-stop' : 'deploy-running']"
+        :title="isRunning ? '停止' : '开启'"
+        @click="clickHandler('deploy')"
+        @mouseover="mouseoverHandler('deploy')"
+        @mouseout="mouseoutHandler"
+      >
+        <span
+          :class="['rto_iconfont', isRunning ? 'icon-stop' : 'icon-start']"
+          style="font-size: 22px"
+        ></span>
       </div>
     </div>
     <div class="placeholder"></div>
@@ -52,44 +115,97 @@
 export default {
   data() {
     return {
-      isRunning: false
+      isRunning: false,
     };
   },
   watch: {
     "$store.state.status.appStatus": {
       handler() {
-        this.isRunning = this.$store.getters['status/isRunning']
-      }
-    }
+        this.isRunning = this.$store.getters["status/isRunning"];
+      },
+    },
   },
   created() {},
   methods: {
     clickHandler(id) {
-      if(id === 'file-new') {
-        this.$store.commit('view/createAppDialog', true);
-      }else if(id === 'file-open') {
-        this.$store.dispatch('file/open').catch(err => {
-          console.error(err)
-        })
-      }else if(id === 'file-save') {
-        this.$store.dispatch('file/save')
-      }else if(id === 'file-saveAs') {
-        this.$store.dispatch('file/saveAs')
-      }else if(id === 'deploy') {
-        let deployBtn = document.querySelector('.sp-app-actions .footer-item');
-        deployBtn.click()
-        this.isRunning = !this.isRunning
-      }else if(id === 'edit-cut') {
-        this.$store.dispatch('edit/cutNode');
-      }else if(id === 'edit-copy') {
-        this.$store.dispatch('edit/copyNode');
-      }else if(id === 'view-alarm') {
-        this.$store.commit('view/logPanelVisible', !this.$store.state.view.logPanelVisible)
+      if (id === "file-new") {
+        this.$store.commit("view/createAppDialog", true);
+      } else if (id === "file-open") {
+        this.$store.dispatch("file/open").catch((err) => {
+          console.error(err);
+        });
+      } else if (id === "file-save") {
+        this.$store.dispatch("file/save");
+      } else if (id === "file-saveAs") {
+        this.$store.dispatch("file/saveAs");
+      } else if (id === "deploy") {
+        let title = this.isRunning ? "确定停止该项目？" : "确定开启该项目？";
+        this.$confirm({
+          title: title,
+          okText: "确定",
+          cancelText: "取消",
+          onOk: () => {
+            let deployBtn = document.querySelector(
+              ".sp-app-actions .footer-item"
+            );
+            deployBtn.click();
+            this.isRunning = !this.isRunning;
+          },
+          onCancel() {},
+        });
+      } else if (id === "edit-cut") {
+        this.$store.dispatch("edit/cutNode");
+      } else if (id === "edit-copy") {
+        this.$store.dispatch("edit/copyNode");
+      } else if (id === "view-alarm") {
+        this.$store.commit(
+          "view/logPanelVisible",
+          !this.$store.state.view.logPanelVisible
+        );
       }
+    },
+    mouseoverHandler(id) {
+      let title = ''
+      if(id === 'file-new') {
+        title = '新建'
+      }else if(id === 'file-open') {
+        title = '打开'
+      }else if(id === 'file-save') {
+        title = '保存'
+      }else if(id === 'file-saveAs') {
+        title = '另存为'
+      }else if(id === 'edit-cut') {
+        title = '剪切'
+      }else if(id === 'edit-copy') {
+        title = '复制'
+      }else if(id === 'view-setting') {
+        title = '设置'
+      }else if(id === 'view-alarm') {
+        title = '日志'
+      }else if(id === 'view-help') {
+        title = '帮助'
+      }else if(id === 'view-about') {
+        title = '关于'
+      }else if(id === 'deploy') {
+        title = this.isRunning ? '停止' : '开启'
+      }
+      this.$store.commit('statustooltip/status', title)
+    },
+    mouseoutHandler() {
+      this.$store.commit('statustooltip/status', '')
     }
-  }
+  },
 };
 </script>
+
+<style lang="scss">
+.deploy-stop {
+  color: #f5222d !important;
+}
+.deploy-running {
+  color: #52c41a !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .toolbar {

@@ -62,6 +62,10 @@ function convertUTCDateToLocalDate(dateStr) {
 
 function getNodeLabel(nodeId) {
   let nodeObj = window.SuanpanAPI.nodeService.getNode(nodeId);
-  let nodeLabel = nodeObj.metadata.label;
-  return `${nodeLabel} (id:${nodeId.slice(0, 6)})`
+  if(nodeObj) {
+    let nodeLabel = nodeObj.metadata.label;
+    return `${nodeLabel} (id:${nodeId.slice(0, 6)})`
+  }else {
+    return `id:${nodeId.slice(0, 6)}`
+  }
 }
