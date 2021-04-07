@@ -35,7 +35,7 @@
     <div class="form" v-show="formVisible">
       <a-spin :spinning="formSpinning"/>
       <a-form-model ref="ruleForm" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :rules="rules">
-        <a-form-model-item ref="name" label="模型名称" prop="name">
+        <a-form-model-item ref="name" :label="initColumns[0].title" prop="name">
           <a-input
             v-model="form.name" 
             @blur="
@@ -45,7 +45,7 @@
             "
           />
         </a-form-model-item>
-        <a-form-model-item ref="desc" label="模型描述" prop="desc">
+        <a-form-model-item ref="desc" :label="initColumns[1].title" prop="desc">
           <a-input v-model="form.desc" />
         </a-form-model-item>
         <a-form-model-item
@@ -124,7 +124,7 @@
             v-model="item.defaultValue"
             placeholder="初始值"
           />
-          <a-radio v-model="item.isRequired">必填</a-radio>
+          <a-checkbox v-model="item.isRequired" :checked="item.isRequired">必填</a-checkbox>
           <a-icon
             class="dynamic-delete-button"
             type="minus-circle-o"
@@ -343,11 +343,23 @@ export default {
           margin-right: 2px;
         }
 
-        .ant-radio-wrapper {
+        .ant-checkbox-wrapper {
+          display: flex;
+          align-items: center;
           margin-left: 2px;
-          span.ant-radio + * {
-            padding-right: 4px;
-            padding-left: 4px;
+
+          .ant-checkbox + span {
+            line-height: initial;
+            width: 44px;
+          }
+
+          span.ant-checkbox {
+            padding-right: 0px;
+            width: 16px;
+            
+            span {
+              width: 16px;
+            }
           }
         }
 
