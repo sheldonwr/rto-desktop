@@ -14,7 +14,7 @@
         <a-tree
           v-model="checkedKeys"
           checkable
-          :expanded-keys="expandedKeys"
+          defaultExpandAll
           :tree-data="dirData"
           @expand="onExpand"
         >
@@ -55,7 +55,6 @@ export default {
       mvisible: this.value,
       loading: false,
       checkedKeys: [],
-      expandedKeys: [],
     };
   },
   computed: {
@@ -63,9 +62,6 @@ export default {
       return `文件夹“${this.dir.label}”中包含如下项目和子文件夹，选择需要删除的文件夹和项目`
     },
     dirData() {
-      if(this.dir.key) {
-        this.expandedKeys = [this.dir.key]
-      }
       return [this.dir]
     }
   },
@@ -85,30 +81,35 @@ export default {
           dirIds.push(keys[1]);
         }
       }
-      this.deleteDirsAndApps(dirIds, appIds);
+      this.deleteApps(dirIds, appIds);
     },
     deleteApps(dirIds, appIds) {
-      this.loading = true;
-      this.appCount = 0;
-      for(let i = 0; i < appIds.length; i++) {
-        this.deleteApp(appIds[i], dirIds, appIds);
+      if(appIds.length > 0) {
+        this.loading = true;
+        this.appCount = 0;
+        for(let i = 0; i < appIds.length; i++) {
+          this.deleteApp(appIds[i], dirIds, appIds);
+        }
+      }else {
+        this.loading = true;
+        this.deleteDirs(dirIds)
       }
     },
     deleteApp(id, dirIds, appIds) {
       this.$store.dispatch('file/delete', {id}).then( () => {
         this.appCount++;
-        if(this.appCount.length === appIds.length) {
+        if(this.appCount === appIds.length) {
           this.deleteDirs(dirIds)
         }
       }).catch( () => {
         this.appCount++;
-        if(this.appCount.length === appIds.length) {
+        if(this.appCount === appIds.length) {
           this.deleteDirs(dirIds)
         }
       })
     },
     deleteDirs(dirIds) {
-      this.$store.dispatch('file/deleteDirs').then( () => {
+      this.$store.dispatch('file/deleteDirs', dirIds).then( () => {
         this.loading = false;
         this.$emit("input", false);
         this.$store.dispatch("showMessage", {

@@ -288,7 +288,7 @@ export default {
           if(predictDir == null) {
             continue;
           }
-          if(dirIdsSet.has(predictDir.id)) {
+          if(dirIdsSet.has(''+predictDir.id)) {
             predictDirs.splice(i, 1);
             continue;
           }
@@ -302,7 +302,7 @@ export default {
                 if(child == null) {
                   continue;
                 }
-                if(dirIdsSet.has(child.id)) {
+                if(dirIdsSet.has(''+child.id)) {
                   dir.children.splice(j, 1);
                   continue;
                 }
@@ -314,8 +314,7 @@ export default {
             }
           }
         }
-        console.log(res)
-        // return saveUserConfig(res);
+        return saveUserConfig(res);
       })
     }
   },
