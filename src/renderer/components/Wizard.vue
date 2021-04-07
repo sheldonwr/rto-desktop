@@ -89,7 +89,7 @@
       </li>
     </context-menu>
     <RenameForm v-model="renameDialogVisible" :isDir="renameIsDir" :model="renameModel" @success="renameSuccessHandler"></RenameForm>
-    <DeleteDirForm v-if="deleteDirDialogVisible" v-model="deleteDirDialogVisible" :dir="deleteDirModel"></DeleteDirForm>
+    <DirDeleteForm v-if="deleteDirDialogVisible" v-model="deleteDirDialogVisible" :dir="deleteDirModel" @success="deleteDirSuccessHandler"></DirDeleteForm>
   </div>
 </template>
 
@@ -98,13 +98,13 @@ import { interval, deepCopy } from "utils/";
 import bus from "utils/bus";
 import contextMenu from "vue-context-menu";
 import RenameForm from "components/RenameForm";
-import DeleteDirForm from "components/DeleteDirForm";
+import DirDeleteForm from "components/DirDeleteForm";
 
 export default {
   components: {
     contextMenu,
     RenameForm,
-    DeleteDirForm
+    DirDeleteForm
   },
   data() {
     return {
@@ -295,7 +295,6 @@ export default {
                 type: "success",
                 msg: "删除成功",
               });
-              this.$store.commit("view/wizardClosable", false);
               this.fetchApps();
             })
             .catch((err) => {
@@ -376,6 +375,9 @@ export default {
       }
     },
     renameSuccessHandler() {
+      this.fetchAppsLoading();
+    },
+    deleteDirSuccessHandler() {
       this.fetchAppsLoading();
     }
   },

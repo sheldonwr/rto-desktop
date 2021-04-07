@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import bus from "utils/bus";
-
 export default {
   props: {
     value: {
@@ -62,7 +60,7 @@ export default {
   },
   computed: {
     alertDescription() {
-      return `文件夹“${this.dir.label}”中包含如下项目，选择需要删除的文件夹和项目`
+      return `文件夹“${this.dir.label}”中包含如下项目和子文件夹，选择需要删除的文件夹和项目`
     },
     dirData() {
       if(this.dir.key) {
@@ -74,7 +72,58 @@ export default {
   mounted() {},
   methods: {
     okHandler() {
-      console.log(this.checkedKeys)
+      if(!this.checkedKeys || (this.checkedKeys.length === 0)) {
+        return;
+      }
+      let dirIds = [], appIds = [];
+      for(let i = 0; i < this.checkedKeys.length; i++) {
+        let key = this.checkedKeys[i];
+        let keys = key.split('-');
+        if(keys[0] === 'app') {
+          appIds.push(keys[1])
+        }else if(keys[0] === 'dir') {
+          dirIds.push(keys[1]);
+        }
+      }
+      this.deleteDirsAndApps(dirIds, appIds);
+    },
+    deleteApps(dirIds, appIds) {
+      this.loading = true;
+      this.appCount = 0;
+      for(let i = 0; i < appIds.length; i++) {
+        this.deleteApp(appIds[i], dirIds, appIds);
+      }
+    },
+    deleteApp(id, dirIds, appIds) {
+      this.$store.dispatch('file/delete', {id}).then( () => {
+        this.appCount++;
+        if(this.appCount.length === appIds.length) {
+          this.deleteDirs(dirIds)
+        }
+      }).catch( () => {
+        this.appCount++;
+        if(this.appCount.length === appIds.length) {
+          this.deleteDirs(dirIds)
+        }
+      })
+    },
+    deleteDirs(dirIds) {
+      this.$store.dispatch('file/deleteDirs').then( () => {
+        this.loading = false;
+        this.$emit("input", false);
+        this.$store.dispatch("showMessage", {
+          type: "success",
+          msg: "删除成功",
+        });
+        this.$emit("success");
+      }).catch( err => {
+        console.error(err)
+        this.loading = false;
+        this.$store.dispatch("showMessage", {
+          type: "error",
+          msg: "删除失败",
+        });
+      })
     },
     cancelHandler() {
       this.mvisible = false;

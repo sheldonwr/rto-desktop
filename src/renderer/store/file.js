@@ -114,12 +114,16 @@ export default {
     },
     delete({state, commit, dispatch}, app) {
       return deleteApp(app.id).then( () => {
-        commit("currentApp", {
-          id: null,
-          name: ''
-        })
+        if(state.currentApp.id == app.id) {
+          commit("currentApp", {
+            id: null,
+            name: ''
+          })
+          this.commit("view/wizardClosable", false);
+        }
       }).catch( err => {
         console.error(err)
+        throw err
       });
     },
     runningList() {
@@ -272,10 +276,46 @@ export default {
         return saveUserConfig(res);
       })
     },
-    test({}) {
+    deleteDirs({}, dirIds=[]) {
       return getUserConfig().then( res => {
-        res.predictDirs[1].children.pop()
-        return saveUserConfig(res);
+        // traverse predict dir
+        let predictDirs = res.predictDirs;
+        let predictQueue = [];
+        let dirIdsSet = new Set(dirIds);
+        let predictDirLen = predictDirs.length
+        for(let i = 0; i < predictDirLen; i++) {
+          let predictDir = predictDirs[i];
+          if(predictDir == null) {
+            continue;
+          }
+          if(dirIdsSet.has(predictDir.id)) {
+            predictDirs.splice(i, 1);
+            continue;
+          }
+          predictQueue.push(predictDir)
+          while(true) {
+            let dir = predictQueue.shift();
+            if(dir.children && dir.children.length > 0) {
+              let len = dir.children.length;
+              for(let j = 0; j < len; j++) {
+                let child = dir.children[j];
+                if(child == null) {
+                  continue;
+                }
+                if(dirIdsSet.has(child.id)) {
+                  dir.children.splice(j, 1);
+                  continue;
+                }
+                predictQueue.push(child);
+              }
+            }
+            if(predictQueue.length === 0) {
+              break;
+            }
+          }
+        }
+        console.log(res)
+        // return saveUserConfig(res);
       })
     }
   },

@@ -111,7 +111,7 @@ export default {
         .then(() => {
           this.loading = false;
           this.$emit("input", false);
-          this.$emit("success", false);
+          this.$emit("success");
           this.showSuccess();
         })
         .catch((err) => {
