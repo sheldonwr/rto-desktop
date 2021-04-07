@@ -88,17 +88,23 @@
         {{ item.label }}
       </li>
     </context-menu>
+    <RenameForm v-model="renameDialogVisible" :isDir="renameIsDir" :model="renameModel" @success="renameSuccessHandler"></RenameForm>
+    <DeleteDirForm v-if="deleteDirDialogVisible" v-model="deleteDirDialogVisible" :dir="deleteDirModel"></DeleteDirForm>
   </div>
 </template>
 
 <script>
-import { interval } from "utils/";
+import { interval, deepCopy } from "utils/";
 import bus from "utils/bus";
 import contextMenu from "vue-context-menu";
+import RenameForm from "components/RenameForm";
+import DeleteDirForm from "components/DeleteDirForm";
 
 export default {
   components: {
     contextMenu,
+    RenameForm,
+    DeleteDirForm
   },
   data() {
     return {
@@ -149,6 +155,11 @@ export default {
           scopedSlots: { customRender: 'operation' },
         },
       ],
+      renameDialogVisible: false,
+      renameIsDir: false,
+      renameModel: null,
+      deleteDirDialogVisible: false,
+      deleteDirModel: {label:''},
     };
   },
   created() {
@@ -180,6 +191,12 @@ export default {
             },
           },
           {
+            label: "重命名",
+            onclick: () => {
+              this.renameDialog(this.contextItem.dataRef, true);
+            },
+          },
+          {
             label:
               this.contextItem.dataRef.status === "Running" ? "停止" : "开启",
             onclick: () => {
@@ -194,21 +211,21 @@ export default {
           },
         ];
       } else {
-        if (
-          this.contextItem.dataRef.id == 1 ||
-          this.contextItem.dataRef.id == 2
-        ) {
-          // 根文件夹
-          return [];
-        } else {
-          // 文件夹
-          return [
-            {
-              label: "删除",
-              onclick: () => {},
+        // 文件夹
+        return [
+          {
+            label: "重命名",
+            onclick: () => {
+              this.renameDialog(this.contextItem.dataRef, false);
+            }
+          },
+          {
+            label: "删除",
+            onclick: () => {
+              this.deleteDir(this.contextItem.dataRef)
             },
-          ];
-        }
+          },
+        ];
       }
     },
   },
@@ -292,6 +309,10 @@ export default {
         onCancel() {},
       });
     },
+    deleteDir(dir) {
+      this.deleteDirModel = deepCopy(dir);
+      this.deleteDirDialogVisible = true;
+    },
     close() {
       this.$store.commit("view/wizardVisible", false);
     },
@@ -345,6 +366,18 @@ export default {
         this.$refs.ctxMenu.open(event);
       }
     },
+    renameDialog(item, isApp) {
+      this.renameDialogVisible = true
+      this.renameIsDir = !isApp;
+      if(isApp) {
+        this.renameModel = {id:item.id, name: item.name}
+      }else {
+        this.renameModel = {id:item.id, name: item.label}
+      }
+    },
+    renameSuccessHandler() {
+      this.fetchAppsLoading();
+    }
   },
 };
 </script>

@@ -149,3 +149,10 @@ export function getUserConfig() {
 export function saveUserConfig(json) {
   return window.SuanpanAPI.userService.saveConfig(json);
 }
+
+/**
+ * change app name
+ */
+export function changeAppName(id, name) {
+  return window.SuanpanAPI.appService.changeName(id, name);
+}

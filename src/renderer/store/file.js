@@ -1,5 +1,5 @@
 import { invoke, gotoPredict } from "../services";
-import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp, getUserConfig, saveUserConfig } from "services/file"
+import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp, getUserConfig, saveUserConfig, changeAppName } from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
 
 export default {
@@ -197,8 +197,8 @@ export default {
         // traverse predict dir
         let predictDirs = res.predictDirs;
         let predictQueue = [];
-        let predictDirsMap = {};
         let maxId = 0;
+        let parentDir = null;
         for(let i = 0; i < predictDirs.length; i++) {
           predictQueue.push(predictDirs[i])
           while(true) {
@@ -206,7 +206,9 @@ export default {
             if(parseInt(dir.id) > maxId) {
               maxId = parseInt(dir.id)
             }
-            predictDirsMap[dir.id] = dir;
+            if(dirId == dir.id) {
+              parentDir = dir;
+            }
             if(dir.children && dir.children.length > 0) {
               for(let j = 0; j < dir.children.length; j++) {
                 predictQueue.push(dir.children[j]);
@@ -217,7 +219,9 @@ export default {
             }
           }
         }
-        let parentDir = predictDirsMap[dirId]
+        if(parentDir == null) {
+          return;
+        }
         if(!parentDir.children) {
           parentDir.children = []
         }
@@ -227,6 +231,50 @@ export default {
           id: maxId + 1,
           label: name
         })
+        return saveUserConfig(res);
+      })
+    },
+    appChangeName({}, {id, name}) {
+      return changeAppName(id, name)
+    },
+    dirChangName({}, {id, name}) {
+      return getUserConfig().then( res => {
+        // traverse predict dir
+        let predictDirs = res.predictDirs;
+        let predictQueue = [];
+        let maxId = 0;
+        let parentDir = null;
+        for(let i = 0; i < predictDirs.length; i++) {
+          predictQueue.push(predictDirs[i])
+          while(true) {
+            let dir = predictQueue.shift();
+            if(parseInt(dir.id) > maxId) {
+              maxId = parseInt(dir.id)
+            }
+            if(id == dir.id) {
+              parentDir = dir;
+              break;
+            }
+            if(dir.children && dir.children.length > 0) {
+              for(let j = 0; j < dir.children.length; j++) {
+                predictQueue.push(dir.children[j]);
+              }
+            }
+            if(predictQueue.length === 0) {
+              break;
+            }
+          }
+        }
+        if(parentDir == null) {
+          return;
+        }
+        parentDir.label = name;
+        return saveUserConfig(res);
+      })
+    },
+    test({}) {
+      return getUserConfig().then( res => {
+        res.predictDirs[1].children.pop()
         return saveUserConfig(res);
       })
     }
