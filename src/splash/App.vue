@@ -82,7 +82,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true
-          window.ipcRenderer.invoke('config-app').then ( (res) => {
+          window.ipcRenderer.invoke('config-app', this.config).then ( (res) => {
             window.ipcRenderer.invoke('config-set', this.config).finally( () => {
               window.ipcRenderer.send('splash-over')
             })

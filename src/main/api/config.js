@@ -37,10 +37,11 @@ function setConfig(event, obj) {
   });
 }
 
-function getAppConfig() {
+function getAppConfig(event, obj) {
   return new Promise((resolve, reject) => {
-    getUrlContent(`${config.protocol}://${config.host}:${config.port}/app/config`, "POST").then(
+    getUrlContent(`${config.protocol}://${obj.host}:${obj.port}/app/config`, "POST").then(
       (rawData) => {
+        Object.assign(config, obj)
         appConfig = convert2Appconfig(JSON.parse(rawData).data)
         resolve(appConfig);
       }
