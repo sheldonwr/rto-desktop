@@ -45,6 +45,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  user-select: none;
   .about-description {
     text-align: center;
     height: 300px;
