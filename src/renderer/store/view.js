@@ -12,7 +12,9 @@ export default {
     createAppDialog: false,
     createDirDialog: false,
     // 状态栏
-    statusVisible: false
+    statusVisible: false,
+    // 关于
+    aboutVisible: false,
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -35,6 +37,9 @@ export default {
     },
     statusVisible(state, val) {
       state.statusVisible = val;
+    },
+    aboutVisible(state, val) {
+      state.aboutVisible = val;
     }
   },
   actions: {

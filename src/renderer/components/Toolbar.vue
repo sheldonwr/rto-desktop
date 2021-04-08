@@ -78,6 +78,7 @@
       <div
         class="toolbar-icon"
         title="帮助"
+        @click="clickHandler('view-help')"
         @mouseover="mouseoverHandler('view-help')"
         @mouseout="mouseoutHandler"
       >
@@ -86,6 +87,7 @@
       <div
         class="toolbar-icon"
         title="关于"
+        @click="clickHandler('view-about')"
         @mouseover="mouseoverHandler('view-about')"
         @mouseout="mouseoutHandler"
       >
@@ -162,6 +164,10 @@ export default {
           "view/logPanelVisible",
           !this.$store.state.view.logPanelVisible
         );
+      }else if(id === 'view-help') {
+        window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
+      }else if(id === 'view-about') {
+        this.$store.commit('view/aboutVisible', true)
       }
     },
     mouseoverHandler(id) {

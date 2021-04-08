@@ -218,12 +218,10 @@ export default {
             {
               label: "RTO用户帮助",
               value: "help-rto",
-              disabled: true,
             },
             {
               label: "关于RTOExplorer",
-              value: "help-about",
-              disabled: true,
+              value: "help-about"
             },
           ],
         },
@@ -405,6 +403,12 @@ export default {
           process.env.NODE_ENV !== "production" ? 
           window.open(`${window.location.origin}/modelAlgoManage?tab=algo`):
           window.open(`${window.location.origin}/modelAlgoManage.html?tab=algo`)
+          break;
+        case "help-rto":
+          window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
+          break;
+        case "help-about":
+          this.$store.commit('view/aboutVisible', true)
           break;
       }
     },

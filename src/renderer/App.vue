@@ -7,6 +7,7 @@
     <wizard v-if="$store.state.view.wizardVisible"></wizard>
     <AppCreateForm v-if="createAppDialog" v-model="createAppDialog"></AppCreateForm>
     <DirCreateForm v-if="createDirDialog" v-model="createDirDialog"></DirCreateForm>
+    <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import Drawer from "components/Drawer";
 import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm"
 import DirCreateForm from "components/DirCreateForm"
+import AboutDialog from "components/AboutDialog"
 import bus from "utils/bus"
 
 export default {
@@ -29,7 +31,8 @@ export default {
     Drawer,
     Wizard,
     AppCreateForm,
-    DirCreateForm
+    DirCreateForm,
+    AboutDialog
   },
   mounted() {
     this.updateAppHeight();
@@ -62,6 +65,14 @@ export default {
       },
       set(val) {
         this.$store.commit('view/createDirDialog', val);
+      }
+    },
+    aboutVisible: {
+      get() {
+        return this.$store.state.view.aboutVisible;
+      },
+      set(val) {
+        this.$store.commit('view/aboutVisible', val);
       }
     }
   },
