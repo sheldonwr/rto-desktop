@@ -95,6 +95,15 @@ export default {
       },
       immediate: true
     },
+    "$store.state.edit.selectedNode": {
+      handler(val) {
+        if(val && this.$store.state.view.logPanelVisible) {
+          setTimeout(() => {
+            this.updateAppHeight();
+          }, 0);
+        }
+      }
+    }
   },
   methods: {
     updateAppHeight(diff=0) {
