@@ -31,6 +31,12 @@ export default {
     recentOpenedApps(state, val) {
       state.recentOpenedApps = uniqueArray(val, item => item.id);
     },
+    recentOpenedAppsDelete(state, id) {
+      let idx = state.recentOpenedApps.findIndex( item => item.id == id);
+      if(idx > -1) {
+        state.recentOpenedApps.splice(idx, 1);
+      }
+    }
   },
   actions: {
     open({ state, commit, dispatch }) {
@@ -44,7 +50,7 @@ export default {
     openFile({ state, commit, dispatch }, filePath) {
       let { name: fileName } = getFileNameAndExt(filePath);
       this.dispatch('showLoading', { opacity: false, msg: '打开中...'});
-        openFile(fileName).then( res => {
+        openFile(filePath, fileName).then( res => {
           gotoPredict(res.appId).then( () => {
             commit("currentApp", {
               id: res.appId,
@@ -121,6 +127,7 @@ export default {
           })
           this.commit("view/wizardClosable", false);
         }
+        commit('recentOpenedAppsDelete', app.id);
       }).catch( err => {
         console.error(err)
         throw err
@@ -199,7 +206,7 @@ export default {
     createDir({}, {name, dir: dirId}) {
       return getUserConfig().then( res => {
         // traverse predict dir
-        let predictDirs = res.predictDirs;
+        let predictDirs = res.predictDirs || [];
         let predictQueue = [];
         let maxId = 0;
         let parentDir = null;
@@ -224,17 +231,25 @@ export default {
           }
         }
         if(parentDir == null) {
-          return;
+          if(res.predictDirs == null) {
+            res.predictDirs = [{
+              children: [],
+              folder: true,
+              id: maxId + 1,
+              label: name
+            }]
+          }
+        }else {
+          if(!parentDir.children) {
+            parentDir.children = []
+          }
+          parentDir.children.push({
+            children: [],
+            folder: true,
+            id: maxId + 1,
+            label: name
+          })
         }
-        if(!parentDir.children) {
-          parentDir.children = []
-        }
-        parentDir.children.push({
-          children: [],
-          folder: true,
-          id: maxId + 1,
-          label: name
-        })
         return saveUserConfig(res);
       })
     },

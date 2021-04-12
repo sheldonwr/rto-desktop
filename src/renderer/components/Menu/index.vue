@@ -57,18 +57,18 @@ export default {
               disabled: false,
             },
             {
+              label: "最近打开",
+              value: "file-recent",
+              disabled: false,
+              items: this.recentApps,
+            },
+            {
               label: "关闭",
               value: "file-close",
             },
             {
               label: "终止",
               value: "file-terminate",
-            },
-            {
-              label: "最近打开",
-              value: "file-recent",
-              disabled: false,
-              items: this.recentApps,
             },
             {
               label: "退出",
@@ -346,7 +346,15 @@ export default {
           break;
         case "file-quit":
           // 退出
-          this.$store.dispatch("window/closeWindow");
+          this.$confirm({
+            title: `确定关闭软件吗？`,
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+              return this.$store.dispatch('window/closeWindow')
+            },
+            onCancel() {},
+          });
           break;
         case "edit-cut":
           this.$store.dispatch("edit/cutNode");

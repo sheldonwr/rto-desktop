@@ -50,7 +50,7 @@ export function getApp(id) {
 /**
  * 导入项目
  */
- export function openFile(fileName) {
+ export function openFile(fullpath, fileName) {
   return invoke('file-load', fullpath).then((fileBuffer) => {
     return new Promise( (resolve, reject) => {
       const importAppDataPath = window.SuanpanAPI.commonService.getImportPath(

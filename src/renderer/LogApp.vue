@@ -78,7 +78,8 @@ export default {
 <style lang="scss" scoped>
 .rto_log {
   position: relative;
-  z-index: 9;
+  z-index: 99;
+  background: #fff;
   .clearfix:after {
     content: " ";
     display: block;
