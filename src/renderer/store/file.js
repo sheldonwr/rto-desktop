@@ -89,7 +89,7 @@ export default {
       return dispatch('saveDialog', '另存为')
     },
     saveDialog({ state, commit, dispatch }, dialogTitle) {
-      return invoke("file-save-dialog", dialogTitle).then(filePath => {
+      return invoke("file-save-dialog", dialogTitle, state.currentApp.name).then(filePath => {
         if(!filePath) {
           throw new Error('file not selected')
         }

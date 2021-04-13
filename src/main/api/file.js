@@ -1,5 +1,6 @@
 import { ipcMain, dialog, BrowserWindow, app } from "electron";
 import fs from 'fs';
+import path from 'path';
 const http = require('http');
 
 ipcMain.handle("file-open", openFile);
@@ -33,10 +34,10 @@ function loadFile(event, filePath) {
   });
 }
 
-async function saveFileDialog(event, title) {
+async function saveFileDialog(event, title, defaultName='') {
   const { filePath } = await dialog.showSaveDialog( BrowserWindow.getFocusedWindow(), {
     title: title,
-    defaultPath: app.getPath("documents"),
+    defaultPath: path.join(app.getPath("documents"), defaultName),
     filters: [{
       name: "sp", extensions: ['sp']
     }]

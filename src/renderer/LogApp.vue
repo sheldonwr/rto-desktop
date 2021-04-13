@@ -38,6 +38,9 @@
         </ResizeTabContent>
       </a-tab-pane>
     </a-tabs>
+    <div class="close-wrap" @click="close">
+      <span class="rto_iconfont icon-close"></span>
+    </div>
   </div>
 </template>
 
@@ -105,6 +108,23 @@ export default {
   }
   ul {
     margin-bottom: 0;
+  }
+  .close-wrap {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 36px;
+    width: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      opacity: 0.5;
+    }
+    .rto_iconfont {
+      font-size: 10px;
+    }
   }
 }
 .tab-content {
