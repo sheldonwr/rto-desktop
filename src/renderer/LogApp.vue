@@ -80,6 +80,16 @@ export default {
   watch: {
     "$store.state.edit.selectedNode": {
       handler(selectedNode) {
+        console.log('++++', selectedNode)
+      },
+    },
+    "$store.state.status.appStatus": {
+      handler() {
+        if(this.$store.getters["status/isLogging"]) {
+          this.getAppLog();
+        }else {
+          this.clearAppLog();
+        }
       },
     },
   },
@@ -91,27 +101,59 @@ export default {
 
     },
     predictTransition(appId) {
-      this.getAppLog(appId);
-      this.getCompLog(appId);
+      this.appId = appId
+      this.getAppLog();
+      this.getCompLog();
     },
-    getAppLog(appId) {
+    getAppLog() {
       // 项目日志
+      if(!this.appId) {
+        return;
+      }
       this.clearAppLog();
       this.appLog = '';
       let curlogPos = 0;
-      this.$store.dispatch("log/getAppLog", {appId, curlogPos}).then((res) => {
-        this.appLog = res.text
+      this.$store.dispatch("log/getAppLog", {appId: this.appId, curlogPos}).then((res) => {
+        if(res && res.text) {
+          this.appLog = res.text
+          curlogPos = res.nextLogPosition;
+        }
       });
-      // this.appLogInterval = setInterval(() => {
-      //   if(!this.$store.getters["status/isLogging"]) {
-
-      //   }
-      // }, 1500);
+      if(this.$store.getters["status/isLogging"]) {
+        this.appLogInterval = setInterval(() => {
+          this.$store.dispatch("log/getAppLog", {appId: this.appId, curlogPos}).then((res) => {
+            if(res && res.text) {
+              this.appLog += res.text
+              curlogPos = res.nextLogPosition;
+            }
+          });
+        }, 1500);
+      }
     },
-    getCompLog(appId) {
+    getCompLog() {
       // 组件日志
+      if(!this.appId || !this.nodeId) {
+        return;
+      }
       this.clearCompLog();
       this.compLog = '';
+      let curlogPos = 0;
+      this.$store.dispatch("log/getComponentLog", {appId: this.appId, nodeId: this.nodeId, curlogPos}).then((res) => {
+        if(res && res.text) {
+          this.compLog = res.text
+          curlogPos = res.nextLogPosition;
+        }
+      });
+      if(this.$store.getters["status/isLogging"]) {
+        this.compLogInterval = setInterval(() => {
+          this.$store.dispatch("log/getComponentLog", {appId: this.appId, nodeId: this.nodeId, curlogPos}).then((res) => {
+            if(res && res.text) {
+              this.compLog += res.text
+              curlogPos = res.nextLogPosition;
+            }
+          });
+        }, 1500);
+      }
     },
     clearAppLog() {
       if(this.appLogInterval) {
@@ -214,11 +256,9 @@ export default {
 }
 .logview {
   padding: 12px;
-  height: 240px;
-  border-radius: 2px;
+  height: 100%;
   user-select: text;
   white-space: pre;
-  border: 1px solid #e8e8e8;
   color: #5b6573;
   background-color: #fff;
   overflow: auto;

@@ -22,12 +22,13 @@ export default {
         commit('allLogs', addLogs(state.allLogs, res.logs))  
       })
     },
-    getAppLog({rootState}, {appId, curlogPos=0}) {
+    getAppLog({}, {appId, curlogPos=0}) {
       let logPath = window.SuanpanAPI.logService.getAppLogId(window.appConfig.userId, appId);
       return window.SuanpanAPI.logService.getLog(logPath, curlogPos);
     },
-    getComponentLog({}) {
-
+    getComponentLog({}, {appId, nodeId, curlogPos=0}) {
+      let logPath = window.SuanpanAPI.logService.getLogId(window.appConfig.userId, appId, nodeId);
+      return window.SuanpanAPI.logService.getLog(logPath, curlogPos); 
     }
   }
 };
