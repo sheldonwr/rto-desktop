@@ -40,7 +40,11 @@
       </a-tab-pane>
       <a-tab-pane key="3" tab="组件日志">
         <ResizeTabContent :default-height="240">
-          组件日志
+          <div class="logview">
+            <div class="logview-content">
+              <div>{{ compLog }}</div>
+            </div>
+          </div>
         </ResizeTabContent>
       </a-tab-pane>
     </a-tabs>
@@ -52,7 +56,6 @@
 
 <script>
 import ResizeTabContent from "components/ResizeTabContent";
-import bus from "utils/bus";
 
 export default {
   name: "log",
@@ -69,26 +72,46 @@ export default {
     };
   },
   created() {
-    bus.on("transition-component", this.componentTransition);
-    bus.on("transition-predict", this.predictTransition);
   },
   mounted() {},
-  beforeDestroy() {
-    bus.off("transition-component");
-    bus.off("transition-predict");
-  },
+  beforeDestroy() {},
   watch: {
+    "$store.state.view.logPanelVisible": {
+      handler(visible) {
+        if(visible) {
+          this.getAppLog();
+        }else if(visible && this.$store.state.edit.selectedNode) {
+          this.getCompLog();
+        }else if(!this.$store.state.edit.selectedNode) {
+          this.clearCompLog();
+          this.compLog = '';
+        }else {
+          this.clearAppLog();
+          this.clearCompLog();
+        }
+      }
+    },
     "$store.state.edit.selectedNode": {
       handler(selectedNode) {
-        console.log('++++', selectedNode)
+        if(selectedNode) {
+          this.nodeId = selectedNode.id;
+          this.getCompLog();
+        }else {
+          this.clearCompLog();
+          this.compLog = '';
+        }
       },
     },
     "$store.state.status.appStatus": {
       handler() {
-        if(this.$store.getters["status/isLogging"]) {
+        let isLogging = this.$store.getters["status/isLogging"];
+        if(isLogging) {
           this.getAppLog();
+        }else if(isLogging && this.$store.state.edit.selectedNode) {
+          this.getCompLog();
         }else {
-          this.clearAppLog();
+           this.clearAppLog();
+           this.clearCompLog();
         }
       },
     },
@@ -97,23 +120,16 @@ export default {
     close() {
       this.$store.commit("view/logPanelVisible", false);
     },
-    componentTransition() {
-
-    },
-    predictTransition(appId) {
-      this.appId = appId
-      this.getAppLog();
-      this.getCompLog();
-    },
     getAppLog() {
       // 项目日志
-      if(!this.appId) {
+      let appId = this.$store.state.file.currentApp.id;
+      if(!appId) {
         return;
       }
       this.clearAppLog();
       this.appLog = '';
       let curlogPos = 0;
-      this.$store.dispatch("log/getAppLog", {appId: this.appId, curlogPos}).then((res) => {
+      this.$store.dispatch("log/getAppLog", {appId: appId, curlogPos}).then((res) => {
         if(res && res.text) {
           this.appLog = res.text
           curlogPos = res.nextLogPosition;
@@ -121,7 +137,7 @@ export default {
       });
       if(this.$store.getters["status/isLogging"]) {
         this.appLogInterval = setInterval(() => {
-          this.$store.dispatch("log/getAppLog", {appId: this.appId, curlogPos}).then((res) => {
+          this.$store.dispatch("log/getAppLog", {appId: appId, curlogPos}).then((res) => {
             if(res && res.text) {
               this.appLog += res.text
               curlogPos = res.nextLogPosition;
@@ -132,13 +148,14 @@ export default {
     },
     getCompLog() {
       // 组件日志
-      if(!this.appId || !this.nodeId) {
+      let appId = this.$store.state.file.currentApp.id;
+      if(!appId || !this.nodeId) {
         return;
       }
       this.clearCompLog();
       this.compLog = '';
       let curlogPos = 0;
-      this.$store.dispatch("log/getComponentLog", {appId: this.appId, nodeId: this.nodeId, curlogPos}).then((res) => {
+      this.$store.dispatch("log/getComponentLog", {appId: appId, nodeId: this.nodeId, curlogPos}).then((res) => {
         if(res && res.text) {
           this.compLog = res.text
           curlogPos = res.nextLogPosition;
@@ -146,7 +163,7 @@ export default {
       });
       if(this.$store.getters["status/isLogging"]) {
         this.compLogInterval = setInterval(() => {
-          this.$store.dispatch("log/getComponentLog", {appId: this.appId, nodeId: this.nodeId, curlogPos}).then((res) => {
+          this.$store.dispatch("log/getComponentLog", {appId: appId, nodeId: this.nodeId, curlogPos}).then((res) => {
             if(res && res.text) {
               this.compLog += res.text
               curlogPos = res.nextLogPosition;

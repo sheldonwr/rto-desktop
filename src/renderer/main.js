@@ -152,7 +152,6 @@ window.addEventListener('load', () => {
 
   // 监听rto组件打开操作面板
   window.SuanpanAPI.eventService.on('rto:setting:params', (event, data) => {
-    console.log(event, data)
     if (data && data.length > 0 && data[0].hasOwnProperty('url')) {
       const { url } = data[0];
       if (url && url !== '') {
@@ -185,7 +184,7 @@ window.addEventListener('load', ()=> {
     }
     console.log(data)
     let location = data[1].router.urlRouter.location;
-    if(location.endsWith('/edit') === 0) {
+    if(location.endsWith('/edit')) {
       bus.emit('transition-component')
     }else if(location.startsWith('/web/service/predict/')) {
       let locs = location.split('/');

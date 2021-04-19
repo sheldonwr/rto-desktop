@@ -106,6 +106,20 @@
     </div>
     <div class="deploy-container">
       <div
+        v-if="isComponentEdit"
+        class="toolbar-icon deploy-running"
+        title="完成"
+        @click="clickHandler('component-success')"
+        @mouseover="mouseoverHandler('component-success')"
+        @mouseout="mouseoutHandler"
+      >
+        <span
+          :class="['rto_iconfont', 'icon-check']"
+          style="font-size: 22px"
+        ></span>
+      </div>
+      <div
+        v-else
         class="toolbar-icon"
         :class="[isRunning ? 'deploy-stop' : 'deploy-running']"
         :title="isRunning ? '停止' : '开启'"
@@ -124,10 +138,13 @@
 </template>
 
 <script>
+import bus from "utils/bus";
+
 export default {
   data() {
     return {
       isRunning: false,
+      isComponentEdit: false,
     };
   },
   watch: {
@@ -137,7 +154,14 @@ export default {
       },
     },
   },
-  created() {},
+  created() {
+    bus.on("transition-component", this.componentTransition);
+    bus.on("transition-predict", this.predictTransition);
+  },
+  beforeDestroy() {
+    bus.off("transition-component");
+    bus.off("transition-predict");
+  },
   methods: {
     clickHandler(id) {
       if (id === "file-new") {
@@ -181,6 +205,8 @@ export default {
       }else if(id === 'view-app') {
         this.$store.commit("view/logPanelVisible", false);
         this.$store.commit("view/wizardVisible", true);
+      }else if(id === 'component-success') {
+        this.$store.dispatch("file/gotoCurrentPredict");
       }
     },
     mouseoverHandler(id) {
@@ -209,11 +235,19 @@ export default {
         title = this.isRunning ? '停止' : '开启'
       }else if(id === 'view-app') {
         title = '项目列表'
+      }else if(id === 'component-success') {
+        title = '组件完成'
       }
       this.$store.commit('statustooltip/status', title)
     },
     mouseoutHandler() {
       this.$store.commit('statustooltip/status', '')
+    },
+    componentTransition() {
+      this.isComponentEdit = true;
+    },
+    predictTransition() {
+      this.isComponentEdit = false;
     }
   },
 };
