@@ -53,7 +53,7 @@
           v-bind="index !== 0 && formItemLayoutWithOutLabel"
           v-for="(item, index) in form.prop"
           :key="item.key"
-          :label="index === 0 ? '基本参数' : ''"
+          :label="index === 0 ? '固定参数' : ''"
           prop="prop"
           :style="index === 0 && 'margin-bottom: 0'"
         >
@@ -89,7 +89,7 @@
         </a-form-model-item>
         <a-form-model-item class="addBtn" v-bind="formItemLayoutWithOutLabel">
           <a-button type="dashed" style="width: 100%" @click="addProp">
-            <a-icon type="plus" /> 添加基本参数
+            <a-icon type="plus" /> 添加固定参数
           </a-button>
         </a-form-model-item>
         <a-form-model-item
@@ -97,7 +97,7 @@
           v-for="(item, index) in form.param"
           v-bind="index !== 0 && formItemLayoutWithOutLabel"
           :key="item.key"
-          :label="index === 0 ? '参数配置' : ''"
+          :label="index === 0 ? '可变参数' : ''"
           prop="param"
           :style="index === 0 && 'margin-bottom: 0'"
         >
@@ -134,7 +134,7 @@
         </a-form-model-item>
         <a-form-model-item class="addBtn" v-bind="formItemLayoutWithOutLabel">
           <a-button type="dashed" style="width: 100%" @click="addParam">
-            <a-icon type="plus" /> 添加参数设置
+            <a-icon type="plus" /> 添加可变参数
           </a-button>
         </a-form-model-item>
       </a-form-model>

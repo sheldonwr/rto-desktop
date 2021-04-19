@@ -21,6 +21,13 @@ export default {
       window.SuanpanAPI.componentLogService.query().then( res => {
         commit('allLogs', addLogs(state.allLogs, res.logs))  
       })
+    },
+    getAppLog({rootState}, appId) {
+      let logPath = window.SuanpanAPI.logService.getAppLogId(window.appConfig.userId, appId);
+      return window.SuanpanAPI.logService.getLog(logPath, 0);
+    },
+    getComponentLog({}) {
+
     }
   }
 };

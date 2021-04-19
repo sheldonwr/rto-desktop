@@ -12,6 +12,7 @@ import StatusApp from './StatusApp.vue'
 import store from "./store";
 import Loading from "components/Loading"
 import { interval } from "utils/";
+import bus from "utils/bus";
 
 
 Vue.config.productionTip = false;
@@ -179,9 +180,17 @@ window.addEventListener('load', () => {
 
 window.addEventListener('load', ()=> {
   let id = window.SuanpanAPI.eventService.on('sp:transition:success', (...data) => {
-    console.log('+++++++++', data)
-    // window.SuanpanAPI.eventService.off(id)
-    // resolve();
+    if(data.length < 2) {
+      return
+    }
+    console.log(data)
+    let location = data[1].router.urlRouter.location;
+    if(location.endsWith('/edit') === 0) {
+      bus.emit('transition-component')
+    }else if(location.startsWith('/web/service/predict/')) {
+      let locs = location.split('/');
+      bus.emit('transition-predict', [locs[locs.length - 1]])
+    }
   })
 })
 

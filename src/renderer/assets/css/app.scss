@@ -29,6 +29,9 @@
 
 
 // override suanpan
+body {
+  overflow: hidden;
+}
 #container {
   top: 115px;
   display: none;

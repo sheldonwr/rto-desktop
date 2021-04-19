@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.view.logPanelVisible" class="rto_custom rto_log">
+  <div v-show="$store.state.view.logPanelVisible" class="rto_custom rto_log">
     <a-tabs type="card">
       <a-tab-pane key="1" tab="日志">
         <ResizeTabContent :default-height="240">
@@ -21,7 +21,9 @@
               <span class="pull-left single-line source">{{ log.fnode }}</span>
               <span class="pull-left single-line time">{{ log.ftime }}</span>
               <span class="pull-left single-line message">{{ log.title }}</span>
-              <span class="pull-left single-line severity">{{ log.level }}</span>
+              <span class="pull-left single-line severity">{{
+                log.level
+              }}</span>
               <span class="pull-left single-line condition"></span>
             </li>
           </ul>
@@ -29,7 +31,11 @@
       </a-tab-pane>
       <a-tab-pane key="2" tab="项目日志">
         <ResizeTabContent :default-height="240">
-          项目日志
+          <div class="logview">
+            <div class="logview-content">
+              <div>{{ appLog }}</div>
+            </div>
+          </div>
         </ResizeTabContent>
       </a-tab-pane>
       <a-tab-pane key="3" tab="组件日志">
@@ -45,21 +51,38 @@
 </template>
 
 <script>
-import ResizeTabContent from 'components/ResizeTabContent'
+import ResizeTabContent from "components/ResizeTabContent";
+import bus from "utils/bus";
 
 export default {
   name: "log",
   components: {
-    ResizeTabContent
+    ResizeTabContent,
   },
   data() {
     return {
       allLogs: [],
+      appLog: "",
     };
+  },
+  created() {
+    bus.on("transition-component", this.componentTransition);
+    bus.on("transition-predict", this.predictTransition);
+  },
+  mounted() {},
+  beforeDestroy() {
+    bus.off("transition-component");
+    bus.off("transition-predict");
   },
   methods: {
     close() {
       this.$store.commit("view/logPanelVisible", false);
+    },
+    componentTransition() {},
+    predictTransition(appId) {
+      this.$store.dispatch("log/getAppLog", appId).then((res) => {
+        this.appLog = res.text
+      });
     },
   },
 };
@@ -147,5 +170,19 @@ export default {
   color: #888;
   line-height: 28px;
   overflow: auto;
+}
+.logview {
+  padding: 12px;
+  height: 240px;
+  border-radius: 2px;
+  user-select: text;
+  white-space: pre;
+  border: 1px solid #e8e8e8;
+  color: #5b6573;
+  background-color: #fff;
+  overflow: auto;
+  .logview-content {
+
+  }
 }
 </style>
