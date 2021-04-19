@@ -4,7 +4,7 @@
       size="middle"
       :columns="initColumns"
       :data-source="dataList"
-      :pagination="pagination"
+      :pagination="this.pagination"
       @change="this.changeTable"
       :loading="tableLoading"
     >
@@ -165,9 +165,6 @@ export default {
       });
       return data;
     },
-    pagination: function() {
-      return this.$store.state.ci.pagination;
-    },
     tableLoading: function() {
       return this.$store.state.ci.loading;
     },
@@ -177,14 +174,20 @@ export default {
   },
   watch: {
     '$store.state.drawer.drawerVisible': function(drawerVisible) {
-      const { activeTab } = this.$store.state.drawer;
       if (!drawerVisible) {
         this.closeForm();
       }
     },
     '$store.state.ci.currentCiDetail': function(detail) {
       this.updateForm({ ...this.form, ...detail });
-    }
+    },
+    '$store.state.ci.pagination': {
+      handler(val) {
+        console.log("val:", val )
+        this.pagination = val;
+      },
+      deep: true
+    },
   },
   data() {
     return {
@@ -218,6 +221,11 @@ export default {
       },
       formVisible: false,
       createNew: true,
+      pagination: {
+        pageSize: 0,
+        pageNo: 0,
+        total: 0
+      }
     };
   },
   methods: {

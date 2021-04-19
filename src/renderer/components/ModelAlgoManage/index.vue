@@ -1,11 +1,8 @@
 <template>
   <div class="card-content">
-    <a-tabs :active-key="getActiveTab" type="card" @change="this.changeActiveTab">
-      <a-tab-pane key="model" tab="模型管理">
-        <Manage type="model" />
-      </a-tab-pane>
-      <a-tab-pane key="algo" tab="算法管理">
-        <Manage type="algo" />
+    <a-tabs :active-key="getActiveTab" type="card">
+      <a-tab-pane :key="getActiveTab" :tab="getActiveTab === 'model' ? '模型管理' : '算法管理'">
+        <Manage :type="getActiveTab" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -33,21 +30,13 @@ export default {
     }
   },
   methods: {
-    changeActiveTab(activeKey) {
-      this.$store.commit('drawer/changeActiveTab', activeKey);
-      this.$store.commit('ci/updatePagination', { current: 1 });
-      this.$store.dispatch('ci/getList', {
-        type: activeKey,
-        pagination: this.$store.getters['ci/getPagination']
-      });
-    },
   },
 };
 </script>
-<style >
+<style>
 .card-content {
   background: #f0f3f8;
-  overflow: hidden;
+  overflow: auto;
   padding: 20px;
   height: 100%;
 }

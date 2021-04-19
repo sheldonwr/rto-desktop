@@ -45,7 +45,7 @@ export default {
 			commit('upadteLoading', true);
 			getCiList(data).then(res => {
 				if (res.hasOwnProperty('data')) commit('updateCiList', res.data);
-				if (res.hasOwnProperty('pagination')) commit('updatePagination', res.pagination);
+				if (res.hasOwnProperty('pagination')) commit('updatePagination', { ...res.pagination, current: res.pagination.pageNo || 1 });
 				commit('upadteLoading', false);
 			});
 		},
