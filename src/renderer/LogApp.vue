@@ -91,10 +91,10 @@ export default {
 
     },
     predictTransition(appId) {
-      this.getAppLog();
-      this.getCompLog();
+      this.getAppLog(appId);
+      this.getCompLog(appId);
     },
-    getAppLog() {
+    getAppLog(appId) {
       // 项目日志
       this.clearAppLog();
       this.appLog = '';
@@ -102,11 +102,13 @@ export default {
       this.$store.dispatch("log/getAppLog", {appId, curlogPos}).then((res) => {
         this.appLog = res.text
       });
-      this.appLogInterval = setInterval(() => {
-        
-      }, 1500);
+      // this.appLogInterval = setInterval(() => {
+      //   if(!this.$store.getters["status/isLogging"]) {
+
+      //   }
+      // }, 1500);
     },
-    getCompLog() {
+    getCompLog(appId) {
       // 组件日志
       this.clearCompLog();
       this.compLog = '';

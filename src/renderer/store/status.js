@@ -10,6 +10,9 @@ export default {
     isRunning(state) {
       return state.appStatus == '1' || state.appStatus == '3'
     },
+    isLogging(state) {
+      return state.appStatus == '1' || state.appStatus == '3' || state.appStatus == '5' || state.appStatus == '6'
+    }
   },
   mutations: {
     appStatus(state, val) {
