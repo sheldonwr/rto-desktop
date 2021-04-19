@@ -62,7 +62,10 @@ export default {
   data() {
     return {
       allLogs: [],
+      // 项目日志
       appLog: "",
+      // 组件日志
+      compLog: "",
     };
   },
   created() {
@@ -74,16 +77,52 @@ export default {
     bus.off("transition-component");
     bus.off("transition-predict");
   },
+  watch: {
+    "$store.state.edit.selectedNode": {
+      handler(selectedNode) {
+      },
+    },
+  },
   methods: {
     close() {
       this.$store.commit("view/logPanelVisible", false);
     },
-    componentTransition() {},
+    componentTransition() {
+
+    },
     predictTransition(appId) {
-      this.$store.dispatch("log/getAppLog", appId).then((res) => {
+      this.getAppLog();
+      this.getCompLog();
+    },
+    getAppLog() {
+      // 项目日志
+      this.clearAppLog();
+      this.appLog = '';
+      let curlogPos = 0;
+      this.$store.dispatch("log/getAppLog", {appId, curlogPos}).then((res) => {
         this.appLog = res.text
       });
+      this.appLogInterval = setInterval(() => {
+        
+      }, 1500);
     },
+    getCompLog() {
+      // 组件日志
+      this.clearCompLog();
+      this.compLog = '';
+    },
+    clearAppLog() {
+      if(this.appLogInterval) {
+        clearInterval(this.appLogInterval);
+        this.appLogInterval = null;
+      }
+    },
+    clearCompLog() {
+      if(this.compLogInterval) {
+        clearInterval(this.compLogInterval);
+        this.compLogInterval = null;
+      }
+    }
   },
 };
 </script>
