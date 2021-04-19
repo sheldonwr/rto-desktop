@@ -3,6 +3,16 @@
     <div class="toolbar-list">
       <div
         class="toolbar-icon"
+        title="项目列表"
+        @click="clickHandler('view-app')"
+        @mouseover="mouseoverHandler('view-app')"
+        @mouseout="mouseoutHandler"
+      >
+        <span class="rto_iconfont icon-project-list"></span>
+      </div>
+      <div class="separator"></div>
+      <div
+        class="toolbar-icon"
         title="新建"
         @click="clickHandler('file-new')"
         @mouseover="mouseoverHandler('file-new')"
@@ -168,6 +178,9 @@ export default {
         window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
       }else if(id === 'view-about') {
         this.$store.commit('view/aboutVisible', true)
+      }else if(id === 'view-app') {
+        this.$store.commit("view/logPanelVisible", false);
+        this.$store.commit("view/wizardVisible", true);
       }
     },
     mouseoverHandler(id) {
@@ -194,6 +207,8 @@ export default {
         title = '关于'
       }else if(id === 'deploy') {
         title = this.isRunning ? '停止' : '开启'
+      }else if(id === 'view-app') {
+        title = '项目列表'
       }
       this.$store.commit('statustooltip/status', title)
     },
@@ -226,7 +241,7 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
-    width: 400px;
+    width: 430px;
   }
   .toolbar-icon {
     padding: 4px 10px;
@@ -246,7 +261,7 @@ export default {
     margin: 0 1px;
   }
   .placeholder {
-    width: 400px;
+    width: 430px;
   }
 }
 </style>

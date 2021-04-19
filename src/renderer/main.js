@@ -177,6 +177,14 @@ window.addEventListener('load', () => {
   }, 1000);
 });
 
+window.addEventListener('load', ()=> {
+  let id = window.SuanpanAPI.eventService.on('sp:transition:success', (...data) => {
+    console.log('+++++++++', data)
+    // window.SuanpanAPI.eventService.off(id)
+    // resolve();
+  })
+})
+
 storeInst.watch(
   function (state) {
       return state.file.currentApp;
