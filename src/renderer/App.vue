@@ -132,7 +132,9 @@ export default {
           this.$store.commit("view/logPanelVisible", false);
           this.$store.commit("view/wizardVisible", true);
         }
-      } else if (event.keyCode === 192 && event.ctrlKey) {
+      }else if(event.keyCode === 116) {
+        this.$store.dispatch("file/gotoCurrentPredict");
+      }else if (event.keyCode === 192 && event.ctrlKey) {
         // 'ctrl+`'
         this.$store.commit(
           "view/logPanelVisible",

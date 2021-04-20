@@ -70,28 +70,28 @@ window.addEventListener('load', () => {
       const commonMenu = [{
         key: 'cut',
         name: '剪切',
-        active: true,
+        active: !storeInst.getters["status/isRunning"],
         function: () => {
           storeInst.dispatch("edit/cutNode");
         }
       }, {
         key: 'copy',
         name: '复制',
-        active: true,
+        active: !storeInst.getters["status/isRunning"],
         function: () => {
           storeInst.dispatch("edit/copyNode");
         }
       }, {
         key: 'paste',
         name: '粘贴',
-        active: true,
+        active: !storeInst.getters["status/isRunning"],
         function: () => {
           storeInst.dispatch("edit/pasteNode");
         }
       }, {
         key: 'delete',
         name: '删除',
-        active: true,
+        active: !storeInst.getters["status/isRunning"],
         function: () => {
           Vue.prototype.$confirm({
             title: `确定删除这个组件吗？`,
@@ -112,8 +112,9 @@ window.addEventListener('load', () => {
         const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
         if (_.isEmpty(actionList) || actionList.length === 0) return;
         actionList.map((action, index) => {
-          if (action.hasOwnProperty('url')) {
-            const { url } = actionList[0];
+          if (action.hasOwnProperty('url') && action.url) {
+            // const { url } = actionList[0];
+            const url = action.url;
             const { appId, userId } = window.appConfig;
             const iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
                             .replace('{{userId}}', userId)

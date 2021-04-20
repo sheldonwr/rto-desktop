@@ -1,6 +1,6 @@
 @font-face {
   font-family: "rto_iconfont";
-  src: url('iconfont.woff?t=1618797594489') format('woff');
+  src: url('iconfont.woff?t=1618920142782') format('woff');
 }
 
 .rto_iconfont {
@@ -9,6 +9,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-refresh:before {
+  content: "\e7da";
 }
 
 .icon-project-list:before {

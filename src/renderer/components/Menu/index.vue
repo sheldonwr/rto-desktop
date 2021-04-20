@@ -149,7 +149,7 @@ export default {
             {
               label: "刷新",
               value: "view-refresh",
-              disabled: true,
+              keycut: 'F5'
             },
             {
               label: "设置",
@@ -406,6 +406,9 @@ export default {
             "view/logPanelVisible",
             !this.$store.state.view.logPanelVisible
           );
+          break;
+        case "view-refresh":
+          this.$store.dispatch("file/gotoCurrentPredict");
           break;
         case "model-manage": // 模型管理
           this.$store.commit("drawer/changeActiveTab", "model");

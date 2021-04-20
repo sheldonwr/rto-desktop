@@ -103,6 +103,16 @@
       >
         <span class="rto_iconfont icon-about"></span>
       </div>
+      <div class="separator"></div>
+      <div
+        class="toolbar-icon"
+        title="刷新"
+        @click="clickHandler('view-refresh')"
+        @mouseover="mouseoverHandler('view-refresh')"
+        @mouseout="mouseoutHandler"
+      >
+        <span class="rto_iconfont icon-refresh"></span>
+      </div>
     </div>
     <div class="deploy-container">
       <div
@@ -148,9 +158,13 @@ export default {
     };
   },
   watch: {
-    "$store.state.status.appStatus": {
-      handler() {
-        this.isRunning = this.$store.getters["status/isRunning"];
+    "$store.state.file.currentApp": {
+      handler(app) {
+        if(app.id) {
+          this.$store.dispatch('status/getStatus').then( () => {
+            this.isRunning = this.$store.getters["status/isRunning"];
+          })
+        }
       },
     },
   },
@@ -207,6 +221,9 @@ export default {
         this.$store.commit("view/wizardVisible", true);
       }else if(id === 'component-success') {
         this.$store.dispatch("file/gotoCurrentPredict");
+      }else if(id === 'view-refresh') {
+        this.$store.dispatch("file/gotoCurrentPredict");
+        this.isRunning = this.$store.getters["status/isRunning"];
       }
     },
     mouseoverHandler(id) {
@@ -237,6 +254,8 @@ export default {
         title = '项目列表'
       }else if(id === 'component-success') {
         title = '组件完成'
+      }else if(id === 'view-refresh') {
+        title = '刷新'
       }
       this.$store.commit('statustooltip/status', title)
     },
@@ -275,7 +294,7 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
-    width: 430px;
+    width: 480px;
   }
   .toolbar-icon {
     padding: 4px 10px;
@@ -295,7 +314,7 @@ export default {
     margin: 0 1px;
   }
   .placeholder {
-    width: 430px;
+    width: 480px;
   }
 }
 </style>

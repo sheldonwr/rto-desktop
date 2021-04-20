@@ -15,26 +15,26 @@ export default {
   },
   actions: {
     cutNode({ state, commit }) {
-      if(state.selectedNode) {
+      if(state.selectedNode && !this.getters["status/isRunning"]) {
         let copied =  window.SuanpanAPI.nodeService.copyNode(state.selectedNode.id);
         commit('copiedNodeObj', copied);
         window.SuanpanAPI.nodeService.removeNode(state.selectedNode.id);
       }
     },
     copyNode({ state, commit }) {
-      if(state.selectedNode) {
+      if(state.selectedNode && !this.getters["status/isRunning"]) {
         let copied =  window.SuanpanAPI.nodeService.copyNode(state.selectedNode.id);
         commit('copiedNodeObj', copied);
         this.dispatch('showMessage', { type: 'success', msg: '复制成功'});
       }
     },
     pasteNode({ state }) {
-      if(state.copiedNodeObj) {
+      if(state.copiedNodeObj && !this.getters["status/isRunning"]) {
         window.SuanpanAPI.nodeService.pasteNode(state.copiedNodeObj.nodeInfo, state.copiedNodeObj.component);
       }
     },
     deleteNode({ state }) {
-      if(state.selectedNode) {
+      if(state.selectedNode && !this.getters["status/isRunning"]) {
         window.SuanpanAPI.nodeService.removeNode(state.selectedNode.id);
       }
     }

@@ -40,7 +40,9 @@ export default {
   },
   actions: {
     gotoCurrentPredict({state}) {
-      return gotoPredict(state.currentApp.id);
+      if(state.currentApp.id) {
+        return gotoPredict(state.currentApp.id);
+      }
     },
     open({ state, commit, dispatch }) {
       return invoke("file-open").then( filePath => {
