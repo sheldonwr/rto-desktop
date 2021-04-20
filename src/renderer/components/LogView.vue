@@ -1,8 +1,9 @@
 <template>
-  <div v-show="$store.state.view.logPanelVisible" class="rto_custom rto_log">
+  <div class="rto_log">
+    <div class="resize-bar" @mousedown.stop="resizeMousedown"></div>
     <a-tabs type="card">
       <a-tab-pane key="1" tab="日志">
-        <ResizeTabContent :default-height="240">
+        <ResizeTabContent :resize-height="resizeHeight">
           <div class="log-head">
             <ul class="log-head-inner clearfix">
               <li class="pull-left source">节点</li>
@@ -30,7 +31,7 @@
         </ResizeTabContent>
       </a-tab-pane>
       <a-tab-pane key="2" tab="项目日志">
-        <ResizeTabContent :default-height="240">
+        <ResizeTabContent :resize-height="resizeHeight">
           <div class="logview">
             <div class="logview-content">
               <div>{{ appLog }}</div>
@@ -39,7 +40,7 @@
         </ResizeTabContent>
       </a-tab-pane>
       <a-tab-pane key="3" tab="组件日志">
-        <ResizeTabContent :default-height="240">
+        <ResizeTabContent :resize-height="resizeHeight">
           <div class="logview">
             <div class="logview-content">
               <div>{{ compLog }}</div>
@@ -69,12 +70,20 @@ export default {
       appLog: "",
       // 组件日志
       compLog: "",
+      resizeHeight: 240,
+      maxHeight: 240,
+      minHeight: 100
     };
   },
   created() {
   },
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    this.maxHeight = window.innerHeight - 100;
+    window.addEventListener('resize', this.resizeHandler);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize');
+  },
   watch: {
     "$store.state.view.logPanelVisible": {
       handler(visible) {
@@ -93,7 +102,7 @@ export default {
     },
     "$store.state.edit.selectedNode": {
       handler(selectedNode) {
-        if(selectedNode) {
+        if(selectedNode && this.$store.state.view.logPanelVisible) {
           this.nodeId = selectedNode.id;
           this.getCompLog();
         }else {
@@ -105,9 +114,9 @@ export default {
     "$store.state.status.appStatus": {
       handler() {
         let isLogging = this.$store.getters["status/isLogging"];
-        if(isLogging) {
+        if(isLogging && this.$store.state.view.logPanelVisible) {
           this.getAppLog();
-        }else if(isLogging && this.$store.state.edit.selectedNode) {
+        }else if(isLogging && this.$store.state.edit.selectedNode && this.$store.state.view.logPanelVisible) {
           this.getCompLog();
         }else {
            this.clearAppLog();
@@ -183,7 +192,37 @@ export default {
         clearInterval(this.compLogInterval);
         this.compLogInterval = null;
       }
-    }
+    },
+    resizeHandler() {
+      this.maxHeight = window.innerHeight - 100;
+    },
+    resizeMousedown(e) {
+      e.preventDefault();
+      this.startDrag = true;
+      this.dragPre = e.clientY;
+      this.orgHeight = this.resizeHeight;
+      document.addEventListener("mousemove", this.resizeMove);
+      document.addEventListener("mouseup", this.resizeMouseUp);
+    },
+    resizeMove(e) {
+      if (!this.startDrag) {
+        return;
+      }
+      e.preventDefault();
+      let diff = this.dragPre - e.clientY;
+      this.resizeHeight = Math.min(
+        this.maxHeight,
+        Math.max(this.minHeight, this.orgHeight + diff)
+      );
+    },
+    resizeMouseUp(e) {
+      if (!this.startDrag) {
+        return;
+      }
+      this.startDrag = false;
+      document.removeEventListener("mousemove", this.resizeMove);
+      document.removeEventListener("mouseup", this.resizeMouseUp);
+    },
   },
 };
 </script>
@@ -199,13 +238,30 @@ export default {
     margin-bottom: 0;
   }
 }
+.logview {
+  border: 0;
+}
 </style>
 
 <style lang="scss" scoped>
 .rto_log {
-  position: relative;
-  z-index: 99;
+  position: fixed;
+  z-index: 99999;
   background: #fff;
+  bottom: 0;
+  width: 100vw;
+  .resize-bar {
+    position: absolute;
+    left: 0;
+    top: -5px;
+    right: 0;
+    height: 8px;
+    background: transparent;
+    cursor: ns-resize;
+    &:hover {
+      background-color: rgba(0,132,255,.16);
+    }
+  }
   .clearfix:after {
     content: " ";
     display: block;

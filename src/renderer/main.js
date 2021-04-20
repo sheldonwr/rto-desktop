@@ -7,7 +7,6 @@ import Vue from 'vue';
 import Vuex from "vuex";
 import App from './App.vue';
 import ModelAlgoManage from './components/ModelAlgoManage';
-import LogApp from './LogApp.vue';
 import StatusApp from './StatusApp.vue'
 import store from "./store";
 import Loading from "components/Loading"
@@ -52,11 +51,6 @@ new Vue({
     return h(this.ViewComponent)
   }
 }).$mount('.rto_header');
-
-new Vue({
-  store: storeInst,
-  render: h => h(LogApp),
-}).$mount('.rto_log');
 
 new Vue({
   store: storeInst,

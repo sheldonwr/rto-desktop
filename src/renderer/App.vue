@@ -8,6 +8,7 @@
     <AppCreateForm v-if="createAppDialog" v-model="createAppDialog"></AppCreateForm>
     <DirCreateForm v-if="createDirDialog" v-model="createDirDialog"></DirCreateForm>
     <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
+    <LogView v-show="$store.state.view.logPanelVisible"></LogView>
   </div>
 </template>
 
@@ -20,7 +21,7 @@ import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm"
 import DirCreateForm from "components/DirCreateForm"
 import AboutDialog from "components/AboutDialog"
-import bus from "utils/bus"
+import LogView from "components/LogView"
 
 export default {
   name: 'App',
@@ -32,7 +33,8 @@ export default {
     Wizard,
     AppCreateForm,
     DirCreateForm,
-    AboutDialog
+    AboutDialog,
+    LogView
   },
   mounted() {
     this.updateAppHeight();
@@ -41,14 +43,6 @@ export default {
     });
     // global keycuts
     window.addEventListener('keydown', this.keycutsHandler);
-  },
-  created() {
-    bus.on('log-view-resize', d => {
-      this.updateAppHeight(d)
-    })
-  },
-  beforeDestroy() {
-    bus.off('log-view-resize')
   },
   computed: {
     createAppDialog: {
@@ -89,12 +83,6 @@ export default {
       },
       immediate: true
     },
-    "$store.state.view.logPanelVisible" : {
-      handler() {
-        this.updateAppHeight();
-      },
-      immediate: true
-    },
     "$store.state.edit.selectedNode": {
       handler(val) {
         if(val && this.$store.state.view.logPanelVisible) {
@@ -112,10 +100,6 @@ export default {
       if(this.$store.state.view.toolbarVisible) {
         appDiffH += 40
         rightPanelDiffH += 40
-      }
-      if(this.$store.state.view.logPanelVisible) {
-        appDiffH += 280
-        rightPanelDiffH += 280
       }
       if(this.$store.state.view.statusVisible) {
         appDiffH += 24
