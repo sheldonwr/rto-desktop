@@ -244,6 +244,9 @@ export default {
       this.fetchApps(true);
     },
     fetchApps(showLoading) {
+      if(!this.$store.state.view.wizardVisible) {
+        return;
+      }
       if (showLoading) {
         this.showLoading = true;
       } else {
