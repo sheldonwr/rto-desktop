@@ -120,6 +120,7 @@ export default {
       }
     },
     keycutsHandler(event) {
+      console.log("++++", event)
       if (event.keyCode === 118) {
         // 'F7'
         if (
@@ -137,6 +138,30 @@ export default {
           "view/logPanelVisible",
           !this.$store.state.view.logPanelVisible
         );
+      }else if(event.ctrlKey && (event.keyCode === 88)) {
+        // 'ctrl+x'
+        this.$store.dispatch("edit/cutNode");
+      }else if(event.ctrlKey && (event.keyCode === 88)) {
+        // 'ctrl+x'
+        this.$store.dispatch("edit/cutNode");
+      }else if(event.ctrlKey && (event.keyCode === 67)) {
+        // 'ctrl+c'
+        this.$store.dispatch("edit/copyNode");
+      }else if(event.ctrlKey && (event.keyCode === 86)) {
+        // 'ctrl+v'
+        this.$store.dispatch("edit/pasteNode");
+      }else if(event.ctrlKey && (event.keyCode === 78)) {
+        // 'ctrl+n'
+        this.$store.commit('view/createAppDialog', true);
+      }else if(event.ctrlKey && (event.keyCode === 79)) {
+        // 'ctrl+o'
+        this.$store.dispatch("file/open");
+      }else if(event.ctrlKey && !event.shiftKey && (event.keyCode === 83)) {
+        // 'ctrl+s'
+        this.$store.dispatch("file/save");
+      }else if(event.ctrlKey && event.shiftKey && (event.keyCode === 83)) {
+        // 'ctrl+shift+s'
+        this.$store.dispatch("file/saveAs");
       }
     },
   },

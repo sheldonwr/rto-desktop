@@ -1,6 +1,6 @@
 <template>
   <div v-if="$store.state.view.statusVisible" class="rto_custom rto_status">
-    <span class="status-title">{{ $store.state.statustooltip.status }}</span>
+    <span class="status-title">{{ $store.state.statustooltip.status ? $store.state.statustooltip.status : '状态栏' }}</span>
   </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
   border-top: 1px solid #acacac;
   line-height: 22px;
   width: 100vw;
+  background: #fff;
   .status-title {
     width: 100%;
     display: inline-block;

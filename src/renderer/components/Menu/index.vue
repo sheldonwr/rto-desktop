@@ -40,21 +40,25 @@ export default {
               label: "新建",
               value: "file-new",
               disabled: false,
+              keycut: 'Ctrl+N'
             },
             {
               label: "打开",
               value: "file-open",
               disabled: false,
+              keycut: 'Ctrl+O'
             },
             {
               label: "保存",
               value: "file-save",
               disabled: false,
+              keycut: 'Ctrl+S'
             },
             {
               label: "另存为",
               value: "file-saveAs",
               disabled: false,
+              keycut: 'Ctrl+Shift+S'
             },
             {
               label: "最近打开",
@@ -85,21 +89,25 @@ export default {
               label: "剪切",
               value: "edit-cut",
               disabled: false,
+              keycut: 'Ctrl+X'
             },
             {
               label: "复制",
               value: "edit-copy",
               disabled: false,
+              keycut: 'Ctrl+C'
             },
             {
               label: "粘贴",
               value: "edit-paste",
               disabled: false,
+              keycut: 'Ctrl+V'
             },
             {
               label: "删除",
               value: "edit-delete",
               disabled: false,
+              keycut: 'Delete'
             },
           ],
         },
