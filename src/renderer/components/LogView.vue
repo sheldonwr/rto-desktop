@@ -82,7 +82,7 @@ export default {
     window.addEventListener('resize', this.resizeHandler);
   },
   beforeDestroy() {
-    window.removeEventListener('resize');
+    window.removeEventListener('resize', this.resizeHandler);
   },
   watch: {
     "$store.state.view.logPanelVisible": {

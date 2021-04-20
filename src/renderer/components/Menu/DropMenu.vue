@@ -67,13 +67,13 @@ export default {
   background: rgba(250,250,250,1.0);
   border-radius: 2px;
   .drop-menu-item {
-    width: 150px;
+    width: 180px;
     padding: 8px 0 8px 28px;
     position: relative;
     font-size: 14px;
     color: initial;
     &.sub {
-      width: 200px;
+      width: 220px;
       padding-right: 10px;
       .menu-label {
         white-space: nowrap;
