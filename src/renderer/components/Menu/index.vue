@@ -121,6 +121,7 @@ export default {
               disabled: false,
               checkable: true,
               checked: this.$store.state.view.toolbarVisible,
+              keycut: 'F3'
             },
             {
               label: "状态栏",
@@ -129,6 +130,7 @@ export default {
               disabled: false,
               checkable: true,
               checked: this.$store.state.view.statusVisible,
+              keycut: 'F4'
             },
             {
               label: "项目列表",
