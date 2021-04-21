@@ -64,6 +64,55 @@ window.addEventListener('click', () => {
 });
 
 window.addEventListener('load', () => {
+  // 画布右键菜单
+  window.SuanpanAPI.eventService.on('sp:app:contextmenu', (...data) => {
+    if(data.length > 1) {
+      const commonMenu = [{
+        key: 'cut',
+        name: '剪切',
+        active: false,
+        function: () => {
+          storeInst.dispatch("edit/cutNode");
+        }
+      }, {
+        key: 'copy',
+        name: '复制',
+        active: false,
+        function: () => {
+          storeInst.dispatch("edit/copyNode");
+        }
+      }, {
+        key: 'paste',
+        name: '粘贴',
+        active: !storeInst.getters["status/isRunning"],
+        function: () => {
+          storeInst.dispatch("edit/pasteNode");
+        }
+      }, {
+        key: 'delete',
+        name: '删除',
+        active: false,
+        function: () => {
+          Vue.prototype.$confirm({
+            title: `确定删除这个组件吗？`,
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+              storeInst.dispatch("edit/deleteNode");
+            },
+            onCancel() {},
+          });
+        }
+      }];
+      let mouseEvent = data[1][0];
+      storeInst.commit('drawer/changeMenuVisible', {
+        visible: true,
+        location: { x: mouseEvent.clientX, y: mouseEvent.clientY},
+        detail: commonMenu
+      });
+    }
+  })
+
   // 组件右键菜单
   window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = []) => {
     if (options.length > 0) {

@@ -163,6 +163,9 @@ export default {
         if(app.id) {
           this.$store.dispatch('status/getStatus').then( () => {
             this.isRunning = this.$store.getters["status/isRunning"];
+            this.$store.dispatch('status/getStatus').then( () => {
+              this.isRunning = this.$store.getters["status/isRunning"];
+            })
           })
         }
       },

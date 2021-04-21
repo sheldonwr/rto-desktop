@@ -30,7 +30,7 @@ export default {
     },
     pasteNode({ state }) {
       if(state.copiedNodeObj && !this.getters["status/isRunning"]) {
-        window.SuanpanAPI.nodeService.pasteNode(state.copiedNodeObj.nodeInfo, state.copiedNodeObj.component);
+        window.SuanpanAPI.nodeService.pasteNode(state.copiedNodeObj);
       }
     },
     deleteNode({ state }) {
