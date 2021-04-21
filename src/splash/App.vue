@@ -152,7 +152,7 @@ export default {
   align-items: center;
   padding-top: 100px;
   .title {
-    font-size: 32px;
+    font-size: 36px;
     color: rgb(0, 93, 151);
     font-weight: bold;
   }
