@@ -146,6 +146,10 @@ export default {
 .ant-col.ant-form-item-label {
   display: none;
 }
+.ant-input, .ant-input-number-input {
+  height: 34px !important;
+  font-size: 16px !important;
+}
 .form-container {
   display: flex;
   flex-direction: column;
