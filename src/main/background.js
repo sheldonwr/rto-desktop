@@ -88,8 +88,8 @@ async function createWindow() {
 
 function createSplashWindow() {
   splashWin = new BrowserWindow({
-    width: 600,
-    height: 400,
+    width: 800,
+    height: 500,
     frame: false,
     resizable: false,
     // alwaysOnTop: true,
