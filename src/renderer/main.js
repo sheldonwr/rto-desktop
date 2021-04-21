@@ -218,7 +218,7 @@ window.addEventListener('load', () => {
   // interval get status
   interval(() => {
     storeInst.dispatch('status/getStatus')
-  }, 1000);
+  }, 1500);
 });
 
 window.addEventListener('load', ()=> {
