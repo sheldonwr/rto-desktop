@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="form-container">
-        <p class="title">工业装置RTO在线优化平台软件</p>
+        <p class="title">工业装置RTO在线优化平台</p>
         <div class="form-wrap">
           <a-form-model ref="config" :model="config" :rules="rules">
             <a-form-model-item label="host" prop="host">
