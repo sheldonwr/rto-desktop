@@ -2,7 +2,7 @@
   <div class="rto_log">
     <div class="resize-bar" @mousedown.stop="resizeMousedown"></div>
     <a-tabs type="card">
-      <a-tab-pane key="1" tab="日志">
+      <a-tab-pane key="1" tab="告警">
         <ResizeTabContent :resize-height="resizeHeight">
           <div class="log-head">
             <ul class="log-head-inner clearfix">
