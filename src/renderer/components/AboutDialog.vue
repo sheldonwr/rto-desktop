@@ -7,7 +7,7 @@
   >
     <div class="about-wrapper">
       <div class="about-description">
-        <p>版本：RTO 0.1.6-beta</p>
+        <p>版本：RTO 0.1.7-beta</p>
       </div>
       <p>Copyright © 2011-2021 华东理工大学 版权所有</p>
     </div>
