@@ -165,10 +165,15 @@ window.addEventListener('load', () => {
             // const { url } = actionList[0];
             const url = action.url;
             const { appId, userId } = window.appConfig;
-            const iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
-                            .replace('{{userId}}', userId)
-                            .replace('{{appId}}', appId)
-                            .replace('{{nodeId}}', itemKey)    
+            let iframeUrl = url;
+            if(url.startsWith('{{origin}}')) {
+              iframeUrl = url.replace('{{origin}}', window.location.origin)
+            }else {
+              iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
+                              .replace('{{userId}}', userId)
+                              .replace('{{appId}}', appId)
+                              .replace('{{nodeId}}', itemKey)    
+            }
             detail.push({ 
               key: `action${index}`, 
               name: action.label || '操作页面',

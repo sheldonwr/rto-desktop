@@ -40,9 +40,14 @@ function closeWindow(event) {
   // let win = BrowserWindow.getFocusedWindow();
   // event.preventDefault();
   // win.hide();
-  let win = null
-  if(win = getMainWindow()) {
+  // let win = null
+  // if(win = getMainWindow()) {
+  //   win.destroy();
+  //   app.quit();
+  // }
+  let win = getMainWindow();
+  if(win) {
     win.destroy();
-    app.quit();
   }
+  app.quit();
 }
