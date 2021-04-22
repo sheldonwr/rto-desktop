@@ -237,8 +237,16 @@ window.addEventListener('load', ()=> {
       bus.emit('transition-component')
     }else if(location.startsWith('/web/service/predict/')) {
       let locs = location.split('/');
-      bus.emit('transition-predict', [locs[locs.length - 1]])
+      let lastItem = locs[locs.length - 1];
+      if(!isNaN(Number(lastItem))) {
+        bus.emit('transition-predict', [lastItem])
+      }
     }
+  })
+
+  // check permission
+  window.SuanpanAPI.common.registerState('app.predict.read', function(...data) {
+    bus.emit('predict-read', data);
   })
 })
 

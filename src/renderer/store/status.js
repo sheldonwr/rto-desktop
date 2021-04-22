@@ -17,12 +17,15 @@ export default {
   mutations: {
     appStatus(state, val) {
       state.appStatus = val;
-    }
+    },
   },
   actions: {
-    getStatus({ state, commit, rootState }) {
-      if(rootState.file.currentApp.id) {
-        return window.SuanpanAPI.predictService.getNetworkStatus(rootState.file.currentApp.id).then( res => {
+    getStatus({ state, commit, rootState }, appId) {
+      if(!appId && rootState.file.currentApp.id) {
+        appId = rootState.file.currentApp.id;
+      }
+      if(appId) {
+        return window.SuanpanAPI.predictService.getNetworkStatus(appId).then( res => {
           if(res.map && (res.map.status != null)) {
             commit('appStatus', res.map.status)
           }else {

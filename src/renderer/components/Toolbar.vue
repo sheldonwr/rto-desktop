@@ -131,14 +131,14 @@
       <div
         v-else
         class="toolbar-icon"
-        :class="[isRunning ? 'deploy-stop' : 'deploy-running']"
-        :title="isRunning ? '停止' : '开启'"
+        :class="[isReadonly ? 'deploy-readonly' : isRunning ? 'deploy-stop' : 'deploy-running']"
+        :title="isReadonly ? '编辑' : isRunning ? '停止' : '开启'"
         @click="clickHandler('deploy')"
         @mouseover="mouseoverHandler('deploy')"
         @mouseout="mouseoutHandler"
       >
         <span
-          :class="['rto_iconfont', isRunning ? 'icon-stop' : 'icon-start']"
+          :class="['rto_iconfont', isReadonly ? 'icon-edit' : isRunning ? 'icon-stop' : 'icon-start']"
           style="font-size: 22px"
         ></span>
       </div>
@@ -155,25 +155,13 @@ export default {
     return {
       isRunning: false,
       isComponentEdit: false,
+      isReadonly: false
     };
-  },
-  watch: {
-    "$store.state.file.currentApp": {
-      handler(app) {
-        if(app.id) {
-          this.$store.dispatch('status/getStatus').then( () => {
-            this.isRunning = this.$store.getters["status/isRunning"];
-            this.$store.dispatch('status/getStatus').then( () => {
-              this.isRunning = this.$store.getters["status/isRunning"];
-            })
-          })
-        }
-      },
-    },
   },
   created() {
     bus.on("transition-component", this.componentTransition);
     bus.on("transition-predict", this.predictTransition);
+    bus.on("predict-read", this.predictReadonly);
   },
   beforeDestroy() {
     bus.off("transition-component");
@@ -192,20 +180,24 @@ export default {
       } else if (id === "file-saveAs") {
         this.$store.dispatch("file/saveAs");
       } else if (id === "deploy") {
-        let title = this.isRunning ? "确定停止该项目？" : "确定开启该项目？";
-        this.$confirm({
-          title: title,
-          okText: "确定",
-          cancelText: "取消",
-          onOk: () => {
-            let deployBtn = document.querySelector(
-              ".sp-app-actions .footer-item"
-            );
-            deployBtn.click();
-            this.isRunning = !this.isRunning;
-          },
-          onCancel() {},
-        });
+        if(this.isReadonly) {
+          this.refresh();
+        }else {
+          let title = this.isRunning ? "确定停止该项目？" : "确定开启该项目？";
+          this.$confirm({
+            title: title,
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+              let deployBtn = document.querySelector(
+                ".sp-app-actions .footer-item"
+              );
+              deployBtn.click();
+              this.isRunning = !this.isRunning;
+            },
+            onCancel() {},
+          });
+        }
       } else if (id === "edit-cut") {
         this.$store.dispatch("edit/cutNode");
       } else if (id === "edit-copy") {
@@ -224,10 +216,16 @@ export default {
         this.$store.commit("view/wizardVisible", true);
       }else if(id === 'component-success') {
         this.$store.dispatch("file/gotoCurrentPredict");
+        this.isComponentEdit = false;
       }else if(id === 'view-refresh') {
-        this.$store.dispatch("file/gotoCurrentPredict");
-        this.isRunning = this.$store.getters["status/isRunning"];
+        this.refresh();
       }
+    },
+    refresh() {
+      this.$store.dispatch("file/gotoCurrentPredict");
+      this.isRunning = this.$store.getters["status/isRunning"];
+      this.isReadonly = false;
+      this.isComponentEdit = false;
     },
     mouseoverHandler(id) {
       let title = ''
@@ -252,7 +250,7 @@ export default {
       }else if(id === 'view-about') {
         title = '关于'
       }else if(id === 'deploy') {
-        title = this.isRunning ? '停止' : '开启'
+        title = this.isReadonly ? '编辑' : this.isRunning ? '停止' : '开启'
       }else if(id === 'view-app') {
         title = '项目列表'
       }else if(id === 'component-success') {
@@ -268,8 +266,20 @@ export default {
     componentTransition() {
       this.isComponentEdit = true;
     },
-    predictTransition() {
+    predictTransition(appId) {
+      if(this.lastAppId == appId) {
+        return;
+      }
       this.isComponentEdit = false;
+      this.$store.dispatch('status/getStatus', appId).then( appStatus => {
+        this.isRunning = this.$store.getters["status/isRunning"];
+      }).catch( err => {
+        console.error(err)
+      })
+      this.lastAppId = appId;
+    },
+    predictReadonly(data) {
+      this.isReadonly = true;
     }
   },
 };
@@ -281,6 +291,9 @@ export default {
 }
 .deploy-running {
   color: #52c41a !important;
+}
+.deploy-readonly {
+  color: rgb(0, 132, 255) !important;
 }
 </style>
 

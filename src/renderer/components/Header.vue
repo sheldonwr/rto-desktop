@@ -1,7 +1,7 @@
 <template>
   <div class="header-wrap drag">
     <div class="logo-wrap">
-      <p class="logo-title">工业实时优化平台</p>
+      <p class="logo-title">工业装置RTO在线优化平台</p>
     </div>
     <div class="title-wrap">
       <p class="title">{{ $store.getters["file/title"] }}</p>
@@ -72,7 +72,7 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 16px;
-    width: 200px;
+    width: 400px;
     img {
       width: 88px;
       height: 23px;

@@ -54,7 +54,8 @@ async function createWindow() {
         frame: true,
       });
       event.newGuest = new BrowserWindow({ ...options, width: 1024, height:600, y: '50%', x: '50%' });
-      Menu.setApplicationMenu(null)
+      // Menu.setApplicationMenu(null)
+      event.newGuest.setMenuBarVisibility(false);
       // event.newGuest.removeMenu();
       if(url.indexOf('modelAlgoManage') > -1) {
         if (isDevelopment) {
