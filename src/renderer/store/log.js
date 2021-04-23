@@ -7,6 +7,14 @@ export default {
     allLogs(state, val=[]) {
       state.allLogs = val;
     },
+    addLog(state, node) {
+      state.allLogs.push({
+        fnode: getNodeLabel(node.id),
+        ftime: new Date().toLocaleString(),
+        title: "在线编辑",
+        level: 'warning'
+      });
+    }
   },
   actions: {
     connect() {

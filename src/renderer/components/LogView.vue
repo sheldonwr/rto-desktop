@@ -57,7 +57,6 @@
 
 <script>
 import ResizeTabContent from "components/ResizeTabContent";
-import bus from "utils/bus";
 
 export default {
   name: "log",
@@ -66,7 +65,6 @@ export default {
   },
   data() {
     return {
-      allLogs: [],
       // 项目日志
       appLog: "",
       // 组件日志
@@ -240,12 +238,14 @@ export default {
       if(graph) {
         nodes = graph.nodes;
       }
-      let vscodeNodes = [];
       for(let i = 0; i < nodes.length; i++) {
         let node = nodes[i];
-
+        let def = node.metadata.def;
+        if(def && (def.dockerRepo.indexOf('vscode') > -1)
+          && (def.params.__mode.value == 'online-edit')) {
+          this.$store.commit('log/addLog', node);
+        }
       }
-
     }
   },
 };

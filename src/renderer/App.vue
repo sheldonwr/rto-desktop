@@ -120,7 +120,7 @@ export default {
       }
     },
     keycutsHandler(event) {
-      console.log("++++", event)
+      // console.log("++++", event)
       if (event.keyCode === 118) {
         // 'F7'
         if (
@@ -132,12 +132,9 @@ export default {
           this.$store.commit("view/logPanelVisible", false);
           this.$store.commit("view/wizardVisible", true);
         }
-      }else if(event.keyCode === 115) {
+      }else if(event.keyCode === 112) {
         // f1
-        this.$store.commit(
-          "view/statusVisible",
-          !this.$store.state.view.statusVisible
-        );
+        window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
       }else if(event.keyCode === 115) {
         // f4
         this.$store.commit(

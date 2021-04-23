@@ -72,5 +72,6 @@ function convert2Appconfig(obj) {
   ac.appMenu = JSON.parse(ac.appMenu);
   ac.services = JSON.parse(ac.services);
   ac.RtoOrigin = RtoOrigin;
+  ac.nodeCopyDir = JSON.parse(ac.nodeCopyDir);
   return ac;
 }
