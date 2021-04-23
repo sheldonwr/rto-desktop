@@ -72,7 +72,7 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 16px;
-    width: 400px;
+    width: 350px;
     img {
       width: 88px;
       height: 23px;
@@ -91,7 +91,7 @@ export default {
   }
   .window-controls {
     display: flex;
-    width: 200px;
+    width: 350px;
     justify-content: flex-end;
     .window-icon {
       cursor: pointer;

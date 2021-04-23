@@ -14,11 +14,11 @@
       <span class="keycut-wrap">
         <span>{{ dropItem.keycut ? dropItem.keycut : '' }}</span>
       </span>
-      <span v-if="dropItem.items && dropItem.items.length>0" class="more-wrap">
+      <span v-if="dropItem.items && dropItem.items.length>0 && !dropItem.disabled" class="more-wrap">
         <span class="rto_iconfont icon-right-arrow"></span>
       </span>
       <drop-menu
-        v-if="openedItem === dropItem.value"
+        v-if="openedItem === dropItem.value && !dropItem.disabled"
         class="menu-right"
         :datas="dropItem.items"
       ></drop-menu>

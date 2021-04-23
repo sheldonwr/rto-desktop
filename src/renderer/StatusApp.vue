@@ -1,6 +1,6 @@
 <template>
   <div v-if="$store.state.view.statusVisible" class="rto_custom rto_status">
-    <span class="status-title">{{ $store.state.statustooltip.status ? $store.state.statustooltip.status : '状态栏' }}</span>
+    <span class="status-title">{{ $store.state.statustooltip.status ? $store.state.statustooltip.status : '帮助文档请按F1' }}</span>
   </div>
 </template>
 

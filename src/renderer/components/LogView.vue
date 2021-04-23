@@ -57,6 +57,7 @@
 
 <script>
 import ResizeTabContent from "components/ResizeTabContent";
+import bus from "utils/bus";
 
 export default {
   name: "log",
@@ -121,6 +122,16 @@ export default {
         }else {
            this.clearAppLog();
            this.clearCompLog();
+        }
+        if(this.$store.getters["status/isRunning"] && this.$store.state.file.currentApp.id) {
+          this.checkVscode();
+        }
+      },
+    },
+    "$store.state.file.currentApp": {
+      handler(currentApp) {
+        if(currentApp.id && this.$store.getters["status/isRunning"]) {
+          this.checkVscode();
         }
       },
     },
@@ -223,6 +234,19 @@ export default {
       document.removeEventListener("mousemove", this.resizeMove);
       document.removeEventListener("mouseup", this.resizeMouseUp);
     },
+    checkVscode() {
+      const graph = window.SuanpanAPI.nodeService.getGraph();
+      let nodes = [];
+      if(graph) {
+        nodes = graph.nodes;
+      }
+      let vscodeNodes = [];
+      for(let i = 0; i < nodes.length; i++) {
+        let node = nodes[i];
+
+      }
+
+    }
   },
 };
 </script>

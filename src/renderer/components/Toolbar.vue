@@ -164,8 +164,6 @@ export default {
     bus.on("predict-read", this.predictReadonly);
   },
   beforeDestroy() {
-    bus.off("transition-component");
-    bus.off("transition-predict");
   },
   methods: {
     clickHandler(id) {
@@ -226,6 +224,7 @@ export default {
       this.isRunning = this.$store.getters["status/isRunning"];
       this.isReadonly = false;
       this.isComponentEdit = false;
+      this.lastAppId = null;
     },
     mouseoverHandler(id) {
       let title = ''

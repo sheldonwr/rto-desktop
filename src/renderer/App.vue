@@ -120,7 +120,7 @@ export default {
       }
     },
     keycutsHandler(event) {
-      // console.log("++++", event)
+      console.log("++++", event)
       if (event.keyCode === 118) {
         // 'F7'
         if (
@@ -132,6 +132,12 @@ export default {
           this.$store.commit("view/logPanelVisible", false);
           this.$store.commit("view/wizardVisible", true);
         }
+      }else if(event.keyCode === 115) {
+        // f1
+        this.$store.commit(
+          "view/statusVisible",
+          !this.$store.state.view.statusVisible
+        );
       }else if(event.keyCode === 115) {
         // f4
         this.$store.commit(

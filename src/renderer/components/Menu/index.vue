@@ -23,6 +23,7 @@
 
 <script>
 import DropMenu from "./DropMenu";
+import bus from "utils/bus";
 
 export default {
   name: "app-menu",
@@ -177,17 +178,13 @@ export default {
             {
               label: "连接",
               value: "action-connection",
-              disabled: true,
-            },
-            {
-              label: "路径",
-              value: "edit-path",
-              disabled: true,
+              disabled: false,
             },
             {
               label: "更新",
-              value: "edit-update",
-              disabled: true,
+              value: "action-update",
+              disabled: false,
+              items: [],
             },
           ],
         },
@@ -229,6 +226,7 @@ export default {
             {
               label: "RTO用户帮助",
               value: "help-rto",
+              keycut: 'F1'
             },
             {
               label: "关于RTOExplorer",
@@ -238,6 +236,7 @@ export default {
         },
       },
       openedMenu: "",
+      opcNodes: []
     };
   },
   computed: {
@@ -290,6 +289,18 @@ export default {
         ).checked = this.$store.state.view.logPanelVisible;
       },
     },
+    "$store.state.status.appStatus": {
+      handler() {
+        this.checkGraph();
+      }
+    }
+  },
+  created() {
+    window.addEventListener("load", this.nodeActionListener);
+    bus.on("transition-predict", this.predictTransition);
+  },
+  beforeDestroy() {
+    window.removeEventListener("load", this.nodeActionListener);
   },
   methods: {
     menuClickHandler(menuItem) {
@@ -315,6 +326,8 @@ export default {
             this.dispatch('showMessage', { type: "error", msg: "打开失败" });
             console.error(err)
           });
+      }else if(menuItem.id === 'rto-db') {
+        window.open(menuItem.value);
       }
       switch (menuItemId) {
         case "file-new":
@@ -377,15 +390,17 @@ export default {
           this.$store.dispatch("edit/pasteNode");
           break;
         case "edit-delete":
-          this.$confirm({
-            title: `确定删除这个组件吗？`,
-            okText: "确定",
-            cancelText: "取消",
-            onOk: () => {
-              this.$store.dispatch("edit/deleteNode");
-            },
-            onCancel() {},
-          });
+          if(this.$store.state.edit.selectedNode && !this.$store.getters["status/isRunning"]) {
+            this.$confirm({
+              title: `确定删除这个组件吗？`,
+              okText: "确定",
+              cancelText: "取消",
+              onOk: () => {
+                this.$store.dispatch("edit/deleteNode");
+              },
+              onCancel() {},
+            });
+          }
           break;
         case "view-app":
           this.$store.commit("view/logPanelVisible", false);
@@ -412,6 +427,9 @@ export default {
         case "view-refresh":
           this.$store.dispatch("file/gotoCurrentPredict");
           break;
+        case "action-connection":
+          this.$store.dispatch("file/gotoCurrentPredict");
+          break;
         case "model-manage": // 模型管理
           this.$store.commit("drawer/changeActiveTab", "model");
           this.$store.commit("drawer/changeIsModelAlgoManage", true);
@@ -433,6 +451,58 @@ export default {
           this.$store.commit('view/aboutVisible', true)
           break;
       }
+    },
+    nodeActionListener() {
+      window.SuanpanAPI.eventService.on('appNodeAdded', () => {
+        this.checkGraph();
+      });
+      window.SuanpanAPI.eventService.on('appNodeDeleted', () => { 
+        this.checkGraph();
+      });
+      this.checkGraph();
+    },
+    checkGraph() {
+      let actionItem = this.menus.action.items.find(
+        (item) => item.value === "action-update"
+      );
+      if(!this.$store.getters["status/isRunning"]) {
+        actionItem.disabled = true;
+        this.opcNodes = [];
+        return;
+      }
+      const graph = window.SuanpanAPI.nodeService.getGraph();
+      let nodes = [];
+      if(graph) {
+        nodes = graph.nodes;
+      }
+      this.opcNodes = [];
+      
+      for(let i = 0; i < nodes.length; i++) {
+        let node = nodes[i];
+        let def = node.metadata.def;
+        if(def && (def.dockerRepo.indexOf('rto_device') > -1) 
+          && (def.actionList && def.actionList[0].url)) {
+          let url = def.actionList[0].url;
+          url = `${window.location.origin}${(url || '').match(/\/proxr[\S]*/)}`
+                              .replace('{{userId}}', window.appConfig.userId)
+                              .replace('{{appId}}', window.appConfig.appId)
+                              .replace('{{nodeId}}',  node.id)
+          this.opcNodes.push({
+            label: node.metadata.label,
+            value: url,
+            id: 'rto-db'
+          });
+        }
+      }
+      actionItem.items = this.opcNodes;
+      if(this.opcNodes.length > 0) {
+        actionItem.disabled = false;
+      }else {
+        actionItem.disabled = true;
+      }
+    },
+    predictTransition(appId) {
+      this.checkGraph();
     },
   },
 };

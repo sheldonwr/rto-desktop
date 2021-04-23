@@ -248,6 +248,13 @@ window.addEventListener('load', ()=> {
   window.SuanpanAPI.common.registerState('app.predict.read', function(...data) {
     bus.emit('predict-read', data);
   })
+
+  // log socket
+  storeInst.dispatch('log/connect').then(() => {
+    console.log('log connect success');
+  }).catch( err => {
+    console.error("log connect error", err);
+  })
 })
 
 storeInst.watch(
@@ -258,10 +265,10 @@ storeInst.watch(
     if(storeInst.state.file.currentApp && storeInst.state.file.currentApp.id) {
       storeInst.dispatch('status/getStatus')
       storeInst.commit('log/allLogs', [])
-      storeInst.dispatch('log/connect').then(res => {
-        storeInst.dispatch('log/register')
-        storeInst.dispatch('log/query')
-      })
+      storeInst.dispatch('log/register')
+      storeInst.dispatch('log/query')
+    //   storeInst.dispatch('log/connect').then(res => {
+    //   })
     }
   }
 );
