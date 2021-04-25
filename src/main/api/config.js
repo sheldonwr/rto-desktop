@@ -73,5 +73,6 @@ function convert2Appconfig(obj) {
   ac.services = JSON.parse(ac.services);
   ac.RtoOrigin = RtoOrigin;
   ac.nodeCopyDir = JSON.parse(ac.nodeCopyDir);
+  ac.detachable = JSON.parse(ac.detachable);
   return ac;
 }
