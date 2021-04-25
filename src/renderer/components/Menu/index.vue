@@ -483,7 +483,7 @@ export default {
         if(def && (def.dockerCmd.indexOf('rto_device') > -1) 
           && (def.actionList && def.actionList[0].url)) {
           let url = def.actionList[0].url;
-          url = `${window.location.origin}${(url || '').match(/\/proxr[\S]*/)}`
+          url = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
                               .replace('{{userId}}', window.appConfig.userId)
                               .replace('{{appId}}', window.appConfig.appId)
                               .replace('{{nodeId}}',  node.id)

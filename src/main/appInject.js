@@ -12,6 +12,7 @@ export async function appInjectDev() {
     let htmlStr = await getHtmlString(url.href);
     callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, appConfig) });
   });
+  interceptProxyUrl();
 }
 
 export async function appInjectModelAlgoManage() {
@@ -93,6 +94,18 @@ export function appInjectProd() {
       }
     }
   );
+  interceptProxyUrl();
+}
+
+function interceptProxyUrl() {
+  session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
+    let url = new URL(details.url);
+    if((url.href.indexOf(appConfig.RtoOrigin) === -1) && url.pathname.startsWith('/proxr') || url.pathname.startsWith('/proxrs')) {
+      callback({redirectURL: `${appConfig.RtoOrigin}${url.pathname}${url.search}`, cancel: false})
+    }else {
+      callback({});
+    }
+  });
 }
 
 export function interceptUrl(url) {
