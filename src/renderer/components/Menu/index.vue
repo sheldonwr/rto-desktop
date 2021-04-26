@@ -160,7 +160,7 @@ export default {
               disabled: false,
               checkable: true,
               checked: this.$store.state.view.settingVisible,
-              keycut: 'F6'
+              keycut: 'F1'
             },
             {
               label: "事件日志",
@@ -229,7 +229,7 @@ export default {
             {
               label: "RTO用户帮助",
               value: "help-rto",
-              keycut: 'F1'
+              keycut: 'F10'
             },
             {
               label: "关于RTOExplorer",

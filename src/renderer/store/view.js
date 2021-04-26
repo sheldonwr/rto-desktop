@@ -55,12 +55,21 @@ export default {
   },
   actions: {
     closeSettingPannel({commit}) {
-      commit("settingVisible", false)
       SuanpanAPI.global.appRightEvents.onClose(new Event('setting'))
     },
-    showSettingPannel({commit}) {
-      commit("settingVisible", true)
-      SuanpanAPI.global.appRightEvents.onShow(new Event('setting'))
+    showSettingPannel({commit, rootState, rootGetters}, nodeId) {
+      window.SuanpanAPI.global.appRightEvents.onShow(new Event('setting'));
+      if(nodeId) {
+        let stateChain = 'app.predict.edit.node';
+        if(rootState.appReadonly) {
+          stateChain = 'app.predict.read.node';
+        }else if(rootGetters["status/isRunning"]) {
+          stateChain = 'app.predict.run.node';
+        }
+        window.SuanpanAPI.common.goState(stateChain, String(rootState.file.currentApp.id), nodeId, 'predict')
+      }else {
+        window.SuanpanAPI.common.goState('app.predict', String(rootState.file.currentApp.id), null, 'predict')
+      }
     },
   }
 };

@@ -120,7 +120,7 @@ export default {
       }
     },
     keycutsHandler(event) {
-      // console.log("++++", event)
+      console.log("++++", event)
       if (event.keyCode === 118) {
         // 'F7'
         if (
@@ -132,8 +132,8 @@ export default {
           this.$store.commit("view/logPanelVisible", false);
           this.$store.commit("view/wizardVisible", true);
         }
-      }else if(event.keyCode === 112) {
-        // f1
+      }else if(event.keyCode === 121) {
+        // f10
         window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
       }else if(event.keyCode === 115) {
         // f4
@@ -147,6 +147,17 @@ export default {
           "view/toolbarVisible",
           !this.$store.state.view.toolbarVisible
         );
+      }else if(event.keyCode === 112) {
+        // f1
+        if(this.$store.state.view.settingVisible) {
+          this.$store.dispatch("view/closeSettingPannel")
+        }else {
+          let nodeId = null;
+          if(this.$store.state.edit.selectedNode) {
+            nodeId = this.$store.state.edit.selectedNode.id;
+          }
+          this.$store.dispatch("view/showSettingPannel", nodeId);
+        }
       }else if(event.keyCode === 116) {
         this.$store.dispatch("file/gotoCurrentPredict");
       }else if (event.keyCode === 192 && event.ctrlKey) {

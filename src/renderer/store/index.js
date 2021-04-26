@@ -25,11 +25,15 @@ export default {
   },
   state: {
     selectedNode: null,
+    appReadonly: false
   },
   mutations: {
     selectedNode(state, val) {
       state.selectedNode = val;
     },
+    appReadonly(state, val) {
+      state.appReadonly = val;
+    }
   },
   actions: {
     showLoading({}, args) {
