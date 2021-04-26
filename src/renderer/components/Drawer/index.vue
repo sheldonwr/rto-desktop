@@ -66,7 +66,7 @@ export default {
     .menuItem {
       padding: 10px;
       cursor: pointer;
-      
+      min-width: 120px;
       &:hover {
         color: royalblue;
       }

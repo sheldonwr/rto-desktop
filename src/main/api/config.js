@@ -6,8 +6,8 @@ import { getUrlContent } from "../utils";
 
 let config = {
   protocol: 'http',
-  host: "58.215.216.238",
-  port: "48000",
+  host: "",
+  port: "",
 };
 
 export let appConfig = {};

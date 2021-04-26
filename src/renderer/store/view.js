@@ -1,8 +1,11 @@
 let appRight = {
   closed: false
 }
-if(window.localStorage && window.localStorage.appRight && window.localStorage.appRight.closed) {
-  appRight.closed = true;
+if(window.localStorage && window.localStorage.appRight) {
+  let appRightLocal = JSON.parse(window.localStorage.appRight);
+  if(appRightLocal.closed) {
+    appRight.closed = true;
+  }
 }
 
 export default {
