@@ -68,6 +68,13 @@ window.addEventListener('load', () => {
   window.SuanpanAPI.eventService.on('sp:app:contextmenu', (...data) => {
     if(data.length > 1) {
       const commonMenu = [{
+        key: 'setting',
+        name: '设置',
+        active: true,
+        function: () => {
+          storeInst.dispatch("view/showSettingPannel")
+        }
+      },{
         key: 'cut',
         name: '剪切',
         active: false,
@@ -116,7 +123,15 @@ window.addEventListener('load', () => {
   // 组件右键菜单
   window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = []) => {
     if (options.length > 0) {
+      const { item, itemKey } = options[0];
       const commonMenu = [{
+        key: 'setting',
+        name: '设置',
+        active: true,
+        function: () => {
+          storeInst.dispatch("view/showSettingPannel", itemKey)
+        }
+      }, {
         key: 'cut',
         name: '剪切',
         active: !storeInst.getters["status/isRunning"],
@@ -153,7 +168,6 @@ window.addEventListener('load', () => {
           });
         }
       }];
-      const { item, itemKey } = options[0];
       storeInst.commit('edit/selectedNode', item);
       let detail = [...commonMenu];
       if (item && item.metadata && item.metadata.def) {
@@ -174,7 +188,7 @@ window.addEventListener('load', () => {
                               .replace('{{appId}}', appId)
                               .replace('{{nodeId}}', itemKey)    
             }
-            detail.push({ 
+            detail.push({
               key: `action${index}`, 
               name: action.label || '操作页面',
               active: storeInst.getters['status/isRunning'],
@@ -246,8 +260,17 @@ window.addEventListener('load', ()=> {
 
   // check permission
   window.SuanpanAPI.common.registerState('app.predict.read', function(...data) {
-    bus.emit('predict-read', data);
+    storeInst.commit("appReadonly", true);
   })
+
+  // listen appRight panel visible
+  window.SuanpanAPI.eventService.on('appRight.closed', function() {
+    storeInst.commit('view/settingVisible', false);
+  })
+  window.SuanpanAPI.eventService.on('appRight.show', function() {
+    storeInst.commit('view/settingVisible', true);
+  })
+
 
   // log socket
   storeInst.dispatch('log/connect').then(() => {

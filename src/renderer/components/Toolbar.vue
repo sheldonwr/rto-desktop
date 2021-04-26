@@ -155,15 +155,23 @@ export default {
     return {
       isRunning: false,
       isComponentEdit: false,
-      isReadonly: false
     };
   },
   created() {
     bus.on("transition-component", this.componentTransition);
     bus.on("transition-predict", this.predictTransition);
-    bus.on("predict-read", this.predictReadonly);
   },
   beforeDestroy() {
+  },
+  computed: {
+    isReadonly: {
+      get() {
+        return this.$store.state.appReadonly;
+      },
+      set(val) {
+        this.$store.commit('appReadonly', val);
+      }
+    }
   },
   methods: {
     clickHandler(id) {
@@ -277,9 +285,6 @@ export default {
       })
       this.lastAppId = appId;
     },
-    predictReadonly(data) {
-      this.isReadonly = true;
-    }
   },
 };
 </script>

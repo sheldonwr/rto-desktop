@@ -1,3 +1,9 @@
+let appRight = {
+  closed: false
+}
+if(window.localStorage && window.localStorage.appRight) {
+  Object.assign(appRight, window.localStorage.appRight);
+}
 
 export default {
   namespaced: true,
@@ -15,6 +21,8 @@ export default {
     statusVisible: false,
     // 关于
     aboutVisible: false,
+    // 设置
+    settingVisible: appRight.closed
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -40,8 +48,28 @@ export default {
     },
     aboutVisible(state, val) {
       state.aboutVisible = val;
+    },
+    settingVisible(state, val) {
+      state.settingVisible = val;
     }
   },
   actions: {
+    closeSettingPannel({commit}) {
+      SuanpanAPI.global.appRightEvents.onClose(new Event('setting'))
+    },
+    showSettingPannel({commit, rootState, rootGetters}, nodeId) {
+      window.SuanpanAPI.global.appRightEvents.onShow(new Event('setting'));
+      if(nodeId) {
+        let stateChain = 'app.predict.edit.node';
+        if(rootState.appReadonly) {
+          stateChain = 'app.predict.read.node';
+        }else if(rootGetters["status/isRunning"]) {
+          stateChain = 'app.predict.run.node';
+        }
+        window.SuanpanAPI.common.goState(stateChain, String(rootState.file.currentApp.id), nodeId, 'predict')
+      }else {
+        window.SuanpanAPI.common.goState('app.predict', String(rootState.file.currentApp.id), null, 'predict')
+      }
+    },
   }
 };
