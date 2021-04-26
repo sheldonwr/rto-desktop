@@ -1,3 +1,9 @@
+let appRight = {
+  closed: false
+}
+if(window.localStorage && window.localStorage.appRight) {
+  Object.assign(appRight, window.localStorage.appRight);
+}
 
 export default {
   namespaced: true,
@@ -15,6 +21,8 @@ export default {
     statusVisible: false,
     // 关于
     aboutVisible: false,
+    // 设置
+    settingVisible: appRight.closed
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -40,8 +48,19 @@ export default {
     },
     aboutVisible(state, val) {
       state.aboutVisible = val;
+    },
+    settingVisible(state, val) {
+      state.settingVisible = val;
     }
   },
   actions: {
+    closeSettingPannel({commit}) {
+      commit("settingVisible", false)
+      SuanpanAPI.global.appRightEvents.onClose(new Event('setting'))
+    },
+    showSettingPannel({commit}) {
+      commit("settingVisible", true)
+      SuanpanAPI.global.appRightEvents.onShow(new Event('setting'))
+    },
   }
 };

@@ -157,7 +157,10 @@ export default {
             {
               label: "设置",
               value: "view-setting",
-              disabled: true,
+              disabled: false,
+              checkable: true,
+              checked: this.$store.state.view.settingVisible,
+              keycut: 'F6'
             },
             {
               label: "事件日志",
@@ -293,7 +296,14 @@ export default {
       handler() {
         this.checkGraph();
       }
-    }
+    },
+    "$store.state.view.settingVisible": {
+      handler() {
+        this.menus.view.items.find(
+          (item) => item.value === "view-setting"
+        ).checked = this.$store.state.view.settingVisible;
+      },
+    },
   },
   created() {
     window.addEventListener("load", this.nodeActionListener);
@@ -426,6 +436,13 @@ export default {
           break;
         case "view-refresh":
           this.$store.dispatch("file/gotoCurrentPredict");
+          break;
+        case "view-setting":
+          if(this.$store.state.view.settingVisible) {
+            this.$store.dispatch("view/closeSettingPannel")
+          }else {
+            this.$store.dispatch("view/showSettingPannel")
+          }
           break;
         case "action-connection":
           this.$store.dispatch("file/gotoCurrentPredict");

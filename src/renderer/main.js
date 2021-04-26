@@ -68,6 +68,13 @@ window.addEventListener('load', () => {
   window.SuanpanAPI.eventService.on('sp:app:contextmenu', (...data) => {
     if(data.length > 1) {
       const commonMenu = [{
+        key: 'setting',
+        name: '设置',
+        active: true,
+        function: () => {
+          storeInst.dispatch("view/showSettingPannel")
+        }
+      },{
         key: 'cut',
         name: '剪切',
         active: false,
@@ -117,6 +124,13 @@ window.addEventListener('load', () => {
   window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = []) => {
     if (options.length > 0) {
       const commonMenu = [{
+        key: 'setting',
+        name: '设置',
+        active: true,
+        function: () => {
+          storeInst.dispatch("view/showSettingPannel")
+        }
+      }, {
         key: 'cut',
         name: '剪切',
         active: !storeInst.getters["status/isRunning"],
