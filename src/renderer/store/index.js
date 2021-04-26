@@ -7,6 +7,7 @@ import status from './status';
 import edit from './edit';
 import log from './log';
 import statustooltip from './statustooltip';
+import setting from './setting';
 
 import PersistedState from './persistedState';
 
@@ -21,7 +22,8 @@ export default {
     status,
     edit,
     log,
-    statustooltip
+    statustooltip,
+    setting
   },
   state: {
     selectedNode: null,

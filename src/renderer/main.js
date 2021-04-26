@@ -265,10 +265,10 @@ window.addEventListener('load', ()=> {
 
   // listen appRight panel visible
   window.SuanpanAPI.eventService.on('appRight.closed', function() {
-    storeInst.commit('view/settingVisible', false);
+    storeInst.commit('view/paramVisible', false);
   })
   window.SuanpanAPI.eventService.on('appRight.show', function() {
-    storeInst.commit('view/settingVisible', true);
+    storeInst.commit('view/paramVisible', true);
   })
 
 

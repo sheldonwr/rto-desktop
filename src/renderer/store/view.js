@@ -21,8 +21,10 @@ export default {
     statusVisible: false,
     // 关于
     aboutVisible: false,
+    // 参数配置
+    paramVisible: appRight.closed,
     // 设置
-    settingVisible: appRight.closed
+    settingVisible: false
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -48,6 +50,9 @@ export default {
     },
     aboutVisible(state, val) {
       state.aboutVisible = val;
+    },
+    paramVisible(state, val) {
+      state.paramVisible = val;
     },
     settingVisible(state, val) {
       state.settingVisible = val;

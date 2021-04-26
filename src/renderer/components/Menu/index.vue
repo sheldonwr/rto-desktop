@@ -155,23 +155,20 @@ export default {
               keycut: 'F5'
             },
             {
+              label: "参数配置",
+              value: "view-param",
+              disabled: false,
+              checkable: true,
+              checked: this.$store.state.view.paramVisible,
+              keycut: 'F1'
+            },
+            {
               label: "设置",
               value: "view-setting",
               disabled: false,
               checkable: true,
-              checked: this.$store.state.view.settingVisible,
-              keycut: 'F1'
-            },
-            {
-              label: "事件日志",
-              value: "view-log",
-              disabled: true,
-            },
-            {
-              label: "显示说明",
-              value: "view-description",
-              disabled: true,
-            },
+              checked: this.$store.state.setting.settingVisible,
+            }
           ],
         },
         action: {
@@ -199,16 +196,6 @@ export default {
               label: "注销组件",
               value: "edit-delete",
               disabled: false,
-            },
-            {
-              label: "更新RTO服务账户",
-              value: "tools-urt",
-              disabled: true,
-            },
-            {
-              label: "管理组",
-              value: "tools-manage",
-              disabled: true,
             },
             {
               label: "模型管理",
@@ -297,11 +284,18 @@ export default {
         this.checkGraph();
       }
     },
-    "$store.state.view.settingVisible": {
+    "$store.state.view.paramVisible": {
+      handler() {
+        this.menus.view.items.find(
+          (item) => item.value === "view-param"
+        ).checked = this.$store.state.view.paramVisible;
+      },
+    },
+    "$store.state.setting.settingVisible": {
       handler() {
         this.menus.view.items.find(
           (item) => item.value === "view-setting"
-        ).checked = this.$store.state.view.settingVisible;
+        ).checked = this.$store.state.setting.settingVisible;
       },
     },
   },
@@ -437,12 +431,18 @@ export default {
         case "view-refresh":
           this.$store.dispatch("file/gotoCurrentPredict");
           break;
-        case "view-setting":
-          if(this.$store.state.view.settingVisible) {
+        case "view-param":
+          if(this.$store.state.view.paramVisible) {
             this.$store.dispatch("view/closeSettingPannel")
           }else {
             this.$store.dispatch("view/showSettingPannel")
           }
+          break;
+        case "view-setting":
+          this.$store.commit(
+            "setting/settingVisible",
+            !this.$store.state.setting.settingVisible
+          );
           break;
         case "action-connection":
           this.$store.dispatch("file/gotoCurrentPredict");

@@ -14,6 +14,7 @@
       v-model="createDirDialog"
     ></DirCreateForm>
     <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
+    <SettingDialog v-if="settingVisible" v-model="settingVisible"></SettingDialog>
     <LogView v-show="$store.state.view.logPanelVisible"></LogView>
   </div>
 </template>
@@ -27,6 +28,7 @@ import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm";
 import DirCreateForm from "components/DirCreateForm";
 import AboutDialog from "components/AboutDialog";
+import SettingDialog from "components/SettingDialog";
 import LogView from "components/LogView";
 
 export default {
@@ -41,6 +43,7 @@ export default {
     DirCreateForm,
     AboutDialog,
     LogView,
+    SettingDialog
   },
   mounted() {
     this.updateAppHeight();
@@ -73,6 +76,14 @@ export default {
       },
       set(val) {
         this.$store.commit("view/aboutVisible", val);
+      },
+    },
+    settingVisible: {
+      get() {
+        return this.$store.state.setting.settingVisible;
+      },
+      set(val) {
+        this.$store.commit("setting/settingVisible", val);
       },
     },
   },
@@ -120,7 +131,7 @@ export default {
       }
     },
     keycutsHandler(event) {
-      console.log("++++", event)
+      // console.log("++++", event)
       if (event.keyCode === 118) {
         // 'F7'
         if (
@@ -149,7 +160,7 @@ export default {
         );
       }else if(event.keyCode === 112) {
         // f1
-        if(this.$store.state.view.settingVisible) {
+        if(this.$store.state.view.paramVisible) {
           this.$store.dispatch("view/closeSettingPannel")
         }else {
           let nodeId = null;
