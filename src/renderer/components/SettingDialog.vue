@@ -59,8 +59,8 @@ export default {
     rightPanelCenterChanged() {
       window.appConfig.detachable.showAtCenter = this.form.rightPanelCenter;
       if(this.$store.state.view.paramVisible) {
-        this.$store.dispatch('view/closeSettingPannel');
         this.$store.dispatch('view/showSettingPannel');
+        this.$store.dispatch('view/closeSettingPannel');
       }
     },
     rightPanelWidthChanged() {

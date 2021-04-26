@@ -1,8 +1,8 @@
 let appRight = {
   closed: false
 }
-if(window.localStorage && window.localStorage.appRight) {
-  Object.assign(appRight, window.localStorage.appRight);
+if(window.localStorage && window.localStorage.appRight && window.localStorage.appRight.closed) {
+  appRight.closed = true;
 }
 
 export default {
@@ -22,7 +22,7 @@ export default {
     // 关于
     aboutVisible: false,
     // 参数配置
-    paramVisible: appRight.closed,
+    paramVisible: !appRight.closed,
     // 设置
     settingVisible: false
   },
