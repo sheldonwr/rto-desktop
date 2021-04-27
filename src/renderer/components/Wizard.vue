@@ -19,9 +19,9 @@
           <a-button type="primary" @click="createAppModal">
             <a-icon type="plus" />项目
           </a-button>
-          <a-button v-if="$store.state.view.wizardClosable" @click="close">
+          <!-- <a-button v-if="$store.state.view.wizardClosable" @click="close">
             关闭
-          </a-button>
+          </a-button> -->
         </template>
       </a-page-header>
       <div

@@ -274,10 +274,10 @@ export default {
       this.isComponentEdit = true;
     },
     predictTransition(appId) {
+      this.isComponentEdit = false;
       if(this.lastAppId == appId) {
         return;
       }
-      this.isComponentEdit = false;
       this.$store.dispatch('status/getStatus', appId).then( appStatus => {
         this.isRunning = this.$store.getters["status/isRunning"];
       }).catch( err => {

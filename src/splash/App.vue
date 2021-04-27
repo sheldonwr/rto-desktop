@@ -67,11 +67,11 @@ export default {
       },
       rules: {
         host: [
-          { required: true, message: "请输入host", trigger: "blur" },
+          { required: true, message: "请输入平台地址", trigger: "blur" },
           { validator: validateHost, trigger: "change" },
         ],
         port: [
-          { required: true, message: "请输入port", trigger: "blur" },
+          { required: true, message: "请输入服务端口", trigger: "blur" },
           { validator: validatePort, trigger: "change" },
         ],
       },
