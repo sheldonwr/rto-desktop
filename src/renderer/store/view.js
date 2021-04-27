@@ -24,7 +24,7 @@ export default {
     statusVisible: false,
     // 关于
     aboutVisible: false,
-    // 参数配置
+    // 属性配置
     paramVisible: !appRight.closed,
     // 设置
     settingVisible: false
@@ -67,6 +67,7 @@ export default {
     },
     showSettingPannel({commit, rootState, rootGetters}, nodeId) {
       window.SuanpanAPI.global.appRightEvents.onShow(new Event('setting'));
+      window.SuanpanAPI.common.onAsideToggle('right', 'show')
       if(nodeId) {
         let stateChain = 'app.predict.edit.node';
         if(rootState.appReadonly) {

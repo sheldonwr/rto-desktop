@@ -155,20 +155,20 @@ export default {
               keycut: 'F5'
             },
             {
-              label: "参数配置",
+              label: "属性配置",
               value: "view-param",
               disabled: false,
               checkable: true,
               checked: this.$store.state.view.paramVisible,
               keycut: 'F1'
             },
-            {
-              label: "设置",
-              value: "view-setting",
-              disabled: false,
-              checkable: true,
-              checked: this.$store.state.setting.settingVisible,
-            }
+            // {
+            //   label: "设置",
+            //   value: "view-setting",
+            //   disabled: false,
+            //   checkable: true,
+            //   checked: this.$store.state.setting.settingVisible,
+            // }
           ],
         },
         action: {

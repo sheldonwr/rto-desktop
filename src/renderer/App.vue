@@ -14,7 +14,7 @@
       v-model="createDirDialog"
     ></DirCreateForm>
     <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
-    <SettingDialog v-show="settingVisible" v-model="settingVisible"></SettingDialog>
+    <!-- <SettingDialog v-show="settingVisible" v-model="settingVisible"></SettingDialog> -->
     <LogView v-show="$store.state.view.logPanelVisible"></LogView>
   </div>
 </template>

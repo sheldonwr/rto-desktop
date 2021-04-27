@@ -69,7 +69,7 @@ window.addEventListener('load', () => {
     if(data.length > 1) {
       const commonMenu = [{
         key: 'setting',
-        name: '参数配置',
+        name: '属性配置',
         active: true,
         function: () => {
           storeInst.dispatch("view/showSettingPannel")
@@ -126,7 +126,7 @@ window.addEventListener('load', () => {
       const { item, itemKey } = options[0];
       const commonMenu = [{
         key: 'setting',
-        name: '参数配置',
+        name: '属性配置',
         active: true,
         function: () => {
           storeInst.dispatch("view/showSettingPannel", itemKey)
