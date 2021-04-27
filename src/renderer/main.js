@@ -67,7 +67,7 @@ window.addEventListener('load', () => {
   // 画布右键菜单
   window.SuanpanAPI.eventService.on('sp:app:contextmenu', (...data) => {
     let url = new URL(window.location.href);
-    if(!url.pathname.startsWith('/web/service/predict/10')) {
+    if(!url.pathname.startsWith('/web/service/predict')) {
       return;
     }
     if(data.length > 1) {
@@ -127,7 +127,7 @@ window.addEventListener('load', () => {
   // 组件右键菜单
   window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = []) => {
     let url = new URL(window.location.href);
-    if(!url.pathname.startsWith('/web/service/predict/10')) {
+    if(!url.pathname.startsWith('/web/service/predict')) {
       return;
     }
     if (options.length > 0) {
