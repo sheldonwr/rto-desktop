@@ -100,7 +100,7 @@ export function appInjectProd() {
 function interceptProxyUrl() {
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     let url = new URL(details.url);
-    if((url.href.indexOf(appConfig.RtoOrigin) === -1) && url.pathname.startsWith('/proxr') || url.pathname.startsWith('/proxrs')) {
+    if((url.href.indexOf(appConfig.RtoOrigin) === -1) && (url.pathname.startsWith('/proxr') || url.pathname.startsWith('/proxrs'))) {
       callback({redirectURL: `${appConfig.RtoOrigin}${url.pathname}${url.search}`, cancel: false})
     }else {
       callback({});

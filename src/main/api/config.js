@@ -75,5 +75,6 @@ function convert2Appconfig(obj) {
   ac.nodeCopyDir = JSON.parse(ac.nodeCopyDir);
   ac.detachable = JSON.parse(ac.detachable);
   ac.detachable.appRight = false;
+  ac.socketProtocol = 'http:';
   return ac;
 }
