@@ -33,9 +33,9 @@ export default {
     },
   },
   created() {
-    window.ipcRenderer.on("window-close", () => {
-      this.$store.dispatch("window/closeWindow");
-    });
+    // window.ipcRenderer.on("window-close", () => {
+    //   this.$store.dispatch("window/closeWindow");
+    // });
   },
   methods: {
     windowControl(type) {
