@@ -219,7 +219,7 @@ export default {
               keycut: 'F10'
             },
             {
-              label: "关于RTOExplorer",
+              label: "关于RTO",
               value: "help-about"
             },
           ],
@@ -282,16 +282,19 @@ export default {
     "$store.state.status.appStatus": {
       handler() {
         this.checkGraph();
-        let editCut =  this.menus.edit.items.find(
+        let editCut = this.menus.edit.items.find(
           (item) => item.value === "edit-cut"
         );
-        let editCopy =  this.menus.edit.items.find(
+        let editCopy = this.menus.edit.items.find(
           (item) => item.value === "edit-copy"
         );
-        let editPaste =  this.menus.edit.items.find(
+        let editPaste = this.menus.edit.items.find(
           (item) => item.value === "edit-paste"
         );
-        let editDelete =  this.menus.edit.items.find(
+        let editDelete = this.menus.edit.items.find(
+          (item) => item.value === "edit-delete"
+        );
+        let toolEditDelete = this.menus.tools.items.find(
           (item) => item.value === "edit-delete"
         );
         if(this.$store.getters["status/isRunning"]) {
@@ -299,11 +302,13 @@ export default {
           editCopy.disabled = true;
           editPaste.disabled = true;
           editDelete.disabled = true;
+          toolEditDelete.disabled = true;
         }else {
           editCut.disabled = false;
           editCopy.disabled = false;
           editPaste.disabled = false;
           editDelete.disabled = false;
+          toolEditDelete.disabled = false;
         }
       }
     },
