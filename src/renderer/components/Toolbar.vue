@@ -67,14 +67,14 @@
         <span class="rto_iconfont icon-fuzhi"></span>
       </div>
       <div class="separator"></div>
-      <div
+      <!-- <div
         class="toolbar-icon"
         title="设置"
         @mouseover="mouseoverHandler('view-setting')"
         @mouseout="mouseoutHandler"
       >
         <span class="rto_iconfont icon-shezhi"></span>
-      </div>
+      </div> -->
       <div
         class="toolbar-icon"
         title="日志"

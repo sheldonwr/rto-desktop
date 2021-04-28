@@ -282,6 +282,29 @@ export default {
     "$store.state.status.appStatus": {
       handler() {
         this.checkGraph();
+        let editCut =  this.menus.edit.items.find(
+          (item) => item.value === "edit-cut"
+        );
+        let editCopy =  this.menus.edit.items.find(
+          (item) => item.value === "edit-copy"
+        );
+        let editPaste =  this.menus.edit.items.find(
+          (item) => item.value === "edit-paste"
+        );
+        let editDelete =  this.menus.edit.items.find(
+          (item) => item.value === "edit-delete"
+        );
+        if(this.$store.getters["status/isRunning"]) {
+          editCut.disabled = true;
+          editCopy.disabled = true;
+          editPaste.disabled = true;
+          editDelete.disabled = true;
+        }else {
+          editCut.disabled = false;
+          editCopy.disabled = false;
+          editPaste.disabled = false;
+          editDelete.disabled = false;
+        }
       }
     },
     "$store.state.view.paramVisible": {
