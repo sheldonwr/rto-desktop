@@ -181,7 +181,7 @@ export default {
               disabled: false,
             },
             {
-              label: "更新",
+              label: "数据交互",
               value: "action-update",
               disabled: false,
               items: [],
