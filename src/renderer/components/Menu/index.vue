@@ -387,18 +387,7 @@ export default {
           this.$store.commit("view/wizardVisible", true);
           break;
         case "file-terminate":
-          if(this.$store.getters['status/isRunning']) {
-            this.$confirm({
-              title: '确定终止该项目吗？',
-              okText: "确定",
-              cancelText: "取消",
-              onOk: () => {
-                let deployBtn = document.querySelector('.sp-app-actions .footer-item');
-                deployBtn.click()
-              },
-              onCancel() {},
-            })
-          }
+          bus.emit("file-terminate");
           break;
         case "file-quit":
           // 退出

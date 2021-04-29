@@ -32,7 +32,7 @@
       </a-tab-pane>
       <a-tab-pane key="2" tab="项目日志">
         <ResizeTabContent :resize-height="resizeHeight">
-          <div class="logview">
+          <div class="rto-logview">
             <div class="logview-content">
               <div>{{ appLog }}</div>
             </div>
@@ -41,7 +41,7 @@
       </a-tab-pane>
       <a-tab-pane key="3" tab="组件日志">
         <ResizeTabContent :resize-height="resizeHeight">
-          <div class="logview">
+          <div class="rto-logview">
             <div class="logview-content">
               <div>{{ compLog }}</div>
             </div>
@@ -262,7 +262,7 @@ export default {
     margin-bottom: 0;
   }
 }
-.logview {
+.rto-logview {
   border: 0;
 }
 </style>
@@ -351,7 +351,7 @@ export default {
   line-height: 28px;
   overflow: auto;
 }
-.logview {
+.rto-logview {
   padding: 12px;
   height: 100%;
   user-select: text;
@@ -359,8 +359,5 @@ export default {
   color: #5b6573;
   background-color: #fff;
   overflow: auto;
-  .logview-content {
-
-  }
 }
 </style>

@@ -160,6 +160,7 @@ export default {
   created() {
     bus.on("transition-component", this.componentTransition);
     bus.on("transition-predict", this.predictTransition);
+    bus.on("file-terminate", this.fileTerminate);
   },
   beforeDestroy() {
   },
@@ -186,24 +187,7 @@ export default {
       } else if (id === "file-saveAs") {
         this.$store.dispatch("file/saveAs");
       } else if (id === "deploy") {
-        if(this.isReadonly) {
-          this.refresh();
-        }else {
-          let title = this.isRunning ? "确定停止该项目？" : "确定开启该项目？";
-          this.$confirm({
-            title: title,
-            okText: "确定",
-            cancelText: "取消",
-            onOk: () => {
-              let deployBtn = document.querySelector(
-                ".sp-app-actions .footer-item"
-              );
-              deployBtn.click();
-              this.isRunning = !this.isRunning;
-            },
-            onCancel() {},
-          });
-        }
+        this.fileTerminate();
       } else if (id === "edit-cut") {
         this.$store.dispatch("edit/cutNode");
       } else if (id === "edit-copy") {
@@ -285,6 +269,26 @@ export default {
       })
       this.lastAppId = appId;
     },
+    fileTerminate() {
+      if(this.isReadonly) {
+          this.refresh();
+        }else {
+          let title = this.isRunning ? "确定停止该项目？" : "确定开启该项目？";
+          this.$confirm({
+            title: title,
+            okText: "确定",
+            cancelText: "取消",
+            onOk: () => {
+              let deployBtn = document.querySelector(
+                ".sp-app-actions .footer-item"
+              );
+              deployBtn.click();
+              this.isRunning = !this.isRunning;
+            },
+            onCancel() {},
+          });
+        }
+    }
   },
 };
 </script>
