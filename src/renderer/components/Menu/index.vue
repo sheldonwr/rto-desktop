@@ -172,7 +172,7 @@ export default {
           ],
         },
         action: {
-          label: "更新",
+          label: "操作",
           value: "action",
           items: [
             {
@@ -181,7 +181,7 @@ export default {
               disabled: false,
             },
             {
-              label: "数据交互",
+              label: "通讯",
               value: "action-update",
               disabled: false,
               items: [],
