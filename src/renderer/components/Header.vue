@@ -6,11 +6,11 @@
     <div class="title-wrap">
       <p class="title">{{ $store.getters["file/title"] }}</p>
     </div>
-    <div class="window-controls no-drag">
-      <div class="window-icon" @click="windowControl('minimize')">
+    <div class="window-controls">
+      <div class="window-icon no-drag" @click="windowControl('minimize')">
         <span class="rto_iconfont icon-minimize"></span>
       </div>
-      <div class="window-icon" @click="windowControl('maximize')">
+      <div class="window-icon no-drag" @click="windowControl('maximize')">
         <span
           :class="[
             'rto_iconfont',
@@ -18,7 +18,7 @@
           ]"
         ></span>
       </div>
-      <div class="window-icon danger" @click="windowControl('close')">
+      <div class="window-icon no-drag danger" @click="windowControl('close')">
         <span class="rto_iconfont icon-close"></span>
       </div>
     </div>
