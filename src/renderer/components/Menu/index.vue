@@ -186,6 +186,11 @@ export default {
               disabled: false,
               items: [],
             },
+            {
+              label: '前端显示',
+              value: "frontend-view",
+              disabled: false,
+            }
           ],
         },
         tools: {
@@ -422,6 +427,9 @@ export default {
               onCancel() {},
             });
           }
+          break;
+        case "frontend-view":
+          this.$store.commit("view/frontendVisible", true);
           break;
         case "view-app":
           this.$store.commit("view/logPanelVisible", false);

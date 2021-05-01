@@ -16,7 +16,7 @@ async function openFile() {
     title: '打开',
     defaultPath: app.getPath("documents"),
     filters: [{
-      name: "sp", extensions: ['sp'],
+      name: "zip", extensions: ['zip'],
     }]
   });
   return filePaths[0];
@@ -39,7 +39,7 @@ async function saveFileDialog(event, title, defaultName='') {
     title: title,
     defaultPath: path.join(app.getPath("documents"), defaultName),
     filters: [{
-      name: "sp", extensions: ['sp']
+      name: "zip", extensions: ['zip']
     }]
   })
   return filePath

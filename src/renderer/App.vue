@@ -16,6 +16,7 @@
     <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
     <!-- <SettingDialog v-show="settingVisible" v-model="settingVisible"></SettingDialog> -->
     <LogView v-show="$store.state.view.logPanelVisible"></LogView>
+    <FrontendDialog v-model="frontendVisible"></FrontendDialog>
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import DirCreateForm from "components/DirCreateForm";
 import AboutDialog from "components/AboutDialog";
 import SettingDialog from "components/SettingDialog";
 import LogView from "components/LogView";
+import FrontendDialog from "components/FrontendDialog";
 
 export default {
   name: "App",
@@ -43,7 +45,8 @@ export default {
     DirCreateForm,
     AboutDialog,
     LogView,
-    SettingDialog
+    SettingDialog,
+    FrontendDialog
   },
   mounted() {
     this.updateAppHeight();
@@ -84,6 +87,14 @@ export default {
       },
       set(val) {
         this.$store.commit("setting/settingVisible", val);
+      },
+    },
+    frontendVisible: {
+      get() {
+        return this.$store.state.view.frontendVisible;
+      },
+      set(val) {
+        this.$store.commit("view/frontendVisible", val);
       },
     },
   },

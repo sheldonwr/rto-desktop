@@ -27,7 +27,9 @@ export default {
     // 属性配置
     paramVisible: !appRight.closed,
     // 设置
-    settingVisible: false
+    settingVisible: false,
+    // 前端显示
+    frontendVisible: false,
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -59,6 +61,9 @@ export default {
     },
     settingVisible(state, val) {
       state.settingVisible = val;
+    },
+    frontendVisible(state, val) {
+      state.frontendVisible = val;
     }
   },
   actions: {
