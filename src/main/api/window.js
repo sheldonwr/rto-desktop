@@ -8,13 +8,18 @@ ipcMain.handle('window-getMaximize', async (event, opt) => {
 })
 
 function getMainWindow() {
-  let wins = BrowserWindow.getAllWindows()
+  let wins = BrowserWindow.getAllWindows();
+  let mianWin = null;
   if(wins && wins.length > 0) {
-    return wins.reduce(function (p, v) {
-      return ( p.id < v.id ? p : v );
-    });
+    try {
+      mianWin = wins.reduce(function (p, v) {
+        return ( p.id < v.id ? p : v );
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
-  return null;
+  return mianWin;
 }
 
 function minimize(event) {

@@ -279,8 +279,6 @@ window.addEventListener('load', ()=> {
     storeInst.commit('view/paramVisible', true);
   })
 
-
-  // log socket
   storeInst.dispatch('log/connect').then(() => {
     console.log('log connect success');
   }).catch( err => {
@@ -298,8 +296,11 @@ storeInst.watch(
       storeInst.commit('log/allLogs', [])
       storeInst.dispatch('log/register')
       storeInst.dispatch('log/query')
-    //   storeInst.dispatch('log/connect').then(res => {
-    //   })
+      // storeInst.dispatch('log/connect').then(() => {
+      //   console.log('log connect success');
+      // }).catch( err => {
+      //   console.error("log connect error", err);
+      // })
     }
   }
 );
