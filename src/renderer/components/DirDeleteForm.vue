@@ -8,7 +8,7 @@
     @ok="okHandler"
     @cancel="cancelHandler"
   >
-    <div>
+    <div class="delete-form-wrap">
       <a-alert :description="alertDescription" type="warning" show-icon />
       <div class="tree-container">
         <a-tree
@@ -136,6 +136,14 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.delete-form-wrap {
+  .ant-alert-icon {
+    left: 8px !important;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .tree-container {

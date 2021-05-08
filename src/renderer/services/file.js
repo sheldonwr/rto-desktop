@@ -71,11 +71,15 @@ export function getApp(id) {
       window.SuanpanAPI.appDataStoreService
         .upload( Key, fileBlob, null, null, () => {
             // 导入项目文件
+            let dir = 2;
+            if(window.userConfig && window.userConfig.predictDirs && window.userConfig.predictDirs.length > 1) {
+              dir = window.userConfig.predictDirs[1].id;
+            }
             window.SuanpanAPI.appService
               .import({
                 name: fileName,
                 dataPath: Key,
-                dir: window.appConfig.defaultAppFolder,
+                dir: dir,
               })
               .then(
                 (res) => {

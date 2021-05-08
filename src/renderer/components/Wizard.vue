@@ -212,20 +212,38 @@ export default {
         ];
       } else {
         // 文件夹
-        return [
-          {
-            label: "重命名",
-            onclick: () => {
-              this.renameDialog(this.contextItem.dataRef, false);
+        console.log("=====", this.contextItem)
+        let dirs = [];
+        if(window.userConfig && window.userConfig.predictDirs && window.userConfig.predictDirs.length > 1) {
+          dirs = window.userConfig.predictDirs.map(p => p.id);
+        }
+        let dir = this.contextItem.dataRef.id;
+        if(dirs.indexOf(dir) > -1) {
+          return [
+            {
+              label: "重命名",
+              onclick: () => {
+                this.renameDialog(this.contextItem.dataRef, false);
+              }
             }
-          },
-          {
-            label: "删除",
-            onclick: () => {
-              this.deleteDir(this.contextItem.dataRef)
+          ];
+        }else {
+          return [
+            {
+              label: "重命名",
+              onclick: () => {
+                this.renameDialog(this.contextItem.dataRef, false);
+              }
             },
-          },
-        ];
+            {
+              label: "删除",
+              onclick: () => {
+                this.deleteDir(this.contextItem.dataRef)
+              },
+            },
+          ];
+        }
+
       }
     },
   },
