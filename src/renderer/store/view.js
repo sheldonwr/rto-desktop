@@ -24,6 +24,8 @@ export default {
     statusVisible: false,
     // 关于
     aboutVisible: false,
+    // 帮助文档
+    helpVisible: false,
     // 属性配置
     paramVisible: !appRight.closed,
     // 设置
@@ -55,6 +57,9 @@ export default {
     },
     aboutVisible(state, val) {
       state.aboutVisible = val;
+    },
+    helpVisible(state, val) {
+      state.helpVisible = val;
     },
     paramVisible(state, val) {
       state.paramVisible = val;
