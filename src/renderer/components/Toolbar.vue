@@ -214,7 +214,8 @@ export default {
           !this.$store.state.view.logPanelVisible
         );
       } else if (id === "view-help") {
-        window.open("https://xuelangyun.yuque.com/suanpan_doc/public");
+        // window.open("https://xuelangyun.yuque.com/suanpan_doc/public");
+        this.$store.commit('view/helpVisible', true)
       } else if (id === "view-about") {
         this.$store.commit("view/aboutVisible", true);
       } else if (id === "view-app") {
