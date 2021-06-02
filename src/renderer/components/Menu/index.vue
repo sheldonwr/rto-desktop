@@ -487,7 +487,8 @@ export default {
           window.open(`${window.location.origin}/modelAlgoManage.html?tab=algo`)
           break;
         case "help-rto":
-          window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
+          // window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
+          this.$store.commit('view/helpVisible', true)
           break;
         case "help-about":
           this.$store.commit('view/aboutVisible', true)

@@ -1,15 +1,14 @@
 <template>
   <a-modal
     v-model="mvisible"
-    title="关于"
+    title="RTO用户帮助"
     :footer="null"
     :afterClose="afterClose"
   >
-    <div class="about-wrapper">
-      <div class="about-description">
-        <p>版本：RTO 1.0.5</p>
+    <div class="help-wrapper">
+      <div class="help-description">
+        <p>帮助文档正在准备中，即将上线发布</p>
       </div>
-      <p>Copyright © 2011-2021 华东理工大学 版权所有</p>
     </div>
   </a-modal>
 </template>
@@ -41,12 +40,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.about-wrapper {
+.help-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   user-select: none;
-  .about-description {
+  .help-description {
     text-align: center;
     height: 300px;
     display: flex;

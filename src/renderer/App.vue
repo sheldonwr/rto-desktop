@@ -14,6 +14,7 @@
       v-model="createDirDialog"
     ></DirCreateForm>
     <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
+    <HelpDialog v-if="helpVisible" v-model="helpVisible"></HelpDialog>
     <SettingDialog v-show="settingVisible" v-model="settingVisible"></SettingDialog>
     <LogView v-show="$store.state.view.logPanelVisible"></LogView>
     <FrontendDialog v-model="frontendVisible"></FrontendDialog>
@@ -29,6 +30,7 @@ import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm";
 import DirCreateForm from "components/DirCreateForm";
 import AboutDialog from "components/AboutDialog";
+import HelpDialog from "components/HelpDialog";
 import SettingDialog from "components/SettingDialog";
 import LogView from "components/LogView";
 import FrontendDialog from "components/FrontendDialog";
@@ -44,6 +46,7 @@ export default {
     AppCreateForm,
     DirCreateForm,
     AboutDialog,
+    HelpDialog,
     LogView,
     SettingDialog,
     FrontendDialog
@@ -79,6 +82,14 @@ export default {
       },
       set(val) {
         this.$store.commit("view/aboutVisible", val);
+      },
+    },
+    helpVisible:{
+       get() {
+        return this.$store.state.view.helpVisible;
+      },
+      set(val) {
+        this.$store.commit("view/helpVisible", val);
       },
     },
     settingVisible: {
@@ -156,7 +167,8 @@ export default {
         }
       }else if(event.keyCode === 121) {
         // f10
-        window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
+        // window.open('https://xuelangyun.yuque.com/suanpan_doc/public');
+        this.$store.commit('view/helpVisible', true)
       }else if(event.keyCode === 115) {
         // f4
         this.$store.commit(

@@ -189,7 +189,10 @@ window.addEventListener('load', () => {
             const { appId, userId } = window.appConfig;
             let iframeUrl = url;
             if(url.startsWith('{{origin}}')) {
-              iframeUrl = url.replace('{{origin}}', window.location.origin)
+              iframeUrl = url.replace('{{origin}}', window.location.origin);
+              if(process.env.NODE_ENV == "production" && (iframeUrl.indexOf('modelAlgoManage.html') < 0)) {
+                iframeUrl = iframeUrl.replace('modelAlgoManage', "modelAlgoManage.html");
+              }
             }else {
               iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
                               .replace('{{userId}}', userId)
