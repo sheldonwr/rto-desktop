@@ -162,13 +162,13 @@ export default {
               checked: this.$store.state.view.paramVisible,
               keycut: 'F1'
             },
-            // {
-            //   label: "设置",
-            //   value: "view-setting",
-            //   disabled: false,
-            //   checkable: true,
-            //   checked: this.$store.state.setting.settingVisible,
-            // }
+            {
+              label: "设置",
+              value: "view-setting",
+              disabled: false,
+              checkable: true,
+              checked: this.$store.state.setting.settingVisible,
+            }
           ],
         },
         action: {
@@ -555,18 +555,20 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  background: #fff;
-  padding: 4px 0 4px 6px;
+  background: var(--e-menu-bar-bg);
   height: 38px;
   z-index: 999;
   margin: 0;
   .menu-item {
-    padding: 5px 10px;
+    padding: 0 10px;
     cursor: pointer;
     outline: 0;
     position: relative;
+    line-height: 38px;
+    color: var(--e-menu-bar-color);
     &:hover {
-      background-color: rgba(238, 238, 238, 0.6);
+      color: var(--e-menu-bar-active-color);
+      background: var(--e-menu-bar-active-bg);
       border-radius: 2px;
     }
     .menu-bottom {

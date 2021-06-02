@@ -63,8 +63,7 @@ export default {
 .header-wrap {
   width: 100%;
   height: 37px;
-  background: rgba(255, 255, 255, 0.6);
-  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5);
+  background: var(--e-app-title-bg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -81,13 +80,12 @@ export default {
       margin: 0;
       font-size: 18px;
       font-weight: bold;
-      background: linear-gradient(#4470f7, #2183f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--e-app-logo-color);
     }
   }
   .title {
     margin: 0;
+    color: var(--e-app-title-color);
   }
   .window-controls {
     display: flex;
@@ -98,10 +96,10 @@ export default {
       padding: 8px 16px;
       .rto_iconfont {
         font-size: 13px;
-        color: #333;
+        color: var(--e-app-title-color);
       }
       &:hover {
-        background: rgba(0, 0, 0, 0.2);
+        background: var(--e-app-title-hover-color);
       }
       &.danger:hover {
         background: red;

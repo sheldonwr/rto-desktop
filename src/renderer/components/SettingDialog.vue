@@ -13,14 +13,12 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="属性配置面板居中显示" prop="rightPanelCenter">
-        <a-switch v-model="form.rightPanelCenter" @change="rightPanelCenterChanged" />
-      </a-form-model-item>
-      <a-form-model-item label="属性配置面板宽度" prop="rightPanelWidth">
-        <a-input-number v-model="form.rightPanelWidth" :min="320" :max="640" @change="rightPanelWidthChanged" />
-      </a-form-model-item>
-      <a-form-model-item label="属性配置面板高度" prop="rightPanelHeight">
-        <a-input-number v-model="form.rightPanelHeight" :min="320" :max="640" @change="rightPanelHeightChanged" />
+      <a-form-model-item label="主题" prop="theme">
+        <a-select v-model="form.theme" style="width: 150px" @change="themeChanged">
+          <a-select-option value="default">默认</a-select-option>
+          <a-select-option value="light">浅色</a-select-option>
+          <a-select-option value="dark">深色</a-select-option>
+        </a-select>
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -41,11 +39,12 @@ export default {
       labelCol: { span: 8 },
       wrapperCol: { span: 14 },
       form: {
-        rightPanelCenter: true,
-        rightPanelWidth: 640,
-        rightPanelHeight: 640
+        theme: 'default'
       }
     };
+  },
+  created() {
+    this.form.theme = this.$store.state.theme;
   },
   watch: {
     value(val) {
@@ -56,24 +55,8 @@ export default {
     afterClose() {
       this.$emit("input", false);
     },
-    rightPanelCenterChanged() {
-      window.appConfig.detachable.showAtCenter = this.form.rightPanelCenter;
-      if(this.$store.state.view.paramVisible) {
-        this.$store.dispatch('view/closeSettingPannel');
-        this.$store.dispatch('view/showSettingPannel');
-      }
-    },
-    rightPanelWidthChanged() {
-      if(this.form.rightPanelWidth < 320 || this.form.rightPanelWidth > 640) {
-        return
-      }
-      window.appConfig.detachable.detachedRightSize.width = this.form.rightPanelWidth
-    },
-    rightPanelHeightChanged() {
-       if(this.form.rightPanelHeight < 320 || this.form.rightPanelHeight > 640) {
-        return
-      }
-      window.appConfig.detachable.detachedRightSize.height = this.form.rightPanelHeight
+    themeChanged() {
+      this.$store.commit("theme", this.form.theme);
     }
   },
 };

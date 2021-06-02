@@ -27,7 +27,8 @@ export default {
   },
   state: {
     selectedNode: null,
-    appReadonly: false
+    appReadonly: false,
+    theme: 'default'
   },
   mutations: {
     selectedNode(state, val) {
@@ -35,6 +36,9 @@ export default {
     },
     appReadonly(state, val) {
       state.appReadonly = val;
+    },
+    theme(state, val) {
+      state.theme = val;
     }
   },
   actions: {

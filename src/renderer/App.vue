@@ -1,5 +1,5 @@
 <template>
-  <div class="rto_custom rto_header">
+  <div class="rto_custom rto_header" :class="[$store.state.theme]">
     <top-header></top-header>
     <menu-view></menu-view>
     <tool-bar v-show="$store.state.view.toolbarVisible"></tool-bar>
@@ -14,7 +14,7 @@
       v-model="createDirDialog"
     ></DirCreateForm>
     <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
-    <!-- <SettingDialog v-show="settingVisible" v-model="settingVisible"></SettingDialog> -->
+    <SettingDialog v-show="settingVisible" v-model="settingVisible"></SettingDialog>
     <LogView v-show="$store.state.view.logPanelVisible"></LogView>
     <FrontendDialog v-model="frontendVisible"></FrontendDialog>
   </div>

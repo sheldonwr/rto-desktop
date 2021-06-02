@@ -1,5 +1,5 @@
 import 'ant-design-vue/dist/antd.css';
-import "assets/css/app.scss";
+import "assets/css";
 import "assets/iconfont/iconfont.css";
 
 import Antd from 'ant-design-vue';

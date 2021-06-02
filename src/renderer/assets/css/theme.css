@@ -1,0 +1,53 @@
+.rto_custom, .rto_custom.default {
+  /* title */
+  --e-app-title-bg: rgba(255, 255, 255, 0.6);
+  --e-app-logo-color: #2183f7;
+  --e-app-title-color: #333;
+  --e-app-title-hover-color: rgba(0, 0, 0, 0.2);
+  /* 菜单栏 */
+  --e-menu-bar-bg: #fff;
+  --e-menu-bar-color: #333;
+  --e-menu-bar-active-color: #000;
+  --e-menu-bar-active-bg: rgba(238, 238, 238, 0.6);
+  /* 工具栏 */
+  --e-tool-bar-color: #1f1f1f;
+  --e-tool-bar-bg: #f6f7fb;
+  --e-tool-bar-border-color: #dcdcdc;
+  --e-tool-bar-item-hover-color: rgba(210, 210, 210, 0.6);
+}
+
+.rto_custom.light {
+  /* title */
+  --e-app-title-bg: linear-gradient(360deg, #1F1F1F 0%, #696969 100%);
+  --e-app-logo-color: #fff;
+  --e-app-title-color: #fff;
+  --e-app-title-hover-color: rgba(255, 255, 255, 0.2);
+  /* 菜单栏 */
+  --e-menu-bar-bg: linear-gradient(180deg, #FFFFFF 0%, #F0F0F0 100%);
+  --e-menu-bar-color: #1F1F1F;
+  --e-menu-bar-active-color: #fff;
+  --e-menu-bar-active-bg: linear-gradient(360deg, #074089 0%, #0084FF 100%);
+  /* 工具栏 */
+  --e-tool-bar-color: #1f1f1f;
+  --e-tool-bar-bg: linear-gradient(180deg, #FFFFFF 0%, #F0F0F0 100%);
+  --e-tool-bar-border-color: #CCCCCC;
+  --e-tool-bar-item-hover-color: rgba(210, 210, 210, 0.6);
+}
+
+.rto_custom.dark {
+  /* title */
+  --e-app-title-bg: linear-gradient(360deg, #074089 0%, #0084FF 100%);
+  --e-app-logo-color: #fff;
+  --e-app-title-color: #fff;
+  --e-app-title-hover-color: rgba(255, 255, 255, 0.2);
+  /* 菜单栏 */
+  --e-menu-bar-bg: #1F1F1F;
+  --e-menu-bar-color: #FFFFFF;
+  --e-menu-bar-active-color: #fff;
+  --e-menu-bar-active-bg: linear-gradient(180deg, rgba(0, 132, 255, 0.2) 0%, rgba(0, 132, 255, 0.5) 51%, rgba(0, 132, 255, 0.2) 100%);
+  /* 工具栏 */
+  --e-tool-bar-color: #fff;
+  --e-tool-bar-bg: #1F1F1F;
+  --e-tool-bar-border-color: rgba(180,180,180,0.2);
+  --e-tool-bar-item-hover-color: rgba(255, 255, 255, 0.1);
+}
