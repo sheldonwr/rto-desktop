@@ -57,6 +57,10 @@ export default {
     },
     themeChanged() {
       this.$store.commit("theme", this.form.theme);
+      localStorage.setItem('theme', this.form.theme);
+      if(window.SuanpanAPI) {
+        window.SuanpanAPI.uiService.changeTheme(this.form.theme);
+      }
     }
   },
 };

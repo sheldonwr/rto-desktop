@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.view.statusVisible" class="rto_custom rto_status">
+  <div v-if="$store.state.view.statusVisible" class="rto_custom rto_status" :class="[$store.state.theme]">
     <span class="status-title">{{ $store.state.statustooltip.status ? $store.state.statustooltip.status : '帮助文档请按F10' }}</span>
   </div>
 </template>

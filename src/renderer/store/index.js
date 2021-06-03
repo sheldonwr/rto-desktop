@@ -28,7 +28,7 @@ export default {
   state: {
     selectedNode: null,
     appReadonly: false,
-    theme: 'default'
+    theme: localStorage.getItem('theme') || 'default'
   },
   mutations: {
     selectedNode(state, val) {

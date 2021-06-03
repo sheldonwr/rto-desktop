@@ -1,7 +1,7 @@
 <template>
   <div class="rto_log">
     <div class="resize-bar" @mousedown.stop="resizeMousedown"></div>
-    <a-tabs type="card">
+    <a-tabs type="card" class="tab-wrapper">
       <a-tab-pane key="1" tab="告警">
         <ResizeTabContent :resize-height="resizeHeight">
           <div class="log-head">
@@ -264,6 +264,11 @@ export default {
 }
 .rto-logview {
   border: 0;
+}
+.tab-wrapper {
+  .ant-tabs-top-bar {
+    background: var(--e-log-title-bg);
+  }
 }
 </style>
 
