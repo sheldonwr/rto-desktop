@@ -53,7 +53,14 @@ async function createWindow() {
         titleBarStyle: "default",
         frame: true,
       });
-      event.newGuest = new BrowserWindow({ ...options, width: 1024, height:600, y: '50%', x: '50%' });
+      event.newGuest = new BrowserWindow({ 
+        ...options, 
+        width: 1024, 
+        height:600, 
+        y: '50%', 
+        x: '50%',
+        title: url.indexOf('modelAlgoManage') > -1 ? '工具': ''
+     });
       // Menu.setApplicationMenu(null)
       event.newGuest.setMenuBarVisibility(false);
       // event.newGuest.removeMenu();
