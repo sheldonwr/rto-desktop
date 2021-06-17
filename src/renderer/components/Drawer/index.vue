@@ -62,13 +62,17 @@ export default {
   .menu {
     position: absolute;
     background: #fff;
-    box-shadow: 0 0 5px 1px #e8e8e8;
+    // box-shadow: 0 0 5px 1px #e8e8e8;
+    border: 1px solid #707070;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
     .menuItem {
-      padding: 10px;
+      line-height: 32px;
+      padding: 0 16px;
       cursor: pointer;
       min-width: 120px;
       &:hover {
-        color: royalblue;
+        // color: royalblue;
+        background: #B8DCFD;
       }
     }
   }

@@ -162,13 +162,13 @@ export default {
               checked: this.$store.state.view.paramVisible,
               keycut: 'F1'
             },
-            {
-              label: "设置",
-              value: "view-setting",
-              disabled: false,
-              checkable: true,
-              checked: this.$store.state.setting.settingVisible,
-            }
+            // {
+            //   label: "设置",
+            //   value: "view-setting",
+            //   disabled: false,
+            //   checkable: true,
+            //   checked: this.$store.state.setting.settingVisible,
+            // }
           ],
         },
         action: {

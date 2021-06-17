@@ -261,6 +261,14 @@ export default {
   .ant-tabs-bar {
     margin-bottom: 0;
   }
+  .ant-tabs-tab {
+    background: var(--e-log-tab-bg) !important;
+    margin: 0 !important;
+    &-active {
+      background: var(--e-log-tab-active-bg) !important;
+      color: var(--e-log-tab-color) !important;
+    }
+  }
 }
 .rto-logview {
   border: 0;
@@ -331,7 +339,8 @@ export default {
       opacity: 0.5;
     }
     .rto_iconfont {
-      font-size: 10px;
+      font-size: 12px;
+      color: var(--e-log-tab-color);
     }
   }
 }
@@ -342,17 +351,18 @@ export default {
   box-sizing: border-box;
   line-height: 38px;
   font-size: 12px;
-  color: #333;
-  background: #f2f2f2;
+  color: #1f1f1f;
+  background: #EBF4FD;
   padding: 0 30px 0 12px;
+  font-weight: bold;
 }
 .log-content-wrap {
   box-sizing: border-box;
   height: calc(100% - 38px);
-  background: #fff;
+  background: #F5FAFF;
   padding: 0 30px 0 12px;
   font-size: 12px;
-  color: #888;
+  color: #1f1f1f;
   line-height: 28px;
   overflow: auto;
 }
@@ -361,8 +371,8 @@ export default {
   height: 100%;
   user-select: text;
   white-space: pre;
-  color: #5b6573;
-  background-color: #fff;
+  color: #1f1f1f;
+  background: #F5FAFF;
   overflow: auto;
 }
 </style>

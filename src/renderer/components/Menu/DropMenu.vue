@@ -64,16 +64,19 @@ export default {
 <style lang="scss" scoped>
 .drop-menu {
   padding: 0;
-  background: rgba(250,250,250,1.0);
-  border-radius: 2px;
+  background: #FFFFFF;
+  border: 1px solid #707070;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
   .drop-menu-item {
-    width: 180px;
-    padding: 8px 0 8px 28px;
+    width: 240px;
+    padding-left: 28px;
     position: relative;
     font-size: 14px;
     color: initial;
+    line-height: 32px;
+    color: #1F1F1F;
     &.sub {
-      width: 220px;
+      width: 240px;
       padding-right: 10px;
       .menu-label {
         white-space: nowrap;
@@ -84,8 +87,8 @@ export default {
       }
     }
     &.selected {
-      background-color: #f2f2f2;
-      color: #0084ff;
+      background-color: #B8DCFD;
+      // color: #0084ff;
     }
     &.disabled {
       color: #888;
@@ -110,7 +113,7 @@ export default {
     }
     .keycut-wrap {
       position: absolute;
-      right: 20px;
+      right: 15px;
       top: 0;
       bottom: 0;
       width: 30px;

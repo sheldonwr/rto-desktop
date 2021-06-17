@@ -331,10 +331,10 @@ export default {
   height: 40px;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--e-tool-bar-bg);
+  background: var(--e-tool-bar-bg);
   border-top: solid 1px var(--e-tool-bar-border-color);
   border-bottom: solid 1px var(--e-tool-bar-border-color);
-  padding-left: 6px;
+  // padding-left: 6px;
   .toolbar-list {
     height: 100%;
     display: flex;
