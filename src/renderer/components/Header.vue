@@ -1,6 +1,7 @@
 <template>
   <div class="header-wrap drag">
     <div class="logo-wrap">
+      <img :src="require('assets/img/logo.png')">
       <p class="logo-title">工业装置RTO在线优化平台</p>
     </div>
     <div class="title-wrap">
@@ -70,16 +71,14 @@ export default {
   .logo-wrap {
     display: flex;
     align-items: center;
-    padding-left: 16px;
+    padding-left: 10px;
     width: 350px;
     img {
-      width: 88px;
-      height: 23px;
+      height: 20px;
     }
     .logo-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: bold;
+      margin: 0 0 0 5px;
+      font-size: 14px;
       color: var(--e-app-logo-color);
     }
   }

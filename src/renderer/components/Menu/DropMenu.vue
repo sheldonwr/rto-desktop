@@ -65,7 +65,7 @@ export default {
 .drop-menu {
   padding: 0;
   background: #FFFFFF;
-  border: 1px solid #707070;
+  border: 1px solid rgba(112,112,112,0.3);
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
   .drop-menu-item {
     width: 240px;

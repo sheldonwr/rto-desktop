@@ -63,7 +63,7 @@ export default {
     position: absolute;
     background: #fff;
     // box-shadow: 0 0 5px 1px #e8e8e8;
-    border: 1px solid #707070;
+    border: 1px solid rgba(112,112,112,0.3);
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
     .menuItem {
       line-height: 32px;

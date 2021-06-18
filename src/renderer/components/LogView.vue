@@ -287,6 +287,7 @@ export default {
   background: #fff;
   bottom: 0;
   width: 100vw;
+  border-top: 1px solid rgba(91,91,91,0.3);
   .resize-bar {
     position: absolute;
     left: 0;

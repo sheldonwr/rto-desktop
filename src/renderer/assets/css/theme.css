@@ -1,7 +1,7 @@
 .rto_custom, .rto_custom.default {
   /* title */
   --e-app-title-bg: rgba(255, 255, 255, 1.0);
-  --e-app-logo-color: #2183f7;
+  --e-app-logo-color: #1F1F1F;
   --e-app-title-color: #1F1F1F;
   --e-app-title-hover-color: rgba(0, 0, 0, 0.2);
   /* 菜单栏 */
