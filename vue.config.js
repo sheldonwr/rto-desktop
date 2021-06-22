@@ -10,6 +10,10 @@ module.exports = {
     splash: {
       entry: "src/splash/main.js",
       template: "public/splash.html"
+    },
+    manage: {
+      entry: "src/manage/main.js",
+      template: "public/manage.html"
     }
   },
   pluginOptions: {

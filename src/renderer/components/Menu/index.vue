@@ -473,18 +473,10 @@ export default {
           this.$store.dispatch("file/gotoCurrentPredict");
           break;
         case "model-manage": // 模型管理
-          this.$store.commit("drawer/changeActiveTab", "model");
-          this.$store.commit("drawer/changeIsModelAlgoManage", true);
-          process.env.NODE_ENV !== "production" ? 
-          window.open(`${window.location.origin}/modelAlgoManage?tab=model`):
-          window.open(`${window.location.origin}/modelAlgoManage.html?tab=model`)
+          this.$store.dispatch('window/createModalWindow');
           break;
         case "algo-manage": // 算法管理
-          this.$store.commit("drawer/changeActiveTab", "algo");
-          this.$store.commit("drawer/changeIsModelAlgoManage", true);
-          process.env.NODE_ENV !== "production" ? 
-          window.open(`${window.location.origin}/modelAlgoManage?tab=algo`):
-          window.open(`${window.location.origin}/modelAlgoManage.html?tab=algo`)
+          this.$store.dispatch('window/createAlgorithmWindow');
           break;
         case "help-rto":
           // window.open('https://xuelangyun.yuque.com/suanpan_doc/public');

@@ -155,7 +155,7 @@ export default {
     },
     dataList: function() {
       let data = new Array();
-      this.$store.state.ci.ciList.map(val => {
+      this.$store.state.ciList.map(val => {
         const { id, name, desc } = val;
         data.push({
           key: val.id,
@@ -166,24 +166,18 @@ export default {
       return data;
     },
     tableLoading: function() {
-      return this.$store.state.ci.loading;
+      return this.$store.state.loading;
     },
     formSpinning: function() {
-      return this.$store.state.ci.formSpinning;
+      return this.$store.state.formSpinning;
     },
   },
   watch: {
-    '$store.state.drawer.drawerVisible': function(drawerVisible) {
-      if (!drawerVisible) {
-        this.closeForm();
-      }
-    },
-    '$store.state.ci.currentCiDetail': function(detail) {
+    '$store.state.currentCiDetail': function(detail) {
       this.updateForm({ ...this.form, ...detail });
     },
-    '$store.state.ci.pagination': {
+    '$store.state.pagination': {
       handler(val) {
-        console.log("val:", val )
         this.pagination = val;
       },
       deep: true
@@ -230,7 +224,7 @@ export default {
   },
   methods: {
     changeTable(pagination) {
-      this.$store.commit('ci/updatePagination', pagination);
+      this.$store.commit('updatePagination', pagination);
       this.getList();
     },
     showForm() {
@@ -238,7 +232,7 @@ export default {
       this.formVisible = true;
     },
     closeForm() {
-      this.$store.commit('ci/updateCurrentCiDetail', {
+      this.$store.commit('updateCurrentCiDetail', {
         name: '',
         desc: '',
         prop: [],
@@ -250,12 +244,12 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           if (this.createNew) {
-            this.$store.dispatch('ci/createCi', {
+            this.$store.dispatch('createCi', {
               type: this.type,
               ...this.form
             });
           } else {
-            this.$store.dispatch('ci/updateCi', this.form);
+            this.$store.dispatch('updateCi', this.form);
           }
           this.closeForm();
         } else {
@@ -301,17 +295,17 @@ export default {
       }
     },
     deleteRow(record) {
-      this.$store.dispatch('ci/deleteCi', { id: record.key, type: this.type });
+      this.$store.dispatch('deleteCi', { id: record.key, type: this.type });
     },
     editorRow(record) {
-      this.$store.dispatch('ci/getCiDetail', { id: record.key });
+      this.$store.dispatch('getCiDetail', { id: record.key });
       this.createNew = false;
       this.formVisible = true;
     },
     getList() {
-      this.$store.dispatch('ci/getList', {
+      this.$store.dispatch('getList', {
         type: this.type,
-        pagination: this.$store.getters['ci/getPagination']
+        pagination: this.$store.getters['getPagination']
       });
     },
     updateForm(detail) {

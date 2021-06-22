@@ -19,14 +19,14 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch('ci/getList', {
+    this.$store.dispatch('getList', {
       type: this.getActiveTab,
-      pagination: this.$store.getters['ci/getPagination']
+      pagination: this.$store.getters['getPagination']
     });
   },
   computed: {
     getActiveTab: function () {
-      return this.$store.state.drawer.activeTab;
+      return this.$store.state.activeTab;
     }
   },
   methods: {

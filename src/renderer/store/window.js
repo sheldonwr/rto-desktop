@@ -21,6 +21,12 @@ export default {
     },
     closeWindow() {
       send('window-close');
+    },
+    createModalWindow() {
+      send('window-modal');
+    },
+    createAlgorithmWindow() {
+      send('window-algorithm');
     }
   }
 };

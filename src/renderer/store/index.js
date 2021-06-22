@@ -1,7 +1,6 @@
 import window from "./window";
 import view from "./view";
 import drawer from './drawer';
-import ci from './ci';
 import file from './file';
 import status from './status';
 import edit from './edit';
@@ -17,7 +16,6 @@ export default {
     window,
     view,
     drawer,
-    ci,
     file,
     status,
     edit,

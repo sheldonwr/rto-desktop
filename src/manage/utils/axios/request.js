@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { notification } from 'ant-design-vue';
 
+let queryString = window.location.search;
+let params = new URLSearchParams(queryString);
+let RtoOrigin = params.get("RtoOrigin");
+
 const service = axios.create({
-  baseURL: window.appConfig.RtoOrigin,
+  baseURL: RtoOrigin,
   timeout: 3 * 1000
 });
 

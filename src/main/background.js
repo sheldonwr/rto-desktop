@@ -5,7 +5,7 @@ import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "ele
 import path from "path";
 // import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { appInjectDev, appInjectProd, interceptUrl, appInjectModelAlgoManage } from "./appInject";
+import { appInjectDev, appInjectProd, interceptUrl } from "./appInject";
 import * as mainconfigs from "./mainconfig";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -58,19 +58,11 @@ async function createWindow() {
         width: 1024, 
         height:600, 
         y: '50%', 
-        x: '50%',
-        title: url.indexOf('modelAlgoManage') > -1 ? '工具': ''
+        x: '50%'
      });
       // Menu.setApplicationMenu(null)
       event.newGuest.setMenuBarVisibility(false);
       // event.newGuest.removeMenu();
-      if(url.indexOf('modelAlgoManage') > -1) {
-        if (isDevelopment) {
-          await appInjectModelAlgoManage();
-        }else {
-          appInjectProd();
-        }
-      }
       event.newGuest.loadURL(interceptUrl(url));
     }
   );

@@ -6,7 +6,6 @@ import Antd from 'ant-design-vue';
 import Vue from 'vue';
 import Vuex from "vuex";
 import App from './App.vue';
-import ModelAlgoManage from './components/ModelAlgoManage';
 import StatusApp from './StatusApp.vue'
 import store from "./store";
 import Loading from "components/Loading"
@@ -21,34 +20,10 @@ Vue.prototype.$loading = Loading;
 
 const storeInst = new Vuex.Store(store)
 
-const routes = {
-  '/': App,
-  '/index.html': App,
-  '/modelAlgoManage': ModelAlgoManage,
-  '/modelAlgoManage.html': ModelAlgoManage
-};
-
-if(['/modelAlgoManage', '/modelAlgoManage.html'].indexOf(window.location.pathname) > -1) {
-  let queryString = window.location.search;
-  let params = new URLSearchParams(queryString);
-  let tab = params.get("tab");
-  storeInst.commit('drawer/changeActiveTab', tab)
-}
-
 new Vue({
   store: storeInst,
-  data: {
-    currentRoute: window.location.pathname,
-  },
-  computed: {
-    ViewComponent () {
-      const matchingView = routes[this.currentRoute]
-      console.log(matchingView)
-      return matchingView;
-    }
-  },
   render (h) {
-    return h(this.ViewComponent)
+    return h(App)
   }
 }).$mount('.rto_header');
 
@@ -190,9 +165,6 @@ window.addEventListener('load', () => {
             let iframeUrl = url;
             if(url.startsWith('{{origin}}')) {
               iframeUrl = url.replace('{{origin}}', window.location.origin);
-              if(process.env.NODE_ENV == "production" && (iframeUrl.indexOf('modelAlgoManage.html') < 0)) {
-                iframeUrl = iframeUrl.replace('modelAlgoManage', "modelAlgoManage.html");
-              }
             }else {
               iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
                               .replace('{{userId}}', userId)
@@ -205,8 +177,18 @@ window.addEventListener('load', () => {
               active: storeInst.getters['status/isRunning'],
               function: () => {
                 storeInst.commit('drawer/changeMenuVisible', { visible: false });
-                storeInst.commit('drawer/changeIsModelAlgoManage', false);
-                window.open(iframeUrl);
+                if(iframeUrl.includes('modelAlgoManage')) {
+                  let url = new URL(iframeUrl);
+                  let params = new URLSearchParams(url.search);
+                  let tab = params.get("tab");
+                  if(tab == 'model') {
+                    storeInst.dispatch('window/createModalWindow');
+                  }else if(tab == 'algo') {
+                    storeInst.dispatch('window/createAlgorithmWindow');
+                  }
+                }else {
+                  window.open(iframeUrl);
+                }
               }
             });
           }
@@ -229,7 +211,6 @@ window.addEventListener('load', () => {
     if (data && data.length > 0 && data[0].hasOwnProperty('url')) {
       const { url } = data[0];
       if (url && url !== '') {
-        storeInst.commit('drawer/changeIsModelAlgoManage', false);
         window.open(`${appConfig.redirectRequest}${url.match(/\/proxr[\S]*/)}`);
       }
     }

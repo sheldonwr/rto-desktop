@@ -1,6 +1,5 @@
-import { getCiList, createCi, updateCi, getCiDetail, deleteCi } from "../api/ci";
+import { getCiList, createCi, updateCi, getCiDetail, deleteCi } from "./api";
 export default {
-	namespaced: true,
 	state: {
 		ciList: [],
 		pagination: {
@@ -11,6 +10,7 @@ export default {
 		currentCiDetail: {},
 		loading: false,
 		formSpinning: false,
+		activeTab: '',
 	},
 	getters: {
 		getPagination(state) {
@@ -39,6 +39,9 @@ export default {
 		updateSpinning(state, spinning) {
 			state.formSpinning = spinning;
 		},
+		changeActiveTab(state, type) {
+      state.activeTab = type;
+    },
 	},
 	actions: {
 		getList({ commit }, data) {
