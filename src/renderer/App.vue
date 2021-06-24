@@ -4,7 +4,7 @@
     <menu-view></menu-view>
     <tool-bar v-show="$store.state.view.toolbarVisible"></tool-bar>
     <drawer></drawer>
-    <wizard v-if="$store.state.view.wizardVisible"></wizard>
+    <!-- <wizard v-if="$store.state.view.wizardVisible"></wizard> -->
     <AppCreateForm
       v-if="createAppDialog"
       v-model="createAppDialog"
@@ -26,7 +26,6 @@ import TopHeader from "components/Header";
 import MenuView from "components/Menu/index";
 import ToolBar from "components/Toolbar";
 import Drawer from "components/Drawer";
-import Wizard from "components/Wizard";
 import AppCreateForm from "components/AppCreateForm";
 import DirCreateForm from "components/DirCreateForm";
 import AboutDialog from "components/AboutDialog";
@@ -42,7 +41,6 @@ export default {
     MenuView,
     ToolBar,
     Drawer,
-    Wizard,
     AppCreateForm,
     DirCreateForm,
     AboutDialog,
@@ -153,7 +151,10 @@ export default {
       }
     },
     keycutsHandler(event) {
-      // console.log("++++", event)
+      let targetTag = '';
+      if(event.target) {
+        targetTag = event.target.tagName;
+      }
       if (event.keyCode === 118) {
         // 'F7'
         if (
@@ -202,16 +203,19 @@ export default {
         );
       }else if(event.ctrlKey && (event.keyCode === 88)) {
         // 'ctrl+x'
-        this.$store.dispatch("edit/cutNode");
-      }else if(event.ctrlKey && (event.keyCode === 88)) {
-        // 'ctrl+x'
-        this.$store.dispatch("edit/cutNode");
+        if(targetTag != 'INPUT') {
+          this.$store.dispatch("edit/cutNode");
+        }
       }else if(event.ctrlKey && (event.keyCode === 67)) {
         // 'ctrl+c'
-        this.$store.dispatch("edit/copyNode");
+        if(targetTag != 'INPUT') {
+          this.$store.dispatch("edit/copyNode");
+        }
       }else if(event.ctrlKey && (event.keyCode === 86)) {
         // 'ctrl+v'
-        this.$store.dispatch("edit/pasteNode");
+        if(targetTag != 'INPUT') {
+          this.$store.dispatch("edit/pasteNode");
+        }
       }else if(event.ctrlKey && (event.keyCode === 78)) {
         // 'ctrl+n'
         this.$store.commit('view/createAppDialog', true);

@@ -1,5 +1,5 @@
 <template>
-  <div class="wizard-wrap" :style="{ height: wrapperHeight }">
+  <div class="wizard-wrap">
     <a-spin :spinning="showLoading && loading">
       <a-page-header title="项目列表">
         <template slot="extra">
@@ -27,14 +27,12 @@
       <div
         v-if="appList.length === 0"
         class="app-wrapper"
-        :style="{ height: treeWrapperHeight }"
       >
         <p>无项目</p>
       </div>
       <template v-else>
         <div
           class="app-wrapper clearfix"
-          :style="{ height: treeWrapperHeight }"
         >
           <div class="app-tree-wrapper">
             <a-tree
@@ -167,16 +165,6 @@ export default {
     bus.on("dir-create-success", this.fetchAppsLoading);
   },
   computed: {
-    wrapperHeight() {
-      return this.$store.state.view.statusVisible
-        ? "calc(100vh - 37px - 23px)"
-        : "calc(100vh - 37px)";
-    },
-    treeWrapperHeight() {
-      return this.$store.state.view.statusVisible
-        ? "calc(100vh - 37px - 65.5px - 23px)"
-        : "calc(100vh - 37px - 65.5px)";
-    },
     contextItems() {
       if (!this.contextItem) {
         return [];
@@ -408,7 +396,7 @@ export default {
 <style lang="scss">
 .app-wrapper {
   padding: 0 10px;
-  height: calc(100vh - 37px - 65.5px);
+  height: calc(100vh - 65.5px);
   .app-tree-wrapper {
     float: left;
     height: 100%;
@@ -448,11 +436,8 @@ export default {
 <style lang="scss" scoped>
 .wizard-wrap {
   width: 100%;
-  position: absolute;
-  top: 37px;
-  z-index: 999;
   background: #fff;
-  height: calc(100vh - 37px);
+  height: 100vh;
   .reload {
     position: relative;
     top: 2px;

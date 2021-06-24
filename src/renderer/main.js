@@ -11,6 +11,7 @@ import store from "./store";
 import Loading from "components/Loading"
 import { interval } from "utils/";
 import bus from "utils/bus";
+import { listernersInit } from 'listerners/'
 
 
 Vue.config.productionTip = false;
@@ -19,6 +20,7 @@ Vue.use(Antd);
 Vue.prototype.$loading = Loading;
 
 const storeInst = new Vuex.Store(store)
+listernersInit(storeInst)
 
 new Vue({
   store: storeInst,
@@ -288,4 +290,3 @@ storeInst.watch(
     }
   }
 );
-

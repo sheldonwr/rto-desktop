@@ -27,6 +27,9 @@ export default {
     },
     createAlgorithmWindow() {
       send('window-algorithm');
+    },
+    createWizardWindow() {
+      send('window-wizard');
     }
   }
 };

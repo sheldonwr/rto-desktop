@@ -14,6 +14,10 @@ module.exports = {
     manage: {
       entry: "src/manage/main.js",
       template: "public/manage.html"
+    },
+    wizard: {
+      entry: "src/wizard/main.js",
+      template: "public/wizard.html"
     }
   },
   pluginOptions: {

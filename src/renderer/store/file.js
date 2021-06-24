@@ -1,4 +1,4 @@
-import { invoke, gotoPredict } from "../services";
+import { invoke, gotoPredict } from "services/";
 import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp, getUserConfig, saveUserConfig, changeAppName } from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
 
@@ -154,6 +154,12 @@ export default {
         }
         // traverse predict dir
         let predictDirs = res[2].predictDirs;
+        for(let i = 0; i < predictDirs.length; i++) {
+          if(predictDirs[i].label === '分享给我的服务') {
+            predictDirs.splice(i, 1);
+            break;
+          }
+        }
         let predictQueue = [];
         let predictDirsMap = {};
         for(let i = 0; i < predictDirs.length; i++) {
@@ -163,7 +169,8 @@ export default {
             dir.key = `dir-${dir.id}`;
             dir.title = dir.label;
             dir.scopedSlots = {
-              icon: 'dir'
+              icon: 'dir',
+              title: 'dirTitle'
             }
             predictDirsMap[dir.id] = dir;
             if(dir.children && dir.children.length > 0) {
