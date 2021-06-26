@@ -28,6 +28,8 @@ export default {
     settingVisible: false,
     // 前端显示
     frontendVisible: false,
+    // 项目列表遮罩
+    coverVisible: true
   },
   mutations: {
     toolbarVisible(state, val) {
@@ -56,6 +58,9 @@ export default {
     },
     frontendVisible(state, val) {
       state.frontendVisible = val;
+    },
+    coverVisible(state, val) {
+      state.coverVisible = val;
     }
   },
   actions: {

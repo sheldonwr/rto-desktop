@@ -7,6 +7,7 @@ import Vue from 'vue';
 import Vuex from "vuex";
 import App from './App.vue';
 import StatusApp from './StatusApp.vue'
+import CoverApp from './CoverApp.vue'
 import store from "./store";
 import Loading from "components/Loading"
 import { interval } from "utils/";
@@ -20,7 +21,7 @@ Vue.use(Antd);
 Vue.prototype.$loading = Loading;
 
 const storeInst = new Vuex.Store(store)
-listernersInit(storeInst)
+listernersInit(storeInst, Vue)
 
 new Vue({
   store: storeInst,
@@ -34,180 +35,12 @@ new Vue({
   render: h => h(StatusApp),
 }).$mount('.rto_status');
 
-window.addEventListener('click', () => {
-  if (storeInst.state.drawer.menuInfo.visible) {
-    storeInst.commit('drawer/changeMenuVisible', { visible: false });
-  }
-});
+new Vue({
+  store: storeInst,
+  render: h => h(CoverApp),
+}).$mount('.rto_cover');
 
 window.addEventListener('load', () => {
-  // 画布右键菜单
-  window.SuanpanAPI.eventService.on('sp:app:contextmenu', (...data) => {
-    let url = new URL(window.location.href);
-    if(!url.pathname.startsWith('/web/service/predict')) {
-      return;
-    }
-    if(data.length > 1) {
-      const commonMenu = [{
-        key: 'setting',
-        name: '属性配置',
-        active: true,
-        function: () => {
-          storeInst.dispatch("view/showSettingPannel")
-        }
-      },{
-        key: 'cut',
-        name: '剪切',
-        active: false,
-        function: () => {
-          storeInst.dispatch("edit/cutNode");
-        }
-      }, {
-        key: 'copy',
-        name: '复制',
-        active: false,
-        function: () => {
-          storeInst.dispatch("edit/copyNode");
-        }
-      }, {
-        key: 'paste',
-        name: '粘贴',
-        active: !storeInst.getters["status/isRunning"],
-        function: () => {
-          storeInst.dispatch("edit/pasteNode");
-        }
-      }, {
-        key: 'delete',
-        name: '删除',
-        active: false,
-        function: () => {
-          Vue.prototype.$confirm({
-            title: `确定删除这个组件吗？`,
-            okText: "确定",
-            cancelText: "取消",
-            onOk: () => {
-              storeInst.dispatch("edit/deleteNode");
-            },
-            onCancel() {},
-          });
-        }
-      }];
-      let mouseEvent = data[1][0];
-      storeInst.commit('drawer/changeMenuVisible', {
-        visible: true,
-        location: { x: mouseEvent.clientX, y: mouseEvent.clientY},
-        detail: commonMenu
-      });
-    }
-  })
-
-  // 组件右键菜单
-  window.SuanpanAPI.eventService.on('sp:node:contextmenu', (event, options = []) => {
-    let url = new URL(window.location.href);
-    if(!url.pathname.startsWith('/web/service/predict')) {
-      return;
-    }
-    if (options.length > 0) {
-      const { item, itemKey } = options[0];
-      const commonMenu = [{
-        key: 'setting',
-        name: '属性配置',
-        active: true,
-        function: () => {
-          storeInst.dispatch("view/showSettingPannel", itemKey)
-        }
-      }, {
-        key: 'cut',
-        name: '剪切',
-        active: !storeInst.getters["status/isRunning"],
-        function: () => {
-          storeInst.dispatch("edit/cutNode");
-        }
-      }, {
-        key: 'copy',
-        name: '复制',
-        active: !storeInst.getters["status/isRunning"],
-        function: () => {
-          storeInst.dispatch("edit/copyNode");
-        }
-      }, {
-        key: 'paste',
-        name: '粘贴',
-        active: !storeInst.getters["status/isRunning"],
-        function: () => {
-          storeInst.dispatch("edit/pasteNode");
-        }
-      }, {
-        key: 'delete',
-        name: '删除',
-        active: !storeInst.getters["status/isRunning"],
-        function: () => {
-          Vue.prototype.$confirm({
-            title: `确定删除这个组件吗？`,
-            okText: "确定",
-            cancelText: "取消",
-            onOk: () => {
-              storeInst.dispatch("edit/deleteNode");
-            },
-            onCancel() {},
-          });
-        }
-      }];
-      storeInst.commit('edit/selectedNode', item);
-      let detail = [...commonMenu];
-      if (item && item.metadata && item.metadata.def) {
-        const { actionList } = item.metadata.def;
-        const { x, y, height, width } = document.getElementById(itemKey).getBoundingClientRect();
-        if (_.isEmpty(actionList) || actionList.length === 0) return;
-        actionList.map((action, index) => {
-          if (action.hasOwnProperty('url') && action.url) {
-            // const { url } = actionList[0];
-            const url = action.url;
-            const { appId, userId } = window.appConfig;
-            let iframeUrl = url;
-            if(url.startsWith('{{origin}}')) {
-              iframeUrl = url.replace('{{origin}}', window.location.origin);
-            }else {
-              iframeUrl = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
-                              .replace('{{userId}}', userId)
-                              .replace('{{appId}}', appId)
-                              .replace('{{nodeId}}', itemKey)    
-            }
-            detail.push({
-              key: `action${index}`, 
-              name: action.label || '操作页面',
-              active: storeInst.getters['status/isRunning'],
-              function: () => {
-                storeInst.commit('drawer/changeMenuVisible', { visible: false });
-                if(iframeUrl.includes('modelAlgoManage')) {
-                  let url = new URL(iframeUrl);
-                  let params = new URLSearchParams(url.search);
-                  let tab = params.get("tab");
-                  if(tab == 'model') {
-                    storeInst.dispatch('window/createModalWindow');
-                  }else if(tab == 'algo') {
-                    storeInst.dispatch('window/createAlgorithmWindow');
-                  }
-                }else {
-                  window.open(iframeUrl);
-                }
-              }
-            });
-          }
-        });
-        if (storeInst.state.drawer.menuInfo.visible) {
-          storeInst.commit('drawer/changeMenuVisible', { visible: false });
-        } else {
-          storeInst.commit('drawer/changeMenuVisible', {
-            visible: true,
-            location: { x: x + width, y: y + height / 2},
-            detail
-          });
-        }
-      }
-    }
-  });
-
   // 监听rto组件打开操作面板
   window.SuanpanAPI.eventService.on('rto:setting:params', (event, data) => {
     if (data && data.length > 0 && data[0].hasOwnProperty('url')) {
@@ -232,7 +65,7 @@ window.addEventListener('load', () => {
   interval(() => {
     storeInst.dispatch('status/getStatus')
   }, 1500);
-});
+})
 
 window.addEventListener('load', ()=> {
   let id = window.SuanpanAPI.eventService.on('sp:transition:success', (...data) => {

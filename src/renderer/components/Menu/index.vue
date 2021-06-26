@@ -116,14 +116,14 @@ export default {
           label: "视图",
           value: "view",
           items: [
-            {
-              label: "工具栏",
-              value: "view-tool",
-              disabled: false,
-              checkable: true,
-              checked: this.$store.state.view.toolbarVisible,
-              keycut: 'F3'
-            },
+            // {
+            //   label: "工具栏",
+            //   value: "view-tool",
+            //   disabled: false,
+            //   checkable: true,
+            //   checked: this.$store.state.view.toolbarVisible,
+            //   keycut: 'F3'
+            // },
             {
               label: "状态栏",
               value: "view-status",

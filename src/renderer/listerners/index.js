@@ -1,6 +1,13 @@
 import { send } from "services/"
+import { rightClickMenuInit } from './rightClickMenu'
 
-export function listernersInit(store) {
+export function listernersInit(store, Vue) {
+  rightClickMenuInit(store, Vue)
+
+  window.addEventListener('load', () => {
+    store.dispatch('window/createWizardWindow');
+  })
+
   window.ipcRenderer.on('wizard-app-list', function (evt, channel) {
     store
     .dispatch("file/list")
@@ -37,6 +44,7 @@ export function listernersInit(store) {
 
   window.ipcRenderer.on('wizard-app-enter', function(evt, app) {
     store.dispatch("file/enterApp", app);
+    store.commit('view/coverVisible', false);
   });
 
   window.ipcRenderer.on('wizard-app-create', function(evt, channel, app) {
