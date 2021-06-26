@@ -130,7 +130,6 @@ export default {
             id: null,
             name: ''
           })
-          this.commit("view/wizardClosable", false);
         }
         commit('recentOpenedAppsDelete', app.id);
       }).catch( err => {

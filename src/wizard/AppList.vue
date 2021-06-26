@@ -4,9 +4,23 @@
       <div class="tree-wrap">
         <div class="tree-actions">
           <img
+            class="action"
             title="刷新"
             :src="require('@/wizard/assets/img/refresh.png')"
             @click="fetchApps"
+          />
+          <div class="spacing"></div>
+          <img
+            class="action"
+            title="新建文件夹"
+            :src="require('@/wizard/assets/img/folder_add.png')"
+            @click="createDir(selectItem)"
+          />
+          <img
+            class="action"
+            title="新建项目"
+            :src="require('@/wizard/assets/img/app_add.png')"
+            @click="createApp(selectItem)"
           />
         </div>
         <div class="tree-list">
@@ -19,22 +33,28 @@
                 showIcon
                 :treeData="appList"
                 @rightClick="rightClickHandler"
+                @select="selectHandler"
                 :defaultExpandedKeys="['dir-2']"
               >
                 <template slot="dir" slot-scope="item">
-                  <a-icon
-                    :type="item.expanded ? 'folder-open' : 'folder'"
-                    theme="filled"
-                    :style="{ fontSize: '20px', color: '#ffca28' }"
+                  <img
+                    class="tree-icon"
+                    :src="
+                      item.expanded
+                        ? require('@/wizard/assets/img/folder_open.png')
+                        : require('@/wizard/assets/img/folder.png')
+                    "
                   />
                 </template>
                 <template slot="app" slot-scope="item">
-                  <span
-                    class="rto_iconfont icon-recycle"
-                    :style="{
-                      color: item.status === 'Running' ? '#52c41a' : '#d9d9d9',
-                    }"
-                  ></span>
+                  <img
+                    class="tree-icon tree-icon-app"
+                    :src="
+                      item.status === 'Running'
+                        ? require('@/wizard/assets/img/app_active.png')
+                        : require('@/wizard/assets/img/app.png')
+                    "
+                  />
                 </template>
                 <template slot="appTitle" slot-scope="item">
                   <span class="app-title-wrapper" @dblclick="enterApp(item)">
@@ -62,7 +82,7 @@
                     class="new-app-edit"
                     type="text"
                     v-model="newDirName"
-                    @blur="createDirHandler"
+                    @blur="createDirHandler()"
                     @focus="clearTimer"
                   />
                 </template>
@@ -92,7 +112,13 @@
         </div>
       </div>
       <div class="table-wrap">
-        <RunningList :data="runningAppList"></RunningList>
+        <RunningList :data="runningAppList" @select-app="selectApp"></RunningList>
+      </div>
+    </div>
+    <div class="footer-wrap clearfix">
+      <div class="actions">
+        <button class="action open" @click="openApp">打开</button>
+        <button class="action cancel" @click="cancel">取消</button>
       </div>
     </div>
     <context-menu ref="ctxMenu" v-show="contextItems.length > 0">
@@ -111,7 +137,7 @@
 <script>
 import RunningList from "./RunningList.vue";
 
-import { interval, deepCopy } from "utils/";
+import { interval } from "./utils";
 import {
   getApplist,
   getRunningList,
@@ -124,6 +150,7 @@ import {
   renameDir,
   createDir,
   deleteDir,
+  close,
 } from "./service";
 import contextMenu from "vue-context-menu";
 
@@ -139,6 +166,8 @@ export default {
       runningAppList: [],
       refreshInterval: 5000,
       contextItem: null,
+      selectItem: null,
+      currentItem: null,
       newAppName: "",
       renameAppName: "",
       newDirName: "",
@@ -163,7 +192,7 @@ export default {
           {
             label: "进入",
             onclick: () => {
-              enterApp(this.contextItem.dataRef);
+              this.enterApp(this.contextItem);
             },
           },
           {
@@ -200,13 +229,13 @@ export default {
             {
               label: "新建项目",
               onclick: () => {
-                this.createApp();
+                this.createApp(this.contextItem);
               },
             },
             {
               label: "新建文件夹",
               onclick: () => {
-                this.createDir();
+                this.createDir(this.contextItem);
               },
             },
           ];
@@ -221,13 +250,13 @@ export default {
             {
               label: "新建项目",
               onclick: () => {
-                this.createApp();
+                this.createApp(this.contextItem);
               },
             },
             {
               label: "新建文件夹",
               onclick: () => {
-                this.createDir();
+                this.createDir(this.contextItem);
               },
             },
             {
@@ -242,15 +271,15 @@ export default {
     },
   },
   methods: {
-    fetchApps(showLoading=true) {
-      if(showLoading) {
+    fetchApps(showLoading = true) {
+      if (showLoading) {
         this.showLoading = true;
       }
       getApplist().then((res) => {
         if (res.error) {
           console.error(res.error);
         } else {
-          if(this.refreshTimer && this.refreshTimer.isPaused()) {
+          if (this.refreshTimer && this.refreshTimer.isPaused()) {
             return;
           }
           this.appList = res.data;
@@ -272,13 +301,24 @@ export default {
         this.$refs.ctxMenu.open(event);
       }
     },
-    createApp() {
-      if (!this.contextItem.expanded) {
-        this.contextItem.onExpand(true);
+    selectHandler(selectedKeys, { selected, node }) {
+      if (selected) {
+        this.selectItem = node;
+      } else {
+        this.selectItem = null;
       }
+    },
+    createApp(item) {
+      if (!item || !item.dataRef.folder) {
+        return;
+      }
+      if (!item.expanded) {
+        item.onExpand(true);
+      }
+      this.currentItem = item;
       this.newAppName = "";
       let newItemId = Date.now();
-      this.contextItem.dataRef.children.unshift({
+      item.dataRef.children.unshift({
         id: newItemId,
         key: `app-${newItemId}`,
         isLeaf: true,
@@ -294,7 +334,7 @@ export default {
         this.showLoading = true;
         createApp({
           name: this.newAppName,
-          dir: this.contextItem.dataRef.id,
+          dir: this.currentItem.dataRef.id,
         }).then((res) => {
           this.showLoading = false;
           if (res.error) {
@@ -310,17 +350,21 @@ export default {
             this.fetchApps();
           }
         });
-      }else {
+      } else {
         this.fetchApps();
       }
     },
-    createDir() {
-      if (!this.contextItem.expanded) {
-        this.contextItem.onExpand(true);
+    createDir(item) {
+      if (!item || !item.dataRef.folder) {
+        return;
+      }
+      this.currentItem = item;
+      if (!item.expanded) {
+        item.onExpand(true);
       }
       this.newDirName = "";
       let newItemId = Date.now();
-      this.contextItem.dataRef.children.unshift({
+      item.dataRef.children.unshift({
         id: newItemId,
         key: `dir-${newItemId}`,
         scopedSlots: {
@@ -335,7 +379,7 @@ export default {
         this.showLoading = true;
         createDir({
           name: this.newDirName,
-          dir: this.contextItem.dataRef.id,
+          dir: this.currentItem.dataRef.id,
         }).then((res) => {
           if (res.error) {
             this.showLoading = false;
@@ -350,10 +394,10 @@ export default {
             });
             setTimeout(() => {
               this.fetchApps();
-            }, 500);
+            }, 1000);
           }
         });
-      }else {
+      } else {
         this.fetchApps();
       }
     },
@@ -382,7 +426,7 @@ export default {
             this.fetchApps();
           }
         });
-      }else {
+      } else {
         this.fetchApps();
       }
     },
@@ -470,10 +514,10 @@ export default {
             });
             setTimeout(() => {
               this.fetchApps();
-            }, 500);
+            }, 1000);
           }
         });
-      }else {
+      } else {
         this.fetchApps();
       }
     },
@@ -505,14 +549,15 @@ export default {
           // collect dirIds, appIds
           let itemQueue = [];
           itemQueue.push(dirData);
-          let dirIds = [], appIds = [];
+          let dirIds = [],
+            appIds = [];
           while (true) {
             let item = itemQueue.shift();
             let key = item.key;
-            let keys = key.split('-');
-            if(keys[0] === 'app') {
-              appIds.push(keys[1])
-            }else if(keys[0] === 'dir') {
+            let keys = key.split("-");
+            if (keys[0] === "app") {
+              appIds.push(keys[1]);
+            } else if (keys[0] === "dir") {
               dirIds.push(keys[1]);
             }
             if (item.children && item.children.length > 0) {
@@ -539,7 +584,7 @@ export default {
               });
               setTimeout(() => {
                 this.fetchApps();
-              }, 500);
+              }, 1000);
             }
           });
         },
@@ -547,16 +592,30 @@ export default {
       });
     },
     clearTimer() {
-      if(this.refreshTimer) {
+      if (this.refreshTimer) {
         this.refreshTimer.clear();
         this.refreshTimer = null;
       }
     },
     startTimer() {
-      if(this.refreshTimer) {
+      if (this.refreshTimer) {
         this.refreshTimer.clear();
       }
-      this.refreshTimer = interval(() => this.fetchApps(false), this.refreshInterval);
+      this.refreshTimer = interval(
+        () => this.fetchApps(false),
+        this.refreshInterval
+      );
+    },
+    openApp() {
+      if (this.selectItem && !this.selectItem.dataRef.folder) {
+        this.enterApp(this.selectItem);
+      }
+    },
+    cancel() {
+      close();
+    },
+    selectApp(app) {
+      enterApp(app);
     }
   },
 };
@@ -569,6 +628,35 @@ export default {
 .ant-tree-child-tree > li:first-child {
   padding: 0;
 }
+.ant-tree li .ant-tree-node-content-wrapper {
+  padding: 0;
+}
+.ctx-menu {
+  padding: 0;
+  background: #fff;
+  border: 1px solid rgba(112, 112, 112, 0.3);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+  .wizard-menu-item {
+    line-height: 32px;
+    padding: 0 16px;
+    cursor: pointer;
+    min-width: 120px;
+    &:hover {
+      background: #b8dcfd;
+    }
+  }
+}
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  padding: 8px 16px;
+}
+.ant-table-thead > tr > th {
+  background: #ebf4fd;
+}
+.ant-tree li .ant-tree-node-content-wrapper:hover,
+.ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected {
+  background: #b8dcfd;
+}
 </style>
 
 <style lang="scss">
@@ -578,6 +666,7 @@ export default {
   box-sizing: border-box;
   user-select: none;
   -webkit-user-drag: none;
+  cursor: auto !important;
 }
 .clearfix:after {
   visibility: hidden;
@@ -590,7 +679,7 @@ export default {
   height: 100vh;
   background: #f5faff;
   .container {
-    height: calc(100vh - 50px);
+    height: calc(100vh - 65px);
     padding: 16px 10px 0 10px;
     .tree-wrap {
       float: left;
@@ -604,9 +693,13 @@ export default {
         background: #ebf4fd;
         display: flex;
         align-items: center;
-        padding: 0 5px;
+        padding-right: 8px;
         img {
           height: 15px;
+          margin-left: 8px;
+        }
+        .spacing {
+          flex: 10;
         }
       }
       .tree-list {
@@ -620,6 +713,8 @@ export default {
       height: 100%;
       width: 75%;
       border: 1px solid rgba(91, 91, 91, 0.5);
+      background: #fff;
+      overflow: auto;
     }
   }
 }
@@ -642,6 +737,34 @@ export default {
   width: calc(100% - 20px);
   &:focus {
     border: 1px solid #1890ff;
+  }
+}
+.footer-wrap {
+  margin: 20px 10px;
+  .actions {
+    float: right;
+    .action {
+      border: 1px solid rgba(69, 112, 253, 0.3);
+      background: #d2e2f1;
+      border-radius: 3px;
+      padding: 0 16px;
+      margin-left: 16px;
+      color: #1f1f1f;
+      outline: 0;
+      &:hover {
+        background: #cbdbef;
+      }
+    }
+  }
+}
+.tree-list {
+  .tree-icon {
+    height: 16px;
+    margin-bottom: 5px;
+  }
+  .tree-icon-app {
+    height: 14px;
+    margin-bottom: 4px;
   }
 }
 </style>

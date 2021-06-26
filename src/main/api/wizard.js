@@ -15,6 +15,7 @@ ipcMain.handle("wizard-app-delete", wizardAppDelete);
 ipcMain.handle("wizard-dir-rename", wizardDirRename);
 ipcMain.handle("wizard-dir-create", wizardDirCreate);
 ipcMain.handle("wizard-dir-delete", wizardDirDelete);
+ipcMain.on("wizard-close", wizardClose);
 
 function createWizardWindow(event) {
   let parentWindow = BrowserWindow.fromWebContents(event.sender);
@@ -156,4 +157,10 @@ function wizardDirDelete(event, dirIds, appIds) {
       resolve(res);
     });
   })
+}
+
+function wizardClose(event) {
+  let chidWin = BrowserWindow.fromWebContents(event.sender);
+  chidWin.destroy();
+  chidWin = null;
 }

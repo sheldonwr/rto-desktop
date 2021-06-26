@@ -219,8 +219,6 @@ export default {
       } else if (id === "view-about") {
         this.$store.commit("view/aboutVisible", true);
       } else if (id === "view-app") {
-        // this.$store.commit("view/logPanelVisible", false);
-        // this.$store.commit("view/wizardVisible", true);
         this.$store.dispatch('window/createWizardWindow');
       } else if (id === "component-success") {
         this.$store.dispatch("file/gotoCurrentPredict");

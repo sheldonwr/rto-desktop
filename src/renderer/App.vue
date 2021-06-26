@@ -4,15 +4,10 @@
     <menu-view></menu-view>
     <tool-bar v-show="$store.state.view.toolbarVisible"></tool-bar>
     <drawer></drawer>
-    <!-- <wizard v-if="$store.state.view.wizardVisible"></wizard> -->
     <AppCreateForm
       v-if="createAppDialog"
       v-model="createAppDialog"
     ></AppCreateForm>
-    <DirCreateForm
-      v-if="createDirDialog"
-      v-model="createDirDialog"
-    ></DirCreateForm>
     <AboutDialog v-if="aboutVisible" v-model="aboutVisible"></AboutDialog>
     <HelpDialog v-if="helpVisible" v-model="helpVisible"></HelpDialog>
     <SettingDialog v-show="settingVisible" v-model="settingVisible"></SettingDialog>
@@ -27,7 +22,6 @@ import MenuView from "components/Menu/index";
 import ToolBar from "components/Toolbar";
 import Drawer from "components/Drawer";
 import AppCreateForm from "components/AppCreateForm";
-import DirCreateForm from "components/DirCreateForm";
 import AboutDialog from "components/AboutDialog";
 import HelpDialog from "components/HelpDialog";
 import SettingDialog from "components/SettingDialog";
@@ -42,7 +36,6 @@ export default {
     ToolBar,
     Drawer,
     AppCreateForm,
-    DirCreateForm,
     AboutDialog,
     HelpDialog,
     LogView,
@@ -64,14 +57,6 @@ export default {
       },
       set(val) {
         this.$store.commit("view/createAppDialog", val);
-      },
-    },
-    createDirDialog: {
-      get() {
-        return this.$store.state.view.createDirDialog;
-      },
-      set(val) {
-        this.$store.commit("view/createDirDialog", val);
       },
     },
     aboutVisible: {
@@ -157,15 +142,7 @@ export default {
       }
       if (event.keyCode === 118) {
         // 'F7'
-        if (
-          this.$store.state.view.wizardVisible &&
-          this.$store.state.view.wizardClosable
-        ) {
-          this.$store.commit("view/wizardVisible", false);
-        } else if (!this.$store.state.view.wizardVisible) {
-          this.$store.commit("view/logPanelVisible", false);
-          this.$store.commit("view/wizardVisible", true);
-        }
+        this.$store.dispatch('window/createWizardWindow');
       }else if(event.keyCode === 121) {
         // f10
         // window.open('https://xuelangyun.yuque.com/suanpan_doc/public');

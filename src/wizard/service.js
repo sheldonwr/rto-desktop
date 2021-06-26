@@ -1,5 +1,10 @@
-import { send, invoke } from 'services/'
+export function send(type, ...args) {
+  window.ipcRenderer.send(type, ...args);
+}
 
+export function invoke(type, ...args) {
+  return window.ipcRenderer.invoke(type, ...args);
+}
 export function getApplist() {
   return invoke('wizard-app-list')
 }
@@ -42,4 +47,8 @@ export function createDir(dir) {
 
 export function deleteDir(dirIds, appIds) {
   return invoke('wizard-dir-delete', dirIds, appIds)
+}
+
+export function close() {
+  return send('wizard-close')
 }

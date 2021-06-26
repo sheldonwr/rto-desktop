@@ -388,8 +388,6 @@ export default {
         case "file-close":
           // 关闭
           this.$store.commit('file/currentApp', {id:null, name:''});
-          this.$store.commit('view/wizardClosable', false);
-          this.$store.commit("view/wizardVisible", true);
           break;
         case "file-terminate":
           bus.emit("file-terminate");
@@ -432,8 +430,7 @@ export default {
           this.$store.commit("view/frontendVisible", true);
           break;
         case "view-app":
-          this.$store.commit("view/logPanelVisible", false);
-          this.$store.commit("view/wizardVisible", true);
+          this.$store.dispatch('window/createWizardWindow');
           break;
         case "view-tool":
           this.$store.commit(
