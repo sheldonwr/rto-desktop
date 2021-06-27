@@ -34,6 +34,14 @@ export default {
 };
 </script>
 <style>
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: auto !important;
+}
 .card-content {
   background: #f0f3f8;
   overflow: auto;

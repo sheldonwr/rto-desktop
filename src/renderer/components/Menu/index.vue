@@ -134,7 +134,7 @@ export default {
               keycut: 'F4'
             },
             {
-              label: "项目列表",
+              label: "项目",
               value: "view-app",
               disabled: false,
               checkable: true,

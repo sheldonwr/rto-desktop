@@ -9,7 +9,7 @@
         @mouseout="mouseoutHandler"
       >
         <img :src="require('assets/img/toolbar/list.png')" />
-        <span>项目列表</span>
+        <span>项目</span>
       </div>
       <div
         class="toolbar-icon"

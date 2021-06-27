@@ -117,6 +117,14 @@ export default {
 </script>
 
 <style lang="scss">
+*, *::after, *::before {
+  box-sizing: border-box;
+  // margin: 0;
+  // padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: auto !important;
+}
 .drag {
   -webkit-app-region: drag;
 }
