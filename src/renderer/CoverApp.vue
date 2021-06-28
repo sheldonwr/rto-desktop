@@ -17,7 +17,7 @@ export default {
 <style lang="scss">
 .rto_cover {
   position: absolute;
-  z-index: 9999;
+  z-index: 999;
   box-sizing: border-box;
   background: #F5FAFF;
   width: 100vw;

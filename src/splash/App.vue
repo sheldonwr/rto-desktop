@@ -196,5 +196,7 @@ export default {
   width: 200px; 
   background: rgb(0, 93, 151) !important;
   margin-top: 20px;
+  outline: 0 !important;
+  border: 0 !important;
 }
 </style>
