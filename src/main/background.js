@@ -64,6 +64,15 @@ async function createWindow() {
       event.newGuest.setMenuBarVisibility(false);
       // event.newGuest.removeMenu();
       event.newGuest.loadURL(interceptUrl(url));
+
+      event.newGuest.webContents.on("new-window", async (event, url, options) => {
+        event.preventDefault();
+        event.newGuest = new BrowserWindow({ 
+          ...options
+        });
+        event.newGuest.setMenuBarVisibility(false);
+        event.newGuest.loadURL(url);
+      })
     }
   );
 
