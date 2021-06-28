@@ -341,10 +341,12 @@ export default {
   },
   methods: {
     menuClickHandler(menuItem) {
-      this.openedMenu = menuItem.value;
+      if(!this.$store.state.view.coverVisible) {
+        this.openedMenu = menuItem.value;
+      }
     },
     menuMouseenterHandler(menuItem) {
-      if (this.openedMenu) {
+      if (!this.$store.state.view.coverVisible && this.openedMenu) {
         this.openedMenu = menuItem.value;
       }
     },

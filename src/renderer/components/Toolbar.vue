@@ -121,7 +121,7 @@
       </div>
       <div class="separator"></div>
       <div
-        v-if="isComponentEdit"
+        v-if="!$store.state.view.coverVisible && isComponentEdit"
         class="toolbar-icon deploy-running"
         title="完成"
         @click="clickHandler('component-success')"
@@ -135,7 +135,7 @@
         <span>完成</span>
       </div>
       <div
-        v-else
+        v-if="!$store.state.view.coverVisible && !isComponentEdit"
         class="toolbar-icon"
         :class="[
           isReadonly
