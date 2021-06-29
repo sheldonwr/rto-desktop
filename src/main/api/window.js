@@ -62,7 +62,11 @@ function closeWindow(event) {
 
 function createToolWindow(event, tab) {
   let parentWindow = BrowserWindow.fromWebContents(event.sender);
-  const child = new BrowserWindow({ parent: parentWindow, modal: true, title: '工具' });
+  const child = new BrowserWindow({ 
+    parent: parentWindow, 
+    modal: true, 
+    title: '工具'
+  });
   child.setMenuBarVisibility(false);
   const search = `?tab=${tab}&RtoOrigin=${appConfig.RtoOrigin}`;
   if (process.env.WEBPACK_DEV_SERVER_URL) {

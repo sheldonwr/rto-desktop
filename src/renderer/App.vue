@@ -44,6 +44,7 @@ export default {
   },
   mounted() {
     this.updateAppHeight();
+    this.$store.dispatch("window/getMaximizedState");
     window.addEventListener("resize", () => {
       this.$store.dispatch("window/getMaximizedState");
     });

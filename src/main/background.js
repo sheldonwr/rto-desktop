@@ -35,7 +35,7 @@ async function createWindow() {
       webSecurity: false,
     },
   });
-
+  win.maximize();
   win.once('ready-to-show', () => {
     splashWin.destroy();
     splashWin = null;
@@ -56,9 +56,7 @@ async function createWindow() {
       event.newGuest = new BrowserWindow({ 
         ...options, 
         width: 1024, 
-        height:600, 
-        y: '50%', 
-        x: '50%'
+        height:600,
      });
       // Menu.setApplicationMenu(null)
       event.newGuest.setMenuBarVisibility(false);
@@ -68,7 +66,9 @@ async function createWindow() {
       event.newGuest.webContents.on("new-window", async (event, url, options) => {
         event.preventDefault();
         event.newGuest = new BrowserWindow({ 
-          ...options
+          ...options,
+          y: '50%', 
+          x: '50%'
         });
         event.newGuest.setMenuBarVisibility(false);
         event.newGuest.loadURL(url);
