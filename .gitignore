@@ -26,3 +26,6 @@ pnpm-debug.log*
 /dist_electron
 
 /logDir
+
+/server
+.conf/
