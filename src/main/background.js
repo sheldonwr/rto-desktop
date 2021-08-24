@@ -109,6 +109,7 @@ function createSplashWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, "preload.js"),
       webSecurity: false,
+      contextIsolation: false,
     },
   });
   if (process.env.WEBPACK_DEV_SERVER_URL) {
