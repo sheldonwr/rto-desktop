@@ -3,10 +3,12 @@
 import "./api/";
 import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "electron";
 import path from "path";
+import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { appInjectDev, appInjectProd, interceptUrl } from "./appInject";
 import * as mainconfigs from "./mainconfig";
-import { findPort, launchSuanpanServer, checkServerSuccess, killSuanpanServer } from "./suanpan";
+import { findPort, launchSuanpanServer, checkServerSuccess, killSuanpanServer, getWebOrigin } from "./suanpan";
 import logger from './log'
+import { getAppConfig } from './api/config'
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -202,6 +204,7 @@ app.on("will-quit", async (event) => {
     try {
       await launchSuanpanServer();
       await checkServerSuccess(port);
+      await getAppConfig(getWebOrigin());
       if (isDevelopment) {
         await appInjectDev();
       }
