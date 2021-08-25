@@ -193,11 +193,11 @@ app.on("will-quit", async (event) => {
      let port = findPort();
     try {
       await launchSuanpanServer();
-      // await checkServerSuccess(port);
-      // if (isDevelopment) {
-      //   await appInjectDev();
-      // }
-      //  createWindow();
+      await checkServerSuccess(port);
+      if (isDevelopment) {
+        await appInjectDev();
+      }
+       createWindow();
     } catch (e) {
      logger.error(`launch failed ${e.message}\n${e.stack}`);
      process.exit(-1);

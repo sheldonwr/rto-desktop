@@ -9,7 +9,7 @@ export function getAppConfig(orgin) {
       (rawData) => {
         let obj = JSON.parse(rawData).data;
         let RtoOrigin = orgin;
-        appConfig = Object.assign(
+        Object.assign(appConfig,
           {
             ...obj,
             oss: {
@@ -28,9 +28,9 @@ export function getAppConfig(orgin) {
         appConfig.appMenu = JSON.parse(appConfig.appMenu);
         appConfig.services = JSON.parse(appConfig.services);
         appConfig.RtoOrigin = RtoOrigin;
-        appConfig.nodeCopyDir = JSON.parse(appConfig.nodeCopyDir);
-        appConfig.detachable = JSON.parse(appConfig.detachable);
-        appConfig.detachable.appRight = false;
+        if(appConfig.nodeCopyDir) {
+          appConfig.nodeCopyDir = JSON.parse(appConfig.nodeCopyDir);
+        }
         appConfig.socketProtocol = 'http:';
 
         resolve(appConfig);

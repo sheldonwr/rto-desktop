@@ -3,14 +3,15 @@ import http from "http";
 import { parse } from "node-html-parser";
 import fs from "fs";
 import path from "path";
-import { appConfig } from "./api/config"
+import { appConfig, getAppConfig } from "./api/config"
+import { getWebOrigin } from "./suanpan";
 
 export async function appInjectDev() {
   protocol.interceptStringProtocol("http", async (request, callback) => {
     protocol.uninterceptProtocol("http");
     let url = new URL(request.url);
     let htmlStr = await getHtmlString(url.href);
-    await getAppConfig();
+    await getAppConfig(getWebOrigin());
     callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, appConfig) });
   });
   interceptProxyUrl();

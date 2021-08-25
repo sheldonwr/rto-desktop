@@ -36,7 +36,8 @@ export function copyApp(appid, name) {
  * Metrics
  */
 export function getMetricsList() {
-  return window.SuanpanAPI.appService.getMetricsList('service');
+  // return window.SuanpanAPI.appService.getMetricsList('service');
+  return Promise.resolve([]);
 }
 
 /**
