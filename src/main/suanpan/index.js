@@ -136,7 +136,7 @@ export async function isServerRunning() {
 
 export async function checkServerSuccess(port) {
   return new Promise((resolve, reject) => {
-    const queryInterval = 3000;
+    const queryInterval = 2000;
     let tryCount = 5;
     let qs = () => {
       const req = http.request(getWebOrigin(), {
