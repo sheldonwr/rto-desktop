@@ -7,9 +7,9 @@ module.exports = {
       entry: "src/renderer/main.js",
       template: "public/editor.html"
     },
-    splash: {
-      entry: "src/splash/main.js",
-      template: "public/splash.html"
+    loading: {
+      entry: "src/loading/main.js",
+      template: "public/loading.html"
     },
     manage: {
       entry: "src/manage/main.js",

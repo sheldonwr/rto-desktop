@@ -1,8 +1,8 @@
 import { app } from 'electron'
 import path from 'path'
-const log4js = require('log4js');
+import log4js from 'log4js'
 
-const logFileDir = process.env.NODE_ENV !== 'production' ? './logDir' : path.join(app.getPath('userData'), './logDir')
+const logFileDir = process.env.NODE_ENV !== 'production' ? './logDir' : path.join(app.getAppPath(), '../../logDir')
 
 log4js.configure({
   appenders: {

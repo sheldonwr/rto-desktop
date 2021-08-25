@@ -1,0 +1,98 @@
+[2021-08-25T11:32:08.316] [INFO] default - current server port: 7000
+[2021-08-25T11:32:08.319] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:32:08.320] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:32:08.320] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:32:08.696] [INFO] default - server spawn
+[2021-08-25T11:32:37.941] [INFO] default - current server port: 7000
+[2021-08-25T11:32:38.143] [INFO] default - launch Suanpan Sever as not found server process with pid:  9712
+[2021-08-25T11:32:38.144] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:32:38.144] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:32:38.145] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:32:38.161] [INFO] default - server spawn
+[2021-08-25T11:32:43.229] [ERROR] default - launch failed undefined
+undefined
+[2021-08-25T11:33:07.875] [INFO] default - current server port: 7000
+[2021-08-25T11:33:07.940] [INFO] default - launch Suanpan Sever as not found server process with pid:  15220
+[2021-08-25T11:33:07.940] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:33:07.940] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:33:07.941] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:33:07.954] [INFO] default - server spawn
+[2021-08-25T11:33:13.019] [ERROR] default - launch failed undefined
+undefined
+[2021-08-25T11:34:19.244] [INFO] default - current server port: 7000
+[2021-08-25T11:34:19.307] [INFO] default - launch Suanpan Sever as not found server process with pid:  13624
+[2021-08-25T11:34:19.307] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:34:19.307] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:34:19.308] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:34:19.318] [INFO] default - server spawn
+[2021-08-25T11:34:24.377] [ERROR] default - launch failed undefined
+undefined
+[2021-08-25T11:34:50.831] [INFO] default - current server port: 7000
+[2021-08-25T11:34:50.894] [INFO] default - launch Suanpan Sever as not found server process with pid:  14784
+[2021-08-25T11:34:50.894] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:34:50.894] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:34:50.895] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:34:50.904] [INFO] default - server spawn
+[2021-08-25T11:34:55.969] [ERROR] default - launch failed undefined
+undefined
+[2021-08-25T11:35:59.247] [INFO] default - current server port: 7000
+[2021-08-25T11:35:59.306] [INFO] default - launch Suanpan Sever as not found server process with pid:  22212
+[2021-08-25T11:35:59.307] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:35:59.307] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:35:59.307] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:35:59.319] [INFO] default - server spawn
+[2021-08-25T11:48:09.807] [INFO] default - current server port: 7000
+[2021-08-25T11:48:09.939] [INFO] default - launch Suanpan Sever as not found server process with pid:  12916
+[2021-08-25T11:48:09.940] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:48:09.940] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:48:09.941] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:48:09.957] [INFO] default - server spawn
+[2021-08-25T11:55:05.976] [INFO] default - current server port: 7000
+[2021-08-25T11:55:06.043] [INFO] default - launch Suanpan Sever as not found server process with pid:  21372
+[2021-08-25T11:55:06.044] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T11:55:06.044] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T11:55:06.045] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T11:55:06.063] [INFO] default - server spawn
+[2021-08-25T12:34:36.108] [INFO] default - current server port: 7000
+[2021-08-25T12:34:36.194] [INFO] default - launch Suanpan Sever as not found server process with pid:  22172
+[2021-08-25T12:34:36.195] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T12:34:36.195] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T12:34:36.196] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T12:34:36.212] [INFO] default - server spawn
+[2021-08-25T12:41:29.367] [INFO] default - current server port: 7000
+[2021-08-25T12:41:29.438] [INFO] default - launch Suanpan Sever as not found server process with pid:  22656
+[2021-08-25T12:41:29.439] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T12:41:29.439] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T12:41:29.440] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\snapshot\\suanpan\\config\\default.js,C:\\snapshot\\suanpan\\config\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T12:41:29.450] [INFO] default - server spawn
+[2021-08-25T12:42:05.513] [INFO] default - current server port: 7000
+[2021-08-25T12:42:05.581] [INFO] default - launch Suanpan Sever as not found server process with pid:  16640
+[2021-08-25T12:42:05.581] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T12:42:05.581] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T12:42:05.582] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T12:42:05.596] [INFO] default - server spawn
+[2021-08-25T12:49:42.028] [INFO] default - current server port: 7000
+[2021-08-25T12:49:42.100] [INFO] default - launch Suanpan Sever as not found server process with pid:  20332
+[2021-08-25T12:49:42.100] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T12:49:42.100] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T12:49:42.101] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","USER_ID":"shanglu","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T12:49:42.121] [INFO] default - server spawn
+[2021-08-25T12:51:19.601] [INFO] default - current server port: 7000
+[2021-08-25T12:51:19.667] [INFO] default - launch Suanpan Sever as not found server process with pid:  16508
+[2021-08-25T12:51:19.668] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T12:51:19.668] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T12:51:19.669] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","NODE_ENV":"Windows","SP_CONFIG":"C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\default.js,C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\windows.js,C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T12:51:19.680] [INFO] default - server spawn
+[2021-08-25T12:52:26.861] [INFO] default - current server port: 7000
+[2021-08-25T12:52:26.922] [INFO] default - launch Suanpan Sever as not found server process with pid:  5352
+[2021-08-25T12:52:26.922] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T12:52:26.922] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T12:52:26.923] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","NODE_ENV":"Windows","SP_CONFIG":"C:\\snapshot\\suanpan\\config\\default.js,C:\\snapshot\\suanpan\\config\\default.js,C:\\snapshot\\suanpan\\config\\default.js"}
+[2021-08-25T12:52:26.933] [INFO] default - server spawn
+[2021-08-25T12:53:33.762] [INFO] default - current server port: 7000
+[2021-08-25T12:53:33.830] [INFO] default - launch Suanpan Sever as not found server process with pid:  21576
+[2021-08-25T12:53:33.831] [INFO] default - launching suanpan server from C:\xuelangyun\project\rto\rto-desktop\server\rto-server.exe
+[2021-08-25T12:53:33.831] [INFO] default - SP_DESKTOP_HOME: C:\xuelangyun\project\
+[2021-08-25T12:53:33.831] [INFO] default - suanpan server env: {"SP_PORT":"7000","SP_DESKTOP_HOME":"C:\\xuelangyun\\project\\","NODE_ENV":"Windows","SP_CONFIG":"C:\\snapshot\\suanpan\\config\\default.js,C:\\snapshot\\suanpan\\config\\windows.js,C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\local.js"}
+[2021-08-25T12:53:33.842] [INFO] default - server spawn
+[2021-08-25T12:56:10.120] [INFO] default - killing processes [{"pid":20868,"ppid":2928,"name":"rto-server.exe"}]

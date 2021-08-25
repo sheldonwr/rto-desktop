@@ -10,6 +10,7 @@ export async function appInjectDev() {
     protocol.uninterceptProtocol("http");
     let url = new URL(request.url);
     let htmlStr = await getHtmlString(url.href);
+    await getAppConfig();
     callback({ mimeType: "text/html", data: injectAppConfig(htmlStr, appConfig) });
   });
   interceptProxyUrl();
