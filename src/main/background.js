@@ -40,6 +40,7 @@ async function createWindow() {
   });
   win.maximize();
   win.once('ready-to-show', () => {
+    loadingWin.hide();
     loadingWin.destroy();
     loadingWin = null;
     win.show();

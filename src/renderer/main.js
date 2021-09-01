@@ -97,12 +97,6 @@ window.addEventListener('load', ()=> {
   window.SuanpanAPI.eventService.on('appRight.show', function() {
     storeInst.commit('view/paramVisible', true);
   })
-
-  storeInst.dispatch('log/connect').then(() => {
-    console.log('log connect success');
-  }).catch( err => {
-    console.error("log connect error", err);
-  })
 })
 
 storeInst.watch(
@@ -113,13 +107,8 @@ storeInst.watch(
     if(storeInst.state.file.currentApp && storeInst.state.file.currentApp.id) {
       storeInst.dispatch('status/getStatus')
       storeInst.commit('log/allLogs', [])
-      storeInst.dispatch('log/register')
-      storeInst.dispatch('log/query')
-      // storeInst.dispatch('log/connect').then(() => {
-      //   console.log('log connect success');
-      // }).catch( err => {
-      //   console.error("log connect error", err);
-      // })
+      storeInst.dispatch('log/register', storeInst.state.file.currentApp.id)
+      storeInst.dispatch('log/query', storeInst.state.file.currentApp.id)
     }
   }
 );

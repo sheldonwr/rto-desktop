@@ -10,8 +10,8 @@ import ini from "ini";
 import logger from "../log";
 
 const AppHome = path.join(app.getAppPath(), '../../');
-const SP_DESKTOP_HOME = path.join(AppHome, '../');
-const ServerConfigPath = isDevelopment ? path.join(process.cwd(), '/server/server.ini') : path.join(SP_DESKTOP_HOME, 'server.ini');
+const SP_DESKTOP_HOME = isDevelopment ? 'C:\\xuelangyun\\suanpan-desktop' : path.join(AppHome, '../');
+const ServerConfigPath = path.join(SP_DESKTOP_HOME, 'server.ini');
 const CurrentPidPath = isDevelopment ? path.join(process.cwd(), '/server/pid.json') : path.join(AppHome, 'pid.json');
 
 let currentPort = 7000;
@@ -60,30 +60,21 @@ export async function launchSuanpanServer() {
 function launchSever() {
   try {    
     let serverExe = isDevelopment
-      ? path.join(process.cwd(), `/server/${SP_SERVER_NAME}`)
+      ? `C:\\xuelangyun\\suanpan-desktop\\${SP_SERVER_NAME}`
       : path.join(AppHome, `../${SP_SERVER_NAME}`);
     logger.info(`launching suanpan server from ${serverExe}`);
     logger.info(`SP_DESKTOP_HOME: ${SP_DESKTOP_HOME}`);
     if (!fs.existsSync(serverExe)) {
       throw new Error(`${serverExe} not exist`);
     }
-    let serverProcess = null;
     let env = generateEnv();
     logger.info(`suanpan server env:`, JSON.stringify(env));
-    if(isDevelopment) {
-      serverProcess = spawn(serverExe, {
-        detached: true,
-        stdio: "ignore",
-        env: env,
-      });
-    }else {
-      serverProcess = spawn(SP_SERVER_NAME, {
-        detached: true,
-        stdio: "ignore",
-        cwd: SP_DESKTOP_HOME,
-        env: env,
-      });
-    }
+    let serverProcess = spawn(SP_SERVER_NAME, {
+      detached: true,
+      stdio: "ignore",
+      cwd: SP_DESKTOP_HOME,
+      env: env,
+    });
     serverProcess.unref();
     serverPid = serverProcess.pid;
     fs.writeFileSync(CurrentPidPath, JSON.stringify({pid: serverPid}));
@@ -95,15 +86,9 @@ function launchSever() {
 }
 
 function generateEnv() {
-  let defaultCfg = isDevelopment
-      ? "C:\\snapshot\\suanpan\\config\\default.js"
-      : "C:\\snapshot\\suanpan\\config\\default.js";
-    let windowsCfg = isDevelopment
-      ? "C:\\snapshot\\suanpan\\config\\windows.js"
-      : "C:\\snapshot\\suanpan\\config\\windows.js";
-    let localCfg = isDevelopment
-      ? "C:\\xuelangyun\\project\\rto\\rto-desktop\\server\\local.js"
-      : path.join(SP_DESKTOP_HOME, "config/local.js");
+  let defaultCfg = "C:\\snapshot\\suanpan\\config\\default.js";
+  let windowsCfg = "C:\\snapshot\\suanpan\\config\\windows.js";
+  let localCfg = path.join(SP_DESKTOP_HOME, "config/local.js");
   return {
     "SP_PORT": `${currentPort}`,
     "SP_DESKTOP_HOME": SP_DESKTOP_HOME,

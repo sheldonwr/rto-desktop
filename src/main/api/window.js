@@ -5,7 +5,7 @@ ipcMain.on("window-minimize", minimize);
 ipcMain.on("window-maximize", maximize);
 ipcMain.on("window-close", closeWindow);
 ipcMain.handle('window-getMaximize', async (event, opt) => {
-  return BrowserWindow.getFocusedWindow().isMaximized();
+  return BrowserWindow.fromWebContents(event.sender).isMaximized();
 })
 ipcMain.on("window-modal", createModalWindow);
 ipcMain.on("window-algorithm", createAlgorithmWindow);

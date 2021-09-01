@@ -9,8 +9,7 @@
               <li class="pull-left source">节点</li>
               <li class="pull-left time">时间</li>
               <li class="pull-left message">内容</li>
-              <li class="pull-left severity">分级</li>
-              <li class="pull-left condition">状态</li>
+              <li class="pull-left severity">级别</li>
             </ul>
           </div>
           <ul class="log-content-wrap">
@@ -19,13 +18,12 @@
               v-for="log in $store.state.log.allLogs"
               :key="log.id"
             >
-              <span class="pull-left single-line source">{{ log.fnode }}</span>
-              <span class="pull-left single-line time">{{ log.ftime }}</span>
-              <span class="pull-left single-line message">{{ log.title }}</span>
-              <span class="pull-left single-line severity">{{
+              <span class="pull-left single-line source" :title="log.fnode">{{ log.fnode }}</span>
+              <span class="pull-left single-line time" :title="log.ftime">{{ log.ftime }}</span>
+              <span class="pull-left single-line message" :title="log.title">{{ log.title }}</span>
+              <span class="pull-left single-line severity" :title="log.level">{{
                 log.level
               }}</span>
-              <span class="pull-left single-line condition"></span>
             </li>
           </ul>
         </ResizeTabContent>
@@ -309,19 +307,21 @@ export default {
     float: left !important;
   }
   .source {
-    width: calc(50% - 220px);
+    width: calc(100% / 24 * 4);
+    min-height: 1px;
   }
   .time {
-    width: 200px;
+    width: calc(100% / 24 * 3);
+    min-height: 1px;
   }
   .message {
-    width: calc(50% - 140px);
+    width: calc(100% / 24 * 15);
+    min-height: 1px;
+    padding-right: 10px;
   }
   .severity {
-    width: 80px;
-  }
-  .condition {
-    width: 80px;
+    width: calc(100% / 24 * 2);
+    min-height: 1px;
   }
   ul {
     margin-bottom: 0;
