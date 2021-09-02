@@ -63,9 +63,8 @@ function addLogs(logs, newLogs=[]) {
 
 function convertUTCDateToLocalDate(log) {
   let date = new Date(log.time);
-  var newDate = new Date(date.getTime() - date.getTimezoneOffset()*60*1000);
-  log.ftime = newDate.toLocaleString();
-  log.htime = newDate.getTime();
+  log.ftime = date.toLocaleString();
+  log.htime = date.getTime();
 }
 
 function getNodeLabel(nodeId) {

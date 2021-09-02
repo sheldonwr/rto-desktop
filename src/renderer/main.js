@@ -64,7 +64,7 @@ window.addEventListener('load', () => {
   // interval get status
   interval(() => {
     storeInst.dispatch('status/getStatus')
-  }, 1500);
+  }, 5000);
 })
 
 window.addEventListener('load', ()=> {

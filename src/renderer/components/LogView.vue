@@ -240,7 +240,7 @@ export default {
         let node = nodes[i];
         let def = node.metadata.def;
         if(def && (def.dockerRepo.indexOf('vscode') > -1)
-          && (def.params.__mode.value == 'online-edit')) {
+          && def.params.__mode  && (def.params.__mode.value == 'online-edit')) {
           this.$store.commit('log/addLog', node);
         }
       }

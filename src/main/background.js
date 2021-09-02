@@ -40,7 +40,6 @@ async function createWindow() {
   });
   win.maximize();
   win.once('ready-to-show', () => {
-    loadingWin.hide();
     loadingWin.destroy();
     loadingWin = null;
     win.show();
@@ -100,29 +99,32 @@ async function createWindow() {
 }
 
 function createLoadingWindow() {
-  loadingWin = new BrowserWindow({
-    width: 400,
-    height: 300,
-    frame: false,
-    resizable: false,
-    show: false,
-    // alwaysOnTop: true,
-    webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      webSecurity: false,
-      contextIsolation: false,
-    },
-  });
-  loadingWin.once("ready-to-show", () => {
-    loadingWin.show();
-  });
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    loadingWin.loadURL(process.env.WEBPACK_DEV_SERVER_URL + 'loading.html');
-  } else {
-    loadingWin.loadURL(`app://./loading.html`);
-  }
+  return new Promise(resolve => {
+    loadingWin = new BrowserWindow({
+      width: 400,
+      height: 300,
+      frame: false,
+      resizable: false,
+      show: false,
+      // alwaysOnTop: true,
+      webPreferences: {
+        // Use pluginOptions.nodeIntegration, leave this alone
+        // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+        nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+        webSecurity: false,
+        contextIsolation: false,
+      },
+    });
+    loadingWin.once("ready-to-show", () => {
+      resolve();
+      loadingWin.show();
+    });
+    if (process.env.WEBPACK_DEV_SERVER_URL) {
+      loadingWin.loadURL(process.env.WEBPACK_DEV_SERVER_URL + 'loading.html');
+    } else {
+      loadingWin.loadURL(`app://./loading.html`);
+    }
+  })
 }
 
 function createTray() {
@@ -200,7 +202,7 @@ app.on("will-quit", async (event) => {
      if(!isDevelopment) {
        appInjectProd();
      }
-     createLoadingWindow();
+     await createLoadingWindow();
      let port = findPort();
     try {
       await launchSuanpanServer();
