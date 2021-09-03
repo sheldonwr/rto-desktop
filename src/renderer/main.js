@@ -67,12 +67,12 @@ window.addEventListener('load', () => {
   }, 5000);
 })
 
+let firtTime = true;
 window.addEventListener('load', ()=> {
   let id = window.SuanpanAPI.eventService.on('sp:transition:success', (...data) => {
     if(data.length < 2) {
       return
     }
-    console.log(data)
     let location = data[1].router.urlRouter.location;
     if(location.endsWith('/edit')) {
       bus.emit('transition-component')
@@ -81,6 +81,13 @@ window.addEventListener('load', ()=> {
       let lastItem = locs[locs.length - 1];
       if(!isNaN(Number(lastItem))) {
         bus.emit('transition-predict', [lastItem])
+        if(firtTime) {
+          firtTime = false;
+          // 日志
+          storeInst.commit('log/cleanLogs')
+          storeInst.dispatch('log/register', lastItem)
+          storeInst.dispatch('log/query', lastItem)
+        }
       }
     }
   })
@@ -106,7 +113,7 @@ storeInst.watch(
   function () {
     if(storeInst.state.file.currentApp && storeInst.state.file.currentApp.id) {
       storeInst.dispatch('status/getStatus')
-      storeInst.commit('log/allLogs', [])
+      storeInst.commit('log/cleanLogs')
       storeInst.dispatch('log/register', storeInst.state.file.currentApp.id)
       storeInst.dispatch('log/query', storeInst.state.file.currentApp.id)
     }

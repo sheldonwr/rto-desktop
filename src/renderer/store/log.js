@@ -1,9 +1,14 @@
 export default {
   namespaced: true,
   state: {
-    allLogs: []
+    allLogs: [],
+    allLogsUnique: {}
   },
   mutations: {
+    cleanLogs(state) {
+      state.allLogs = [];
+      state.allLogsUnique = {};
+    },
     allLogs(state, val=[]) {
       state.allLogs = val;
     },
@@ -23,12 +28,12 @@ export default {
     register({ state, commit }, appId) {
       window.SuanpanAPI.componentLogService.unregisterAllLogProcessor()
       window.SuanpanAPI.componentLogService.registerLogProcessor(appId, (logs) => {
-        commit('allLogs', addLogs(state.allLogs, logs))      
+        commit('allLogs', addLogs(state.allLogs, state.allLogsUnique, logs))      
       })
     },
     query({ state, commit }, appId) {
       window.SuanpanAPI.componentLogService.query(appId).then( res => {
-        commit('allLogs', addLogs(state.allLogs, res.logs))  
+        commit('allLogs', addLogs(state.allLogs, state.allLogsUnique, res.logs))  
       })
     },
     getAppLog({}, {appId, curlogPos=0}) {
@@ -42,20 +47,37 @@ export default {
   }
 };
 
-function addLogs(logs, newLogs=[]) {
+function addLogs(logs, logsUnique, newLogs=[]) {
   // format
+  let filterLogs = [];
   for(let i = 0; i < newLogs.length; i++) {
-    convertUTCDateToLocalDate(newLogs[i]);
-    newLogs[i].fnode = getNodeLabel(newLogs[i].data.node);
+    let newLog = newLogs[i];
+    if(!newLog.time) {
+      continue
+    }
+    convertUTCDateToLocalDate(newLog);
+    let id = newLog.htime + newLog.title.slice(0, 10);
+    if(logsUnique[id]) {
+      continue;
+    }
+    logsUnique[id] = true;
+    newLog.id = id;
+    newLog.fnode = getNodeLabel(newLog.data.node);
+    filterLogs.push(newLog);
   }
-  logs = logs.concat(newLogs);
   // sort
-  logs.sort((a, b) => {
+  filterLogs.sort((a, b) => {
     return b.htime - a.htime;
   })
+  logs = filterLogs.concat(logs);
+
   // slice
-  const MAX_LEN = 3000
+  const MAX_LEN = 2000
   if(logs.length > MAX_LEN) {
+    for(let i = MAX_LEN; i < logs.length; i++) {
+      let lg = logs[i];
+      delete logsUnique[lg.id];
+    }
     logs = logs.slice(0, MAX_LEN);
   }
   return logs;
