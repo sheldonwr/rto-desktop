@@ -62,9 +62,9 @@ window.addEventListener('load', () => {
   })
 
   // interval get status
-  interval(() => {
+  setTimeout(() => {
     storeInst.dispatch('status/getStatus')
-  }, 5000);
+  }, 1000);
 })
 
 let firtTime = true;

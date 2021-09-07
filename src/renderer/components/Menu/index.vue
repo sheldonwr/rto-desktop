@@ -514,7 +514,7 @@ export default {
       for(let i = 0; i < nodes.length; i++) {
         let node = nodes[i];
         let def = node.metadata.def;
-        if(def && (def.dockerCmd.indexOf('rto_device') > -1) 
+        if(def && def.dockerCmd && (def.dockerCmd.indexOf('rto_device') > -1) 
           && (def.actionList && def.actionList[0].url)) {
           let url = def.actionList[0].url;
           url = `${appConfig.redirectRequest}${(url || '').match(/\/proxr[\S]*/)}`
