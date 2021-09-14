@@ -41,5 +41,25 @@ export default {
     release({state}, id) {
       return window.SuanpanAPI.predictService.release(id)
     },
+    deployValidation() {
+      return new Promise((resolve, reject) => {
+        window.SuanpanAPI.rootScope.doSave().then(() => {
+          const validation = window.SuanpanAPI.nodeService.onValidated();
+          if (validation && validation.status === 'error') {
+            reject(new Error(validation.message))
+          }else {
+            resolve();
+          }
+        }).catch(e => {
+          if(e.msg) {
+            e.message = e.msg;
+          }
+          if(e.message === '网络错误') {
+            e.message = '请检查网络，稍后重试';
+          }
+          reject(e);
+        })
+      })
+    }
   },
 };

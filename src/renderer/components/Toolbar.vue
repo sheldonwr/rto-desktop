@@ -298,11 +298,23 @@ export default {
           okText: "确定",
           cancelText: "取消",
           onOk: () => {
-            let deployBtn = document.querySelector(
-              ".sp-app-actions .footer-item"
-            );
-            deployBtn.click();
-            this.isRunning = !this.isRunning;
+            if(!this.isRunning) {
+              this.$store.dispatch('status/deployValidation').then(() => {
+                let deployBtn = document.querySelector(
+                  ".sp-app-actions .footer-item"
+                );
+                deployBtn.click();
+                this.isRunning = !this.isRunning;
+              }).catch(err => {
+                this.$store.dispatch('showMessage', { type: "error", msg: err.message });
+              });
+            }else {
+              let deployBtn = document.querySelector(
+                ".sp-app-actions .footer-item"
+              );
+              deployBtn.click();
+              this.isRunning = !this.isRunning;
+            }
           },
           onCancel() {},
         });
