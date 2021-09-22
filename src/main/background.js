@@ -52,32 +52,58 @@ async function createWindow() {
     "new-window",
     async (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault();
-      Object.assign(options, {
-        titleBarStyle: "default",
-        frame: true,
-      });
-      event.newGuest = new BrowserWindow({ 
-        ...options, 
-        width: 1024, 
-        height:600,
-     });
-      // Menu.setApplicationMenu(null)
-      event.newGuest.setMenuBarVisibility(false);
-      // event.newGuest.removeMenu();
-      event.newGuest.loadURL(interceptUrl(url));
-
-      event.newGuest.webContents.on("new-window", async (event, url, options) => {
-        event.preventDefault();
-        event.newGuest = new BrowserWindow({ 
-          ...options,
-          y: '50%', 
-          x: '50%'
+      let urlObj = new URL(url);
+      let urlId = url;
+      if(urlObj.pathname.startsWith('/run/log/')) {
+        // oss log
+        urlId = `${urlObj.origin}/run/log/`;
+      }else if(urlObj.pathname.startsWith('/dashboard')) {
+        // dashboard
+        urlId = `${urlObj.origin}/dashboard`;
+      }
+      let newWin = getNewWindow(urlId);
+      if(newWin) {
+        event.newGuest = newWin;
+        newWin.focus();
+      }else {
+        Object.assign(options, {
+          titleBarStyle: "default",
+          frame: true,
         });
+        event.newGuest = new BrowserWindow({ 
+          ...options, 
+          width: 1024, 
+          height:600,
+       });
+        event.newGuest._id = urlId;
+        // Menu.setApplicationMenu(null)
         event.newGuest.setMenuBarVisibility(false);
-        event.newGuest.loadURL(url);
-      })
+        // event.newGuest.removeMenu();
+        event.newGuest.loadURL(interceptUrl(url));
+  
+        event.newGuest.webContents.on("new-window", async (event, url, options) => {
+          event.preventDefault();
+          event.newGuest = new BrowserWindow({ 
+            ...options,
+            y: '50%', 
+            x: '50%'
+          });
+        })
+      }
+      event.newGuest.loadURL(url);
     }
   );
+
+  function getNewWindow(id) {
+    let allWins = BrowserWindow.getAllWindows();
+    for(let i = 0; i < allWins.length; i++) {
+      if(allWins[i]._id == id) {
+        return allWins[i];
+      }
+    }
+    return null;
+  }
+  
 
   // win.on('close', function(e){
   //   e.preventDefault();
