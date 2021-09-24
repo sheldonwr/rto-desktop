@@ -28,7 +28,7 @@ async function createWindow() {
     minHeight: 600,
     titleBarStyle: "hidden",
     frame: false,
-    show: false,
+    show: true,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -39,13 +39,13 @@ async function createWindow() {
     },
   });
   win.maximize();
-  win.once('ready-to-show', () => {
+  if(loadingWin) {
     loadingWin.destroy();
     loadingWin = null;
-    win.show();
-    if (process.env.WEBPACK_DEV_SERVER_URL && !process.env.IS_TEST) win.webContents.openDevTools();
-    // win.webContents.openDevTools()
-  });
+  }
+  if (process.env.WEBPACK_DEV_SERVER_URL && !process.env.IS_TEST) {
+    win.webContents.openDevTools();
+  }
 
   // https://www.electronjs.org/docs/api/window-open
   win.webContents.on(
