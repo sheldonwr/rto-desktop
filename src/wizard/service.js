@@ -26,11 +26,11 @@ export function renameApp(app) {
 }
 
 export function releaseApp(appId) {
-  return send('wizard-app-release', appId)
+  return invoke('wizard-app-release', appId)
 }
 
 export function deployApp(appId) {
-  return send('wizard-app-deploy', appId)
+  return invoke('wizard-app-deploy', appId)
 }
 
 export function deleteApp(app) {

@@ -178,6 +178,7 @@ export default {
     bus.on("transition-component", this.componentTransition);
     bus.on("transition-predict", this.predictTransition);
     bus.on("file-terminate", this.fileTerminate);
+    bus.on("app-refresh", this.refresh);
   },
   beforeDestroy() {},
   computed: {
@@ -189,6 +190,13 @@ export default {
         this.$store.commit("appReadonly", val);
       },
     },
+  },
+  watch: {
+    '$store.state.status.appStatus': {
+      handler() {
+        this.isRunning = this.$store.getters["status/isRunning"];
+      }
+    }
   },
   methods: {
     clickHandler(id) {

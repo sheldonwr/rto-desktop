@@ -390,6 +390,7 @@ export default {
         case "file-close":
           // 关闭
           this.$store.commit('file/currentApp', {id:null, name:''});
+          this.$store.commit('view/coverVisible', true);
           break;
         case "file-terminate":
           bus.emit("file-terminate");

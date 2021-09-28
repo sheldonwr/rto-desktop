@@ -10,7 +10,7 @@ import ini from "ini";
 import logger from "../log";
 
 const AppHome = path.join(app.getAppPath(), '../../');
-const SP_DESKTOP_HOME = isDevelopment ? 'C:\\xuelangyun\\suanpan-desktop' : path.join(AppHome, '../');
+const SP_DESKTOP_HOME = isDevelopment ? 'C:\\xuelangyun\\rto-plus' : path.join(AppHome, '../');
 const ServerConfigPath = path.join(SP_DESKTOP_HOME, 'server.ini');
 const CurrentPidPath = isDevelopment ? path.join(process.cwd(), '/server/pid.json') : path.join(AppHome, 'pid.json');
 
@@ -60,7 +60,7 @@ export async function launchSuanpanServer() {
 function launchSever() {
   try {    
     let serverExe = isDevelopment
-      ? `C:\\xuelangyun\\suanpan-desktop\\${SP_SERVER_NAME}`
+      ? `C:\\xuelangyun\\rto-plus\\${SP_SERVER_NAME}`
       : path.join(AppHome, `../${SP_SERVER_NAME}`);
     logger.info(`launching suanpan server from ${serverExe}`);
     logger.info(`SP_DESKTOP_HOME: ${SP_DESKTOP_HOME}`);

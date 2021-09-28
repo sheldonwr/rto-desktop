@@ -24,7 +24,7 @@
       <a-button key="cancel" @click="cancelHandler">
         取消
       </a-button>
-      <a-button key="ok" type="primary" @click="okHandler">
+      <a-button key="ok" type="primary" @click="okHandler" :loading="checkLoading">
         确定
       </a-button>
     </template>
@@ -58,22 +58,53 @@ export default {
         labelCol: { span: 4 },
         wrapperCol: { span: 18 },
       },
+      checkLoading: false
     };
   },
   mounted() {
     
   },
+  beforeDestroy() {
+
+  },
   methods: {
     okHandler() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          this.mvisible = false;
-          this.$emit("input", false);
-          window.open(this.form.url)
+          this.checkLoading = true;
+          this.checkUrl().then(() => {
+            this.checkLoading = false;
+            this.mvisible = false;
+            this.$emit("input", false);
+            window.open(this.form.url)
+          }).catch(err => {
+            if(this.mvisible) {
+              this.$store.dispatch('showMessage', `无法访问${this.form.url}`)
+            }
+            this.checkLoading = false;
+          })
         } else {
           return false;
         }
       });
+    },
+    checkUrl(url) {
+      return new Promise( (resolve, reject) => {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+          this.checkLoading = false;
+          reject()
+        }, 10*1000);
+        if(!this.form.url.startsWith('http://') && !this.form.url.startsWith('https://')) {
+          reject();
+        }else {
+          fetch(this.form.url).then(() => {
+            resolve();
+          }).catch(err => {
+            reject(err)
+          })
+        }
+      })
     },
     cancelHandler() {
       this.mvisible = false;

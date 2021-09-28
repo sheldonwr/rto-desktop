@@ -9,8 +9,8 @@ ipcMain.handle("wizard-running-list", wizardRunningList);
 ipcMain.handle("wizard-app-create", wizardAppCreate);
 ipcMain.on("wizard-app-enter", wizardAppEnter);
 ipcMain.handle("wizard-app-rename", wizardAppRename);
-ipcMain.on("wizard-app-release", wizardAppRelease);
-ipcMain.on("wizard-app-deploy", wizardAppDeploy);
+ipcMain.handle("wizard-app-release", wizardAppRelease);
+ipcMain.handle("wizard-app-deploy", wizardAppDeploy);
 ipcMain.handle("wizard-app-delete", wizardAppDelete);
 ipcMain.handle("wizard-dir-rename", wizardDirRename);
 ipcMain.handle("wizard-dir-create", wizardDirCreate);
@@ -101,15 +101,27 @@ function wizardAppRename(event, app) {
 }
 
 function wizardAppRelease(event, appId) {
-  let chidWin = BrowserWindow.fromWebContents(event.sender);
-  let mainWin = chidWin.getParentWindow();
-  mainWin.webContents.send('wizard-app-release', appId);
+  return new Promise( (resolve) => {
+    let mainWin = BrowserWindow.fromWebContents(event.sender).getParentWindow();
+    let uuid = uuidv4();
+    mainWin.webContents.send('wizard-app-release', uuid, appId);
+    ipcMain.on(uuid, (event, res) => {
+      ipcMain.removeAllListeners(uuid);
+      resolve(res);
+    });
+  })
 }
 
 function wizardAppDeploy(event, appId) {
-  let chidWin = BrowserWindow.fromWebContents(event.sender);
-  let mainWin = chidWin.getParentWindow();
-  mainWin.webContents.send('wizard-app-deploy', appId);
+  return new Promise( (resolve) => {
+    let mainWin = BrowserWindow.fromWebContents(event.sender).getParentWindow();
+    let uuid = uuidv4();
+    mainWin.webContents.send('wizard-app-deploy', uuid, appId);
+    ipcMain.on(uuid, (event, res) => {
+      ipcMain.removeAllListeners(uuid);
+      resolve(res);
+    });
+  })
 }
 
 function wizardAppDelete(event, app) {

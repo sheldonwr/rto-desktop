@@ -10,7 +10,6 @@ import StatusApp from './StatusApp.vue'
 import CoverApp from './CoverApp.vue'
 import store from "./store";
 import Loading from "components/Loading"
-import { interval } from "utils/";
 import bus from "utils/bus";
 import { listernersInit } from 'listerners/'
 
@@ -74,6 +73,7 @@ window.addEventListener('load', ()=> {
       return
     }
     let location = data[1].router.urlRouter.location;
+    console.log('++++', data[1].promise.$$state.value.name)
     if(location.endsWith('/edit')) {
       bus.emit('transition-component')
     }else if(location.startsWith('/web/service/predict/')) {
@@ -103,6 +103,9 @@ window.addEventListener('load', ()=> {
   })
   window.SuanpanAPI.eventService.on('appRight.show', function() {
     storeInst.commit('view/paramVisible', true);
+  })
+  window.SuanpanAPI.eventService.on('sp:app:changename', function(eventName, params) {
+    storeInst.dispatch('file/changeCurrentName', params[2])
   })
 })
 

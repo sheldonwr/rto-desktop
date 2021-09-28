@@ -15,7 +15,7 @@ export function createApp(name, dir) {
  * 删除项目
  */
 export function deleteApp(appId) {
-  return window.SuanpanAPI.appService.del(appId)
+  return window.SuanpanAPI.appService.del(Number(appId))
 }
 
 /**
@@ -36,8 +36,7 @@ export function copyApp(appid, name) {
  * Metrics
  */
 export function getMetricsList() {
-  // return window.SuanpanAPI.appService.getMetricsList('service');
-  return Promise.resolve([]);
+  return window.SuanpanAPI.appService.getMetricsList('service');
 }
 
 /**

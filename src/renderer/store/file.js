@@ -44,6 +44,11 @@ export default {
         return gotoPredict(state.currentApp.id);
       }
     },
+    changeCurrentName({ state }, newName) {
+      if(state.currentApp && state.currentApp.id) {
+        state.currentApp.name = newName;
+      }
+    },
     open({ state, commit, dispatch }) {
       return invoke("file-open").then( filePath => {
         if(!filePath) {

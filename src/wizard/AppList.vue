@@ -450,11 +450,19 @@ export default {
             });
             releaseApp(app.id);
           } else {
-            this.$store.dispatch("showMessage", {
-              type: "info",
-              msg: "开启中...",
-            });
-            deployApp(app.id);
+            deployApp(app.id).then(res => {
+              if(res.error) {
+                this.$store.dispatch("showMessage", {
+                  type: "error",
+                  msg: `${res.error.message}`,
+                });
+              }else {
+                this.$store.dispatch("showMessage", {
+                  type: "info",
+                  msg: "开启中...",
+                });
+              }
+            })
           }
         },
         onCancel() {},

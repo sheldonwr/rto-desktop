@@ -1,5 +1,6 @@
 import { send } from "services/"
 import { rightClickMenuInit } from './rightClickMenu'
+import bus from "utils/bus";
 
 export function listernersInit(store, Vue) {
   rightClickMenuInit(store, Vue)
@@ -67,6 +68,10 @@ export function listernersInit(store, Vue) {
         error: null,
         data: res
       })
+      if(app.id == store.state.file.currentApp.id) {
+        bus.emit('app-refresh');
+        store.dispatch('file/changeCurrentName', app.name);
+      }
     }).catch((err) => {
       send(channel, {
         error: err,
@@ -75,12 +80,28 @@ export function listernersInit(store, Vue) {
     });
   })
 
-  window.ipcRenderer.on('wizard-app-release', function(evt, appId) {
-    store.dispatch("status/release", appId);
+  window.ipcRenderer.on('wizard-app-release', function(evt, channel, appId) {
+    if(appId == store.state.file.currentApp.id) {
+      window.SuanpanAPI.socketService.disconnectAll(appId);
+    }
+    store.dispatch("status/release", appId).then(res => {
+      send(channel, res)
+    }).catch(error => {
+      send(channel, {error})
+    }).finally(() => {
+      if(appId == store.state.file.currentApp.id) {
+        bus.emit('app-refresh');
+      }
+    })
   });
 
-  window.ipcRenderer.on('wizard-app-deploy', function(evt, appId) {
-    store.dispatch("status/deploy", appId);
+  window.ipcRenderer.on('wizard-app-deploy', function(evt, channel, appId) {
+    store.dispatch("status/deployUnopenedApp", appId).then(res => {
+      send(channel, res)
+      if(!res.error && (appId == store.state.file.currentApp.id)) {
+        bus.emit('app-refresh');
+      }
+    })
   });
 
   window.ipcRenderer.on('wizard-app-delete', function(evt, channel, app) {

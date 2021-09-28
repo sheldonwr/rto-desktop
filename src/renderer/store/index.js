@@ -69,7 +69,7 @@ export default {
     showMessage({ state }, opts) {
       if(typeof opts === 'string') {
         opts = {
-          message: opts
+          msg: opts
         }
       }
       let option = Object.assign({

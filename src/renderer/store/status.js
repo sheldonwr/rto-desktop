@@ -8,7 +8,7 @@ export default {
   },
   getters: {
     isRunning(state) {
-      return state.appStatus == '1' || state.appStatus == '3'
+      return state.appStatus == '1' || state.appStatus == '3' || state.appStatus == '5'
     },
     isLogging(state) {
       return state.appStatus == '1' || state.appStatus == '3' || state.appStatus == '5' || state.appStatus == '6'
@@ -60,6 +60,73 @@ export default {
           reject(e);
         })
       })
+    },
+    deployUnopenedApp({state}, appId) {
+      return new Promise((resolve) => {
+        window.SuanpanAPI.appService.get(appId).then(res => {
+          // console.log('+++', JSON.parse(res.appInfo.data))
+          // return;
+          if(!res.success) {
+            resolve({
+              error: new Error("请求失败")
+            })
+            return;
+          }
+          let graph = {};
+          if(res.appInfo.data) {
+            graph = JSON.parse(res.appInfo.data)
+          }
+          if(!graph.processes) {
+            resolve({
+              error: new Error("项目中没有节点")
+            })
+            return;
+          }
+          let nodeIds = Object.keys(graph.processes);
+          if(nodeIds.length < 1) {
+            resolve({
+              error: new Error("项目中没有节点")
+            })
+            return;
+          }
+          for(let i = 0; i < nodeIds.length; i++) {
+            let node = graph.processes[nodeIds[i]];
+            if(node && node.metadata && node.metadata.def && node.metadata.def.params) {
+              let paramNames = Object.keys(node.metadata.def.params);
+              for(let j = 0; j < paramNames.length; j++) {
+                let param = node.metadata.def.params[paramNames[j]];
+                if((param.required || param.isRequired) && (!param.value)) {
+                  resolve({
+                    error: new Error(`${node.metadata.label}中的必填参数不能为空！`)
+                  })
+                  return;
+                }
+              }
+            }
+          }
+          if(graph.connections) {
+            let edges = graph.connections;
+            for(let i = 0; i < edges.length; i++) {
+              let edge = edges[i];
+              if(edge.metadata && edge.metadata.error) {
+                resolve({
+                  error: new Error(`请检查项目中的连线！`)
+                })
+                return;
+              }
+            }
+          }
+          window.SuanpanAPI.predictService.deploy(appId).then( () => {
+            resolve({
+              data: null
+            })
+          })
+        }).catch(err => {
+          resolve({
+            error: err
+          })
+        })
+      });
     }
   },
 };
