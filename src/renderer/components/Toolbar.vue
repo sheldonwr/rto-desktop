@@ -196,6 +196,26 @@ export default {
       handler() {
         this.isRunning = this.$store.getters["status/isRunning"];
       }
+    },
+    '$store.state.view.coverVisible': {
+      handler() {
+        bus.emit('app-status', [this.isRunning, this.isComponentEdit])
+      }
+    },
+    'isComponentEdit': {
+      handler() {
+        bus.emit('app-status', [this.isRunning, this.isComponentEdit])
+      }
+    },
+    '$store.state.appReadonly': {
+      handler() {
+        bus.emit('app-status', [this.isRunning, this.isComponentEdit])
+      }
+    },
+    'isRunning': {
+      handler() {
+        bus.emit('app-status', [this.isRunning, this.isComponentEdit])
+      }
     }
   },
   methods: {
@@ -211,7 +231,7 @@ export default {
       } else if (id === "file-saveAs") {
         this.$store.dispatch("file/saveAs");
       } else if (id === "deploy") {
-        this.fileTerminate();
+        this.deploy();
       } else if (id === "edit-cut") {
         this.$store.dispatch("edit/cutNode");
       } else if (id === "edit-copy") {
@@ -229,11 +249,21 @@ export default {
       } else if (id === "view-app") {
         this.$store.dispatch('window/createWizardWindow');
       } else if (id === "component-success") {
-        this.$store.dispatch("file/gotoCurrentPredict");
-        this.isComponentEdit = false;
+        this.componentSuccess();
       } else if (id === "view-refresh") {
         this.refresh();
       }
+    },
+    fileTerminate() {
+      if(this.isComponentEdit) {
+        this.componentSuccess();
+      }else {
+        this.deploy();
+      }
+    },
+    componentSuccess() {
+      this.$store.dispatch("file/gotoCurrentPredict");
+      this.isComponentEdit = false;
     },
     refresh() {
       this.$store.dispatch("file/gotoCurrentPredict");
@@ -296,7 +326,7 @@ export default {
         });
       this.lastAppId = appId;
     },
-    fileTerminate() {
+    deploy() {
       if (this.isReadonly) {
         this.refresh();
       } else {

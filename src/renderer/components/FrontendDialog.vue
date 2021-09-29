@@ -65,7 +65,7 @@ export default {
     
   },
   beforeDestroy() {
-
+    clearTimeout(this.timer);
   },
   methods: {
     okHandler() {
@@ -91,17 +91,19 @@ export default {
     checkUrl(url) {
       return new Promise( (resolve, reject) => {
         clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-          this.checkLoading = false;
-          reject()
-        }, 10*1000);
         if(!this.form.url.startsWith('http://') && !this.form.url.startsWith('https://')) {
           reject();
         }else {
+          this.timer = setTimeout(() => {
+            this.checkLoading = false;
+            reject()
+          }, 10*1000);
           fetch(this.form.url).then(() => {
             resolve();
+            clearTimeout(this.timer);
           }).catch(err => {
             reject(err)
+            clearTimeout(this.timer);
           })
         }
       })

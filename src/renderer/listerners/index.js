@@ -1,9 +1,13 @@
-import { send } from "services/"
+import { send, invoke } from "services/"
 import { rightClickMenuInit } from './rightClickMenu'
 import bus from "utils/bus";
 
 export function listernersInit(store, Vue) {
   rightClickMenuInit(store, Vue)
+
+  invoke('file-recent-apps-get').then(res => {
+    store.state.file.recentOpenedApps = res.data;
+  })
 
   window.addEventListener('load', () => {
     store.dispatch('window/createWizardWindow');

@@ -2,6 +2,11 @@ import { ipcMain, dialog, BrowserWindow, app } from "electron";
 import fs from 'fs';
 import path from 'path';
 const http = require('http');
+import { AppHome } from '../suanpan'
+import { isDevelopment } from '../mainconfig'
+import logger from '../log'
+
+const recentAppPath = isDevelopment ? path.join(process.cwd(), '/server/recentApp.json') : path.join(AppHome, 'recentApp.json');
 
 ipcMain.handle("file-open", openFile);
 ipcMain.handle("file-load", loadFile);
@@ -10,6 +15,8 @@ ipcMain.handle("file-save", saveFile);
 ipcMain.handle("file-save-content", saveFileContent);
 ipcMain.handle("file-read", readFileContent);
 ipcMain.handle("file-message-dialog", fileMessageDialog);
+ipcMain.on('file-recent-apps-save', saveRecentApps);
+ipcMain.handle('file-recent-apps-get', getRecentApps);
 
 async function openFile() {
   const { filePaths } = await dialog.showOpenDialog( BrowserWindow.getFocusedWindow(), {
@@ -88,5 +95,44 @@ function readFileContent(event, filePath) {
         resolve(data)
       }
     })
+  })
+}
+
+function saveRecentApps(evt, apps) {
+  fs.writeFile(recentAppPath, JSON.stringify(apps), (err) => {
+    if(err) {
+      logger.error('save recent open apps:', err)
+    }
+  })
+}
+
+function getRecentApps() {
+  return new Promise( (resolve, reject) => {
+    fs.access(recentAppPath, (err) => {
+      if (err) {
+        resolve({
+          data: []
+        })
+        return;
+      }
+      fs.readFile(recentAppPath, 'utf-8', (err, data) => {
+        if(err) {
+          logger.error(`${recentAppPath} read error:`, err);
+          resolve({
+            data: []
+          })
+        }else {
+          let apps = [];
+          try {
+            apps = JSON.parse(data)
+          } catch (error) {
+            logger.error(`${recentAppPath} json parse error:`, err);
+          }
+          resolve({
+            data: apps
+          })
+        }
+      })
+    });
   })
 }

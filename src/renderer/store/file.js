@@ -1,4 +1,4 @@
-import { invoke, gotoPredict } from "services/";
+import { send, invoke, gotoPredict } from "services/";
 import { createApp, deleteApp, applist, getMetricsList, openFile, saveFile, getApp, getUserConfig, saveUserConfig, changeAppName } from "services/file"
 import { uniqueArray, getFileNameAndExt } from "utils/"
 
@@ -30,6 +30,7 @@ export default {
     },
     recentOpenedApps(state, val) {
       state.recentOpenedApps = uniqueArray(val, item => item.id);
+      send('file-recent-apps-save', state.recentOpenedApps);
     },
     recentOpenedAppsDelete(state, id) {
       let idx = state.recentOpenedApps.findIndex( item => item.id == id);

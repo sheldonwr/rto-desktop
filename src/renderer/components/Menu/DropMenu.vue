@@ -93,6 +93,9 @@ export default {
     &.disabled {
       color: #888;
       cursor: not-allowed;
+      &.selected {
+        background: #FFFFFF;
+      }
     }
     // &:not(.disabled):hover {
     //   background-color: #f2f2f2;

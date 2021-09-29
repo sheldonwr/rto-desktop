@@ -9,7 +9,7 @@ import http from "http";
 import ini from "ini";
 import logger from "../log";
 
-const AppHome = path.join(app.getAppPath(), '../../');
+export const AppHome = path.join(app.getAppPath(), '../../');
 const SP_DESKTOP_HOME = isDevelopment ? 'C:\\xuelangyun\\rto-plus' : path.join(AppHome, '../');
 const ServerConfigPath = path.join(SP_DESKTOP_HOME, 'server.ini');
 const CurrentPidPath = isDevelopment ? path.join(process.cwd(), '/server/pid.json') : path.join(AppHome, 'pid.json');

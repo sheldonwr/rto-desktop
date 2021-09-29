@@ -72,8 +72,9 @@ export default {
               value: "file-close",
             },
             {
-              label: "终止",
+              label: "开启",
               value: "file-terminate",
+              disabled: true
             },
             {
               label: "退出",
@@ -335,6 +336,7 @@ export default {
   created() {
     window.addEventListener("load", this.nodeActionListener);
     bus.on("transition-predict", this.predictTransition);
+    bus.on("app-status", this.appStatusUpdate);
   },
   beforeDestroy() {
     window.removeEventListener("load", this.nodeActionListener);
@@ -539,6 +541,27 @@ export default {
     predictTransition(appId) {
       this.checkGraph();
     },
+    appStatusUpdate(isRunning, isComponentEdit) {
+      let actionItem = this.menus.file.items.find(
+        (item) => item.value === "file-terminate"
+      );
+      if(this.$store.state.view.coverVisible) {
+        actionItem.disabled = true;
+      }else {
+        actionItem.disabled = false;
+        if(isComponentEdit) {
+          actionItem.label = '完成';
+        }else{
+          if(this.$store.state.appReadonly) {
+            actionItem.label = '编辑';
+          }else if(isRunning) {
+            actionItem.label = '停止';
+          }else {
+            actionItem.label = '开启';
+          }
+        }
+      }
+    }
   },
 };
 </script>

@@ -11,7 +11,7 @@ import setting from './setting';
 import PersistedState from './persistedState';
 
 export default {
-  plugins: [PersistedState],
+  // plugins: [PersistedState],
   modules: {
     window,
     view,
