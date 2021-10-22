@@ -9,21 +9,26 @@
               <li class="pull-left source">节点</li>
               <li class="pull-left time">时间</li>
               <li class="pull-left message">内容</li>
-              <li class="pull-left severity">级别</li>
+              <li class="pull-left severity">
+                <span>级别:</span>
+                <select class="log-threshold" v-model="logThreshold">
+                  <option value ="ERROR">ERROR</option>
+                  <option value ="WARNING">WARNING</option>
+                  <option value="INFO">INFO</option>
+                </select>
+              </li>
             </ul>
           </div>
           <ul class="log-content-wrap">
             <li
               class="clearfix"
-              v-for="log in $store.state.log.allLogs"
+              v-for="log in displayLogs"
               :key="log.id"
             >
               <span class="pull-left single-line source" :title="log.fnode">{{ log.fnode }}</span>
               <span class="pull-left single-line time" :title="log.ftime">{{ log.ftime }}</span>
               <span class="pull-left single-line message" :title="log.title">{{ log.title }}</span>
-              <span class="pull-left single-line severity" :title="log.level">{{
-                log.level
-              }}</span>
+              <span class="pull-left single-line severity" :title="log.level">{{ log.level }}</span>
             </li>
           </ul>
         </ResizeTabContent>
@@ -56,6 +61,13 @@
 <script>
 import ResizeTabContent from "components/ResizeTabContent";
 
+const LOG_LEVELS = {
+  ERROR: 3,
+  WARNING: 2,
+  INFO: 1,
+  DEBUG: 0
+}
+
 export default {
   name: "log",
   components: {
@@ -67,10 +79,19 @@ export default {
       appLog: "",
       // 组件日志
       compLog: "",
+      // 日志过滤级别
+      logThreshold: "INFO",
       resizeHeight: 240,
       maxHeight: 240,
       minHeight: 100
     };
+  },
+  computed: {
+    displayLogs() {
+      return this.$store.state.log.allLogs.filter(log => {
+        return LOG_LEVELS[log.level.toUpperCase()] >= LOG_LEVELS[this.logThreshold]
+      })
+    }
   },
   created() {
   },
@@ -108,7 +129,7 @@ export default {
         }
       },
     },
-    "$store.state.status.appStatus": {
+    "$store.state.status.appRuning": {
       handler() {
         let isLogging = this.$store.getters["status/isLogging"];
         if(isLogging && this.$store.state.view.logPanelVisible) {
@@ -120,14 +141,14 @@ export default {
            this.clearCompLog();
         }
         if(this.$store.getters["status/isRunning"] && this.$store.state.file.currentApp.id) {
-          this.checkVscode();
+          // this.checkVscode();
         }
       },
     },
     "$store.state.file.currentApp": {
       handler(currentApp) {
         if(currentApp.id && this.$store.getters["status/isRunning"]) {
-          this.checkVscode();
+          // this.checkVscode();
         }
       },
     },
@@ -315,12 +336,12 @@ export default {
     min-height: 1px;
   }
   .message {
-    width: calc(100% / 24 * 15);
+    width: calc(100% / 24 * 14);
     min-height: 1px;
     padding-right: 10px;
   }
   .severity {
-    width: calc(100% / 24 * 2);
+    width: calc(100% / 24 * 3);
     min-height: 1px;
   }
   ul {
@@ -375,5 +396,9 @@ export default {
   color: #1f1f1f;
   background: #F5FAFF;
   overflow: auto;
+}
+.log-threshold {
+  border: 0;
+  margin-left: 5px;
 }
 </style>

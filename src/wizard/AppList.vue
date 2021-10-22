@@ -665,6 +665,10 @@ export default {
 .ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected {
   background: #b8dcfd;
 }
+.ant-tree-title {
+  width: calc(100% - 24px);
+  display: inline-block;
+}
 </style>
 
 <style lang="scss">
@@ -774,5 +778,9 @@ export default {
     height: 14px;
     margin-bottom: 4px;
   }
+}
+.app-title-wrapper {
+  width: 100%;
+  display: inline-block;
 }
 </style>

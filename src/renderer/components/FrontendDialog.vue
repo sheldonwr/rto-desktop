@@ -49,7 +49,7 @@ export default {
     return {
       mvisible: this.value,
       form: {
-        url: '',
+        url: 'http://localhost:3391',
       },
       rules: {
         url: [{ required: true, message: "请输入前端显示链接", trigger: "change" }],

@@ -4,37 +4,46 @@ export default {
     // "AppRunning": "1", "AppStopped": "2", "AppSuccess": "3", "AppFailed" : "4", 
     // "AppStarting": "5", "AppStopping": "6", "AppDead": "7", "AppCron": "8", 
     // "AppWaiting": "9", "AppUnknown": "0"
-    appStatus: '0',
+    // appStatus: '0',
+    // 根据 
+    appRuning: false
   },
   getters: {
     isRunning(state) {
-      return state.appStatus == '1' || state.appStatus == '3' || state.appStatus == '5'
+      return state.appRuning
     },
     isLogging(state) {
-      return state.appStatus == '1' || state.appStatus == '3' || state.appStatus == '5' || state.appStatus == '6'
+      return state.appRuning
     },
   },
   mutations: {
-    appStatus(state, val) {
-      state.appStatus = val;
-    },
+    // appStatus(state, val) {
+    //   state.appStatus = val;
+    // },
+    appRuning(state, routerStateName) {
+      if(routerStateName.startsWith('app.predict.prepare') || routerStateName.startsWith('app.predict.run')) {
+        state.appRuning = true;
+      }else {
+        state.appRuning = false;
+      }
+    }
   },
   actions: {
-    getStatus({ state, commit, rootState }, appId) {
-      if(!appId && rootState.file.currentApp.id) {
-        appId = rootState.file.currentApp.id;
-      }
-      if(appId) {
-        return window.SuanpanAPI.predictService.getNetworkStatus(appId).then( res => {
-          if(res.map && (res.map.status != null)) {
-            commit('appStatus', res.map.status)
-          }else {
-            commit('appStatus', '0')
-          }
-          return state.appStatus;
-        })
-      }
-    },
+    // getStatus({ state, commit, rootState }, appId) {
+    //   if(!appId && rootState.file.currentApp.id) {
+    //     appId = rootState.file.currentApp.id;
+    //   }
+    //   if(appId) {
+    //     return window.SuanpanAPI.predictService.getNetworkStatus(appId).then( res => {
+    //       if(res.map && (res.map.status != null)) {
+    //         commit('appStatus', res.map.status)
+    //       }else {
+    //         commit('appStatus', '0')
+    //       }
+    //       return state.appStatus;
+    //     })
+    //   }
+    // },
     deploy({state}, id) {
       return window.SuanpanAPI.predictService.deploy(id)
     },

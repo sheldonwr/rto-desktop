@@ -126,7 +126,7 @@ function getRecentApps() {
           try {
             apps = JSON.parse(data)
           } catch (error) {
-            logger.error(`${recentAppPath} json parse error:`, err);
+            logger.error(`${recentAppPath} json parse error:`, error);
           }
           resolve({
             data: apps

@@ -54,7 +54,6 @@
           v-for="(item, index) in form.prop"
           :key="item.key"
           :label="index === 0 ? '固定参数' : ''"
-          prop="prop"
           :style="index === 0 && 'margin-bottom: 0'"
         >
           <a-input
@@ -98,7 +97,6 @@
           v-bind="index !== 0 && formItemLayoutWithOutLabel"
           :key="item.key"
           :label="index === 0 ? '可变参数' : ''"
-          prop="param"
           :style="index === 0 && 'margin-bottom: 0'"
         >
           <a-input

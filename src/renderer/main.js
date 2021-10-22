@@ -59,11 +59,6 @@ window.addEventListener('load', () => {
   window.SuanpanAPI.eventService.on('sp:node:deselect', (event, data) => {
     storeInst.commit('edit/selectedNode', null)
   })
-
-  // interval get status
-  setTimeout(() => {
-    storeInst.dispatch('status/getStatus')
-  }, 1000);
 })
 
 let firtTime = true;
@@ -77,6 +72,7 @@ window.addEventListener('load', ()=> {
     if(location.endsWith('/edit')) {
       bus.emit('transition-component')
     }else if(location.startsWith('/web/service/predict/')) {
+      storeInst.commit('status/appRuning', data[1].promise.$$state.value.name)
       let locs = location.split('/');
       let lastItem = locs[locs.length - 1];
       if(!isNaN(Number(lastItem))) {
@@ -115,7 +111,6 @@ storeInst.watch(
   },
   function () {
     if(storeInst.state.file.currentApp && storeInst.state.file.currentApp.id) {
-      storeInst.dispatch('status/getStatus')
       storeInst.commit('log/cleanLogs')
       storeInst.dispatch('log/register', storeInst.state.file.currentApp.id)
       storeInst.dispatch('log/query', storeInst.state.file.currentApp.id)

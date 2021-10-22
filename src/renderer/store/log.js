@@ -72,7 +72,7 @@ function addLogs(logs, logsUnique, newLogs=[]) {
   logs = filterLogs.concat(logs);
 
   // slice
-  const MAX_LEN = 2000
+  const MAX_LEN = 500
   if(logs.length > MAX_LEN) {
     for(let i = MAX_LEN; i < logs.length; i++) {
       let lg = logs[i];

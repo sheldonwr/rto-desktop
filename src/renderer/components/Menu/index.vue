@@ -285,7 +285,7 @@ export default {
         ).checked = this.$store.state.view.logPanelVisible;
       },
     },
-    "$store.state.status.appStatus": {
+    "$store.state.status.appRuning": {
       handler() {
         this.checkGraph();
         let editCut = this.menus.edit.items.find(

@@ -192,7 +192,7 @@ export default {
     },
   },
   watch: {
-    '$store.state.status.appStatus': {
+     '$store.state.status.appRuning': {
       handler() {
         this.isRunning = this.$store.getters["status/isRunning"];
       }
@@ -316,14 +316,6 @@ export default {
       if (this.lastAppId == appId) {
         return;
       }
-      this.$store
-        .dispatch("status/getStatus", appId)
-        .then((appStatus) => {
-          this.isRunning = this.$store.getters["status/isRunning"];
-        })
-        .catch((err) => {
-          console.error(err);
-        });
       this.lastAppId = appId;
     },
     deploy() {

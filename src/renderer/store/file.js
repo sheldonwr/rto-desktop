@@ -94,7 +94,15 @@ export default {
       })
     },
     save({ state, commit, dispatch }) {
-      return dispatch('saveDialog', '保存')
+      if(window.SuanpanAPI.rootScope.doSave) {
+        window.SuanpanAPI.rootScope.doSave().then(() => {
+          this.dispatch('showMessage', { type: "success", msg: "项目保存成功" });
+        }).catch((err) => {
+          this.dispatch('showMessage', { type: "error", msg: `保存项目失败: ${err.msg}`});
+        });
+      }else {
+        this.dispatch('showMessage', { type: "success", msg: "项目保存成功" });
+      }
     },
     saveAs({ state, dispatch }) {
       return dispatch('saveDialog', '另存为')

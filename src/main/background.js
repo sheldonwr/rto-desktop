@@ -81,13 +81,14 @@ async function createWindow() {
         // event.newGuest.removeMenu();
         event.newGuest.loadURL(interceptUrl(url));
   
-        event.newGuest.webContents.on("new-window", async (event, url, options) => {
+        event.newGuest.webContents.on("new-window", async (event, url, frameName, disposition, options, additionalFeatures) => {
           event.preventDefault();
           event.newGuest = new BrowserWindow({ 
             ...options,
             y: '50%', 
             x: '50%'
           });
+          event.newGuest.loadURL(url);
         })
       }
       event.newGuest.loadURL(url);
