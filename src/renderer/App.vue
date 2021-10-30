@@ -139,7 +139,10 @@ export default {
     keycutsHandler(event) {
       let targetTag = '';
       if(event.target) {
-        targetTag = event.target.tagName;
+        targetTag = event.target.tagName.toLowerCase();
+      }
+      if(targetTag == 'input' || targetTag == 'textarea') {
+        return;
       }
       if (event.keyCode === 118) {
         // 'F7'
@@ -181,19 +184,13 @@ export default {
         );
       }else if(event.ctrlKey && (event.keyCode === 88)) {
         // 'ctrl+x'
-        if(targetTag != 'INPUT') {
-          this.$store.dispatch("edit/cutNode");
-        }
+        this.$store.dispatch("edit/cutNode");
       }else if(event.ctrlKey && (event.keyCode === 67)) {
         // 'ctrl+c'
-        if(targetTag != 'INPUT') {
-          this.$store.dispatch("edit/copyNode");
-        }
+        this.$store.dispatch("edit/copyNode");
       }else if(event.ctrlKey && (event.keyCode === 86)) {
         // 'ctrl+v'
-        if(targetTag != 'INPUT') {
-          this.$store.dispatch("edit/pasteNode");
-        }
+        this.$store.dispatch("edit/pasteNode");
       }else if(event.ctrlKey && (event.keyCode === 78)) {
         // 'ctrl+n'
         this.$store.commit('view/createAppDialog', true);

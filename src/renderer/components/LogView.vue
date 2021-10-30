@@ -15,6 +15,7 @@
                   <option value ="ERROR">ERROR</option>
                   <option value ="WARNING">WARNING</option>
                   <option value="INFO">INFO</option>
+                  <option value="ALL">全部</option>
                 </select>
               </li>
             </ul>
@@ -65,7 +66,8 @@ const LOG_LEVELS = {
   ERROR: 3,
   WARNING: 2,
   INFO: 1,
-  DEBUG: 0
+  DEBUG: 0,
+  ALL: -1
 }
 
 export default {
@@ -80,7 +82,7 @@ export default {
       // 组件日志
       compLog: "",
       // 日志过滤级别
-      logThreshold: "INFO",
+      logThreshold: "ALL",
       resizeHeight: 240,
       maxHeight: 240,
       minHeight: 100
@@ -88,9 +90,13 @@ export default {
   },
   computed: {
     displayLogs() {
-      return this.$store.state.log.allLogs.filter(log => {
-        return LOG_LEVELS[log.level.toUpperCase()] >= LOG_LEVELS[this.logThreshold]
-      })
+      if(LOG_LEVELS[this.logThreshold] == -1) {
+        return this.$store.state.log.allLogs
+      }else {
+        return this.$store.state.log.allLogs.filter(log => {
+          return LOG_LEVELS[log.level.toUpperCase()] == LOG_LEVELS[this.logThreshold]
+        })
+      }
     }
   },
   created() {
