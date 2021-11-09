@@ -5,11 +5,11 @@
       <a-tab-pane key="1" tab="告警">
         <ResizeTabContent :resize-height="resizeHeight">
           <div class="log-head">
-            <ul class="log-head-inner clearfix">
-              <li class="pull-left source">节点</li>
-              <li class="pull-left time">时间</li>
-              <li class="pull-left message">内容</li>
-              <li class="pull-left severity">
+            <div class="log-head-inner clearfix">
+              <div class="pull-left source">节点</div>
+              <div class="pull-left time">时间</div>
+              <div class="pull-left message">内容</div>
+              <div class="pull-left severity">
                 <span>级别:</span>
                 <select class="log-threshold" v-model="logThreshold">
                   <option value ="ERROR">ERROR</option>
@@ -17,21 +17,29 @@
                   <option value="INFO">INFO</option>
                   <option value="ALL">全部</option>
                 </select>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
-          <ul class="log-content-wrap">
-            <li
-              class="clearfix"
-              v-for="log in displayLogs"
-              :key="log.id"
-            >
-              <span class="pull-left single-line source" :title="log.fnode">{{ log.fnode }}</span>
-              <span class="pull-left single-line time" :title="log.ftime">{{ log.ftime }}</span>
-              <span class="pull-left single-line message" :title="log.title">{{ log.title }}</span>
-              <span class="pull-left single-line severity" :title="log.level">{{ log.level }}</span>
-            </li>
-          </ul>
+          <div class="log-content-wrap">
+            <VirtualScoller
+              ref="scroller"
+              :item-height="itemHeight"
+              :data="displayLogs"
+              :update-flag="$store.state.log.logUpdateFlag"
+              @update="updateVisibleData"
+              >
+              <div
+                class="clearfix"
+                v-for="log in visibleDisplayLogs"
+                :key="log.id"
+              >
+                <span class="pull-left single-line source" :title="log.fnode">{{ log.fnode }}</span>
+                <span class="pull-left single-line time" :title="log.ftime">{{ log.ftime }}</span>
+                <span class="pull-left single-line message" :title="log.title">{{ log.title }}</span>
+                <span class="pull-left single-line severity" :title="log.level">{{ log.level }}</span>
+              </div>
+            </VirtualScoller>
+          </div>
         </ResizeTabContent>
       </a-tab-pane>
       <a-tab-pane key="2" tab="项目日志">
@@ -61,6 +69,7 @@
 
 <script>
 import ResizeTabContent from "components/ResizeTabContent";
+import VirtualScoller from "components/VirtualScoller";
 
 const LOG_LEVELS = {
   ERROR: 3,
@@ -74,6 +83,7 @@ export default {
   name: "log",
   components: {
     ResizeTabContent,
+    VirtualScoller
   },
   data() {
     return {
@@ -85,10 +95,17 @@ export default {
       logThreshold: "ALL",
       resizeHeight: 240,
       maxHeight: 240,
-      minHeight: 100
+      minHeight: 100,
+      // virtual scroll
+      itemHeight: 28,
+      visibleStartIdx: 0,
+      visibleEndIdx: 0
     };
   },
   computed: {
+    visibleDisplayLogs() {
+      return this.displayLogs.slice(this.visibleStartIdx, this.visibleEndIdx)
+    },
     displayLogs() {
       if(LOG_LEVELS[this.logThreshold] == -1) {
         return this.$store.state.log.allLogs
@@ -158,6 +175,9 @@ export default {
         }
       },
     },
+    logThreshold() {
+      this.$store.commit("logUpdateFlag")
+    }
   },
   methods: {
     close() {
@@ -271,6 +291,10 @@ export default {
           this.$store.commit('log/addLog', node);
         }
       }
+    },
+    updateVisibleData(start, end) {
+      this.visibleStartIdx = start
+      this.visibleEndIdx = end
     }
   },
 };

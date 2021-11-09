@@ -1,7 +1,7 @@
 <template>
   <div class="header-wrap drag">
     <div class="logo-wrap">
-      <img :src="require('assets/img/logo.png')">
+      <img :src="require('assets/img/logo.jpg')">
       <p class="logo-title">工业装置RTO在线优化平台</p>
     </div>
     <div class="title-wrap">

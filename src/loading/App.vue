@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="drag">
     <img 
-      :src="require('@/main/assets/logo.png')"
+      :src="require('@/main/assets/logo.jpg')"
       width="50%">
     <p class="loading-text">初始化中<span>{{dot}}</span></p>
   </div>

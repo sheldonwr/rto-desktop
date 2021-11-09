@@ -2,12 +2,20 @@ export default {
   namespaced: true,
   state: {
     allLogs: [],
-    allLogsUnique: {}
+    allLogsUnique: {},
+    logUpdateFlag: 0
   },
   mutations: {
     cleanLogs(state) {
       state.allLogs = [];
       state.allLogsUnique = {};
+    },
+    logUpdateFlag(state) {
+      let val = state.logUpdateFlag + 1
+      if(val === Number.MAX_SAFE_INTEGER) {
+        val = 0
+      }
+      state.logUpdateFlag = val
     },
     allLogs(state, val=[]) {
       state.allLogs = val;
@@ -28,12 +36,18 @@ export default {
     register({ state, commit }, appId) {
       window.SuanpanAPI.componentLogService.unregisterAllLogProcessor()
       window.SuanpanAPI.componentLogService.registerLogProcessor(appId, (logs) => {
-        commit('allLogs', addLogs(state.allLogs, state.allLogsUnique, logs))      
+        commit('allLogs', addLogs(state.allLogs, state.allLogsUnique, logs))
+        if(logs && (logs.length > 0)) {
+          commit('logUpdateFlag')
+        }   
       })
     },
     query({ state, commit }, appId) {
       window.SuanpanAPI.componentLogService.query(appId).then( res => {
-        commit('allLogs', addLogs(state.allLogs, state.allLogsUnique, res.logs))  
+        commit('allLogs', addLogs(state.allLogs, state.allLogsUnique, res.logs))
+        if(res.logs && (res.logs.length > 0)) {
+          commit('logUpdateFlag')
+        }
       })
     },
     getAppLog({}, {appId, curlogPos=0}) {
@@ -72,7 +86,7 @@ function addLogs(logs, logsUnique, newLogs=[]) {
   logs = filterLogs.concat(logs);
 
   // slice
-  const MAX_LEN = 500
+  const MAX_LEN = 5000
   if(logs.length > MAX_LEN) {
     for(let i = MAX_LEN; i < logs.length; i++) {
       let lg = logs[i];
