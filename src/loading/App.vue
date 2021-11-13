@@ -59,6 +59,7 @@ img {
   height: 40px;
 }
 .loading-text {
+  margin-top: 16px;
   text-align: center;
 }
 </style>
