@@ -176,8 +176,8 @@ export default {
         }
       }else if(event.keyCode === 116) {
         this.$store.dispatch("file/gotoCurrentPredict");
-      }else if (event.keyCode === 192 && event.ctrlKey) {
-        // 'ctrl+`'
+      }else if (event.keyCode === 113) {
+        // f2
         this.$store.commit(
           "view/logPanelVisible",
           !this.$store.state.view.logPanelVisible

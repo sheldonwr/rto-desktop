@@ -1,3 +1,4 @@
+import { deepCopy } from '../utils/'
 
 export default {
   namespaced: true,
@@ -24,12 +25,14 @@ export default {
     copyNode({ state, commit }) {
       if(state.selectedNode && !this.getters["status/isRunning"]) {
         let copied =  window.SuanpanAPI.nodeService.copyNode(state.selectedNode.id);
-        commit('copiedNodeObj', copied);
+        commit('copiedNodeObj', deepCopy(copied));
         this.dispatch('showMessage', { type: 'success', msg: '复制成功'});
       }
     },
     pasteNode({ state }) {
       if(state.copiedNodeObj && !this.getters["status/isRunning"]) {
+        state.copiedNodeObj.metadata.x += 20
+        state.copiedNodeObj.metadata.y += 20
         window.SuanpanAPI.nodeService.pasteNode(state.copiedNodeObj);
       }
     },

@@ -7,7 +7,7 @@
   >
     <div class="about-wrapper">
       <div class="about-description">
-        <p>版本：RTO-PLUS 1.0.0</p>
+        <p>版本：RTO-PLUS {{ version }}</p>
       </div>
       <p>Copyright © 2011-2021 华东理工大学 版权所有</p>
     </div>
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { invoke } from "services/"
+
 export default {
   props: {
     value: {
@@ -30,7 +32,13 @@ export default {
   data() {
     return {
       mvisible: this.value,
+      version: '1.0.0'
     };
+  },
+  created() {
+    invoke('verion-get').then(v => {
+      this.version = v
+    })
   },
   methods: {
     afterClose() {

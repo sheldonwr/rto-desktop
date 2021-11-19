@@ -148,7 +148,7 @@ export default {
               disabled: false,
               checkable: true,
               checked: this.$store.state.view.logPanelVisible,
-              keycut: 'Ctrl+`'
+              keycut: 'F2'
             },
             {
               label: "刷新",

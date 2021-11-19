@@ -70,7 +70,7 @@ function addLogs(logs, logsUnique, newLogs=[]) {
       continue
     }
     convertUTCDateToLocalDate(newLog);
-    let id = newLog.htime + newLog.title.slice(0, 10);
+    let id = newLog.id ? newLog.id : newLog.htime + newLog.title.slice(0, 10);
     if(logsUnique[id]) {
       continue;
     }
@@ -86,7 +86,7 @@ function addLogs(logs, logsUnique, newLogs=[]) {
   logs = filterLogs.concat(logs);
 
   // slice
-  const MAX_LEN = 5000
+  const MAX_LEN = 3000
   if(logs.length > MAX_LEN) {
     for(let i = MAX_LEN; i < logs.length; i++) {
       let lg = logs[i];

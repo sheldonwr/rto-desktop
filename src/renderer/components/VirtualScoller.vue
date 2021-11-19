@@ -62,7 +62,7 @@ export default {
       let scrollTop = this.$refs.container.scrollTop;
       const visibleCount = Math.ceil(this.$refs.container.clientHeight / this.itemHeight);
       const start = Math.floor(scrollTop / this.itemHeight);
-      console.log(scrollTop, start)
+      // console.log(scrollTop, start)
       const end = start + visibleCount + 1;
       this.$refs.content.style.webkitTransform = `translate3d(0, ${ start * this.itemHeight }px, 0)`;
       this.$emit('update', start, end)

@@ -9,7 +9,7 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "electron:generate-icons": "electron-icon-builder --input=./src/main/assets/logo.jpg --output=build --flatten"
+    "electron:generate-icons": "electron-icon-builder --input=./src/main/assets/icon.png --output=build --flatten"
   },
   "main": "background.js",
   "dependencies": {
@@ -21,6 +21,7 @@
     "log4js": "^6.3.0",
     "node-html-parser": "^3.0.3",
     "ps-list": "^7.2.0",
+    "require-from-string": "^2.0.2",
     "uuid": "^8.3.2",
     "vue": "^2.6.11",
     "vue-context-menu": "^2.0.6",
