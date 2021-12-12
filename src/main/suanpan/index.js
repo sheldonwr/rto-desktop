@@ -200,7 +200,7 @@ export function checkRedis() {
     let errMsg = '消息队列服务没有正常运行';
     findProcess('port', redisPort)
       .then(list => {
-        if((list.length > 0) && (list[0].name === 'redis-server.exe')) {
+        if((list.length > 0) && (list[0].name === 'redis-server-2.exe')) {
           resolve()
         }else {
           reject(new Error(errMsg))
@@ -217,7 +217,7 @@ export function checkMinio() {
     let errMsg = '对象存储服务没有正常运行';
     findProcess('port', minioPort)
       .then(list => {
-        if((list.length > 0) && (list[0].name === 'minio.exe')) {
+        if((list.length > 0) && (list[0].name === 'minio2.exe')) {
           resolve()
         }else {
           reject(new Error(errMsg))
