@@ -3,10 +3,10 @@
 import "./api/";
 import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "electron";
 import path from "path";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import installExtension from "electron-devtools-installer";
 import { appInjectDev, appInjectProd, interceptUrl } from "./appInject";
 import * as mainconfigs from "./mainconfig";
-import { findPort, launchSuanpanServer, checkServerSuccess, killSuanpanServer, getWebOrigin } from "./suanpan";
+import { launchSuanpanServer, checkServerSuccess, killSuanpanServer, getWebOrigin, checkRedis, checkMinio, getVersion } from "./suanpan";
 import logger from './log'
 import { getAppConfig } from './api/config'
 
@@ -140,6 +140,7 @@ function createLoadingWindow() {
         nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
         webSecurity: false,
         contextIsolation: false,
+        preload: path.join(__dirname, "preload.js"),
       },
     });
     loadingWin.once("ready-to-show", () => {
@@ -218,22 +219,14 @@ app.on("will-quit", async (event) => {
      }
    })
    app.on("ready", async () => {
-    if (isDevelopment && !process.env.IS_TEST) {
-      // Install Vue Devtools
-      try {
-        await installExtension(VUEJS_DEVTOOLS);
-      } catch (e) {
-        console.error("Vue Devtools failed to install:", e.toString());
-      }
-    }
      if(!isDevelopment) {
        appInjectProd();
      }
-     await createLoadingWindow();
-     let port = findPort();
+     await createLoadingWindow(getVersion());
     try {
+      await Promise.all([checkRedis(), checkMinio()])
       await launchSuanpanServer();
-      await checkServerSuccess(port);
+      await checkServerSuccess();
       await getAppConfig(getWebOrigin());
       if (isDevelopment) {
         await appInjectDev();
@@ -241,7 +234,11 @@ app.on("will-quit", async (event) => {
        createWindow();
     } catch (e) {
      logger.error(`launch failed ${e.message}\n${e.stack}`);
-     process.exit(-1);
+     loadingWin.webContents.send('error-msg', e.message || '');
     }
    });
  }
+
+ ipcMain.on('app-quit', (evt, errorMsg) => {
+  process.exit(-1);
+});

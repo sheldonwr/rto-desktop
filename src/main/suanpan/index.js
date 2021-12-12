@@ -8,6 +8,9 @@ import { spawn } from "child_process";
 import http from "http";
 import ini from "ini";
 import logger from "../log";
+import findProcess from 'find-process';
+import requireFromString from 'require-from-string';
+import detectPort from 'detect-port';
 
 export const AppHome = path.join(app.getAppPath(), '../../');
 const SP_DESKTOP_HOME = isDevelopment ? 'C:\\xuelangyun\\rto-plus' : path.join(AppHome, '../');
@@ -16,14 +19,17 @@ const CurrentPidPath = isDevelopment ? path.join(process.cwd(), '/server/pid.jso
 export const LocalFilePath = path.join(SP_DESKTOP_HOME, '/config/local.js');
 
 let currentPort = 7000;
+let redisPort = 26379;
+let minioPort = 29000;
 let serverPid = null;
 let DAEMONIZE = false;
+export let currentVersion = 'unknown';
 
 export function getWebOrigin() {
   return `http://127.0.0.1:${currentPort}`;
 }
 
-export function findPort() {
+function findPort() {
   if(fs.existsSync(ServerConfigPath)) {
     let iniConfig = ini.parse(fs.readFileSync(ServerConfigPath, 'utf-8'));
     if(iniConfig && iniConfig.SP_PORT) {
@@ -36,54 +42,45 @@ export function findPort() {
 
 export async function launchSuanpanServer() {
   if(!fs.existsSync(CurrentPidPath)) {
-    launchSever(); 
+    await launchSever(); 
   }else {
-    serverPid = fs.readFileSync(CurrentPidPath);
-    try {
-      serverPid = JSON.parse(serverPid).pid;
-      let serverProcess = [];
-      if(serverPid != null) {
-        serverProcess = await findProcessByPid(serverPid);
-      }
-      if((serverProcess.length === 0) || (serverProcess[0].name != SP_SERVER_NAME)) {
-        logger.info("launch Suanpan Sever as not found server process with pid: ", serverPid);
-        launchSever();
-      }else {
-        logger.info("found Suanpan Sever process with pid:", serverPid);
-      }
-    }catch (e) {
-      logger.error('pid file parse error', CurrentPidPath);
-      launchSever();
+    serverPid = JSON.parse(fs.readFileSync(CurrentPidPath)).pid;
+    let serverProcess = [];
+    if(serverPid != null) {
+      serverProcess = await findProcessByPid(serverPid);
+    }
+    if((serverProcess.length === 0) || (serverProcess[0].name != SP_SERVER_NAME)) {
+      logger.info("launch Suanpan Sever as not found server process with pid: ", serverPid);
+      await launchSever();
+    }else {
+      logger.info("found Suanpan Sever process with pid:", serverPid);
     }
   }
 }
 
-function launchSever() {
-  try {    
-    let serverExe = isDevelopment
-      ? `C:\\xuelangyun\\rto-plus\\${SP_SERVER_NAME}`
-      : path.join(AppHome, `../${SP_SERVER_NAME}`);
-    logger.info(`launching suanpan server from ${serverExe}`);
-    logger.info(`SP_DESKTOP_HOME: ${SP_DESKTOP_HOME}`);
-    if (!fs.existsSync(serverExe)) {
-      throw new Error(`${serverExe} not exist`);
-    }
-    let env = generateEnv();
-    logger.info(`suanpan server env:`, JSON.stringify(env));
-    let serverProcess = spawn(SP_SERVER_NAME, {
-      detached: true,
-      stdio: "ignore",
-      cwd: SP_DESKTOP_HOME,
-      env: env,
-    });
-    serverProcess.unref();
-    serverPid = serverProcess.pid;
-    fs.writeFileSync(CurrentPidPath, JSON.stringify({pid: serverPid}));
-    logger.info(`server spawn`);
-  } catch (e) {
-    logger.error(`launch suanpan server failed ${e.message}\n${e.stack}`);
-    process.exit(-1);
+async function launchSever() {
+  findPort()
+  await checkPortIsOccupied(currentPort)  
+  let serverExe = isDevelopment
+    ? `C:\\xuelangyun\\rto-plus\\${SP_SERVER_NAME}`
+    : path.join(AppHome, `../${SP_SERVER_NAME}`);
+  logger.info(`launching suanpan server from ${serverExe}`);
+  logger.info(`SP_DESKTOP_HOME: ${SP_DESKTOP_HOME}`);
+  if (!fs.existsSync(serverExe)) {
+    throw new Error(`${serverExe} not exist`);
   }
+  let env = generateEnv();
+  logger.info(`suanpan server env:`, JSON.stringify(env));
+  let serverProcess = spawn(SP_SERVER_NAME, {
+    detached: true,
+    stdio: "ignore",
+    cwd: SP_DESKTOP_HOME,
+    env: env,
+  });
+  serverProcess.unref();
+  serverPid = serverProcess.pid;
+  fs.writeFileSync(CurrentPidPath, JSON.stringify({pid: serverPid}));
+  logger.info(`server spawn`);
 }
 
 function generateEnv() {
@@ -111,6 +108,27 @@ export async function killSuanpanServer() {
   }
 }
 
+export function getVersion() {
+  if(fs.existsSync(LocalFilePath)) {
+    try {
+      let obj = requireFromString(fs.readFileSync(LocalFilePath, 'utf-8'));
+      if(obj.clientVersion) {
+        currentVersion = obj.clientVersion;
+      }
+      if(obj.oss && obj.oss.port) {
+        minioPort = obj.oss.port
+      }
+      if(obj.redis && obj.redis.port) {
+        redisPort = obj.redis.port
+      }
+    } catch (error) {
+      logger.error('cannot get local.js', error);
+    }
+  }
+  return currentVersion;
+}
+
+
 export function isDaemon() {
   return process.env["SERVER_DAEMON"] == "true";
 }
@@ -120,7 +138,7 @@ export async function isServerRunning() {
   return serverProcesses.length > 0;
 }
 
-export async function checkServerSuccess(port) {
+export async function checkServerSuccess() {
   return new Promise((resolve, reject) => {
     const queryInterval = 2000;
     let tryCount = 5;
@@ -160,3 +178,52 @@ export async function checkServerSuccess(port) {
   });
 }
 
+function checkPortIsOccupied(port) {
+  return new Promise((resolve, reject) => {
+    detectPort(port, (err, _port) => {
+      if (err) {
+        reject(err);
+      }else {
+        if (port == _port) {
+          resolve(port)
+        } else {
+          reject(new Error(`端口: ${port} 被占用`));
+        }
+      }
+    });
+  })
+}
+
+// check redis
+export function checkRedis() {
+  return new Promise((resolve, reject) => {
+    let errMsg = '消息队列服务没有正常运行';
+    findProcess('port', redisPort)
+      .then(list => {
+        if((list.length > 0) && (list[0].name === 'redis-server.exe')) {
+          resolve()
+        }else {
+          reject(new Error(errMsg))
+        }
+      }).catch(err => {
+        reject(new Error(errMsg))
+      })
+  })
+}
+
+// check minio
+export function checkMinio() {
+  return new Promise((resolve, reject) => {
+    let errMsg = '对象存储服务没有正常运行';
+    findProcess('port', minioPort)
+      .then(list => {
+        if((list.length > 0) && (list[0].name === 'minio.exe')) {
+          resolve()
+        }else {
+          reject(new Error(errMsg))
+        }
+      }).catch(err => {
+        reject(new Error(errMsg))
+      })
+  })
+}
