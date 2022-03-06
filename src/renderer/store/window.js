@@ -30,6 +30,9 @@ export default {
     },
     createWizardWindow() {
       send('window-wizard');
+    },
+    openModelManager() {
+      return invoke('window-model-manager')
     }
   }
 };

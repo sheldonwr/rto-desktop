@@ -475,7 +475,12 @@ export default {
           this.$store.dispatch("file/gotoCurrentPredict");
           break;
         case "model-manage": // 模型管理
-          this.$store.dispatch('window/createModalWindow');
+          // this.$store.dispatch('window/createModalWindow');
+          this.$store.dispatch('window/openModelManager').then(res => {
+            if(!res.success) {
+              this.dispatch('showMessage', { type: "error", msg: res.msg });
+            }
+          });
           break;
         case "algo-manage": // 算法管理
           this.$store.dispatch('window/createAlgorithmWindow');

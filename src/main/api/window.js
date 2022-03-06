@@ -1,5 +1,8 @@
 import { ipcMain, BrowserWindow, app } from "electron";
 import { appConfig } from "./config"
+import path from 'path'
+import fs from "fs";
+import { spawn } from "child_process";
 
 ipcMain.on("window-minimize", minimize); 
 ipcMain.on("window-maximize", maximize);
@@ -9,6 +12,7 @@ ipcMain.handle('window-getMaximize', async (event, opt) => {
 })
 ipcMain.on("window-modal", createModalWindow);
 ipcMain.on("window-algorithm", createAlgorithmWindow);
+ipcMain.handle("window-model-manager", openModelManager);
 
 function getMainWindow() {
   let wins = BrowserWindow.getAllWindows();
@@ -82,4 +86,39 @@ function createModalWindow(event) {
 
 function createAlgorithmWindow(event) {
   createToolWindow(event, 'algo')
+}
+
+
+const AppHome = path.join(app.getAppPath(), '../../');
+const SP_DESKTOP_HOME = path.join(AppHome, '../');
+const ModelManagerExeName = 'rto-model-manager.exe'
+const ModelManagerExeDirName = 'model-manager'
+const ModelManagerExePath = path.join(SP_DESKTOP_HOME, `${ModelManagerExeDirName}/${ModelManagerExeName}`);
+const ModelManagerExeDir = path.join(SP_DESKTOP_HOME, ModelManagerExeDirName);
+function openModelManager() {
+  return new Promise(resolve => {
+    if (!fs.existsSync(ModelManagerExePath)) {
+      resolve({
+        success: false,
+        msg: '找不到模型管理应用'
+      })
+    }else {
+      try {
+        let managerProcess = spawn(ModelManagerExeName, ['--workdir='], {
+          detached: true,
+          stdio: "ignore",
+          cwd: ModelManagerExeDir,
+        });
+        managerProcess.unref();
+        resolve({
+          success: true
+        })
+      } catch (error) {
+        resolve({
+          success: false,
+          msg: '启动模型管理应用失败'
+        })
+      }
+    }
+  })
 }
