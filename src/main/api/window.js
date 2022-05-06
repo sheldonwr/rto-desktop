@@ -95,6 +95,7 @@ const ModelManagerExeName = 'rto-model-manager.exe'
 const ModelManagerExeDirName = 'model-manager'
 const ModelManagerExePath = path.join(SP_DESKTOP_HOME, `${ModelManagerExeDirName}/${ModelManagerExeName}`);
 const ModelManagerExeDir = path.join(SP_DESKTOP_HOME, ModelManagerExeDirName);
+const ModelManagerWorkDir = path.join(SP_DESKTOP_HOME, 'models');
 function openModelManager() {
   return new Promise(resolve => {
     if (!fs.existsSync(ModelManagerExePath)) {
@@ -104,7 +105,7 @@ function openModelManager() {
       })
     }else {
       try {
-        let managerProcess = spawn(ModelManagerExeName, ['--workdir='], {
+        let managerProcess = spawn(ModelManagerExeName, [`--workdir=${ModelManagerWorkDir}`], {
           detached: true,
           stdio: "ignore",
           cwd: ModelManagerExeDir,
