@@ -111,6 +111,7 @@ storeInst.watch(
   },
   function () {
     if(storeInst.state.file.currentApp && storeInst.state.file.currentApp.id) {
+      storeInst.commit('edit/selectedNode', null)
       storeInst.commit('log/cleanLogs')
       storeInst.dispatch('log/register', storeInst.state.file.currentApp.id)
       storeInst.dispatch('log/query', storeInst.state.file.currentApp.id)

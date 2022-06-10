@@ -135,31 +135,55 @@
         <span>完成</span>
       </div>
       <div
-        v-if="!$store.state.view.coverVisible && !isComponentEdit"
-        class="toolbar-icon"
-        :class="[
-          isReadonly
-            ? 'deploy-readonly'
-            : isRunning
-            ? 'deploy-stop'
-            : 'deploy-running',
-        ]"
-        :title="isReadonly ? '编辑' : isRunning ? '停止' : '开启'"
+        v-if="!$store.state.view.coverVisible && !isComponentEdit && isReadonly"
+        class="toolbar-icon deploy-readonly"
+        title="编辑"
         @click="clickHandler('deploy')"
         @mouseover="mouseoverHandler('deploy')"
         @mouseout="mouseoutHandler"
       >
-        <span
-          :class="[
-            'rto_iconfont',
-            isReadonly ? 'icon-edit' : isRunning ? 'icon-stop' : 'icon-start',
-          ]"
-          style="font-size: 20px"
-        ></span>
-        <span v-if="isReadonly">编辑</span>
-        <span v-else-if="isRunning">停止</span>
-        <span v-else>开启</span>
+        <span class="rto_iconfont icon-edit" style="font-size: 20px"></span>
+        <span>编辑</span>
       </div>
+      <div
+        v-if="!$store.state.view.coverVisible && !isComponentEdit && isRunning"
+        class="toolbar-icon deploy-stop"
+        title="停止"
+        @click="clickHandler('deploy')"
+        @mouseover="mouseoverHandler('deploy')"
+        @mouseout="mouseoutHandler"
+      >
+        <span class="rto_iconfont icon-stop" style="font-size: 20px"></span>
+        <span>停止</span>
+      </div>
+      <a-dropdown 
+        v-if="!$store.state.view.coverVisible && !isComponentEdit && !isRunning" 
+        placement="bottomLeft"
+      >
+        <div
+          class="toolbar-icon deploy-running"
+          title="开启"
+          @mouseover="mouseoverHandler('deploy')"
+          @mouseout="mouseoutHandler"
+        >
+          <span class="rto_iconfont icon-start" style="font-size: 20px"></span>
+          <span>开启</span>
+        </div>
+        <a-menu slot="overlay">
+          <a-menu-item>
+            <div class="overlay-wrap" @click="clickHandler('deploy', {deploy: false})">
+              <span class="rto_iconfont icon-start" style="font-size: 20px"></span>
+              <span>运行</span>
+            </div>
+          </a-menu-item>
+          <a-menu-item>
+            <div class="overlay-wrap" @click="clickHandler('deploy', {deploy: true})">
+              <span class="rto_iconfont icon-tiaoshi" style="font-size: 20px"></span>
+              <span>调试</span>
+            </div>
+          </a-menu-item>
+        </a-menu>
+      </a-dropdown>
     </div>
   </div>
 </template>
@@ -219,7 +243,7 @@ export default {
     }
   },
   methods: {
-    clickHandler(id) {
+    clickHandler(id, opt={}) {
       if (id === "file-new") {
         this.$store.commit("view/createAppDialog", true);
       } else if (id === "file-open") {
@@ -231,7 +255,7 @@ export default {
       } else if (id === "file-saveAs") {
         this.$store.dispatch("file/saveAs");
       } else if (id === "deploy") {
-        this.deploy();
+        this.deploy(opt);
       } else if (id === "edit-cut") {
         this.$store.dispatch("edit/cutNode");
       } else if (id === "edit-copy") {
@@ -318,7 +342,7 @@ export default {
       }
       this.lastAppId = appId;
     },
-    deploy() {
+    deploy(opt={}) {
       if (this.isReadonly) {
         this.refresh();
       } else {
@@ -329,20 +353,19 @@ export default {
           cancelText: "取消",
           onOk: () => {
             if(!this.isRunning) {
-              this.$store.dispatch('status/deployValidation').then(() => {
-                let deployBtn = document.querySelector(
-                  ".sp-app-actions .footer-item"
-                );
-                deployBtn.click();
+              const successCallback = () => {
                 this.isRunning = !this.isRunning;
-              }).catch(err => {
-                this.$store.dispatch('showMessage', { type: "error", msg: err.message });
-              });
+              }
+              const failCallback = (msg) => {
+                this.$store.dispatch('showMessage', { type: "error", msg: msg });
+              }
+              if(opt.deploy) {
+                window.SuanpanAPI.rootScope.deploy(true, successCallback, failCallback)
+              }else {
+                window.SuanpanAPI.rootScope.deploy(false, successCallback, failCallback)
+              }
             }else {
-              let deployBtn = document.querySelector(
-                ".sp-app-actions .footer-item"
-              );
-              deployBtn.click();
+              window.SuanpanAPI.rootScope.release()
               this.isRunning = !this.isRunning;
             }
           },
@@ -404,6 +427,14 @@ export default {
     background: rgba(220, 220, 220, 0.6);
     height: 100%;
     margin: 0 1px;
+  }
+}
+.overlay-wrap {
+  display: flex;
+  align-items: center;
+  min-width: 100px;
+  .rto_iconfont {
+    margin-right: 10px;
   }
 }
 </style>

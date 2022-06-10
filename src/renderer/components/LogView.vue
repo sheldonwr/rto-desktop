@@ -60,6 +60,11 @@
           </div>
         </ResizeTabContent>
       </a-tab-pane>
+      <a-tab-pane key="4" tab="实时数据">
+        <ResizeTabContent :resize-height="resizeHeight">
+          <InstantDataView />
+        </ResizeTabContent>
+      </a-tab-pane>
     </a-tabs>
     <div class="close-wrap" @click="close">
       <span class="rto_iconfont icon-close"></span>
@@ -70,6 +75,7 @@
 <script>
 import ResizeTabContent from "components/ResizeTabContent";
 import VirtualScoller from "components/VirtualScoller";
+import InstantDataView from "components/InstantDataView";
 
 const LOG_LEVELS = {
   ERROR: 3,
@@ -83,7 +89,8 @@ export default {
   name: "log",
   components: {
     ResizeTabContent,
-    VirtualScoller
+    VirtualScoller,
+    InstantDataView
   },
   data() {
     return {

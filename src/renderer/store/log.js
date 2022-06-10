@@ -1,14 +1,18 @@
+let _instantDataKey = 0;
+
 export default {
   namespaced: true,
   state: {
     allLogs: [],
     allLogsUnique: {},
-    logUpdateFlag: 0
+    logUpdateFlag: 0,
+    allInstantDatas: {}
   },
   mutations: {
     cleanLogs(state) {
       state.allLogs = [];
       state.allLogsUnique = {};
+      state.allInstantDatas = {};
     },
     logUpdateFlag(state) {
       let val = state.logUpdateFlag + 1
@@ -19,6 +23,9 @@ export default {
     },
     allLogs(state, val=[]) {
       state.allLogs = val;
+    },
+    allInstantDatas(state, val={}) {
+      state.allInstantDatas = val
     },
     addLog(state, node) {
       state.allLogs.push({
@@ -34,12 +41,19 @@ export default {
       return window.SuanpanAPI.componentLogService.connect()
     },
     register({ state, commit }, appId) {
+      // 日志
+      commit('cleanLogs')
       window.SuanpanAPI.componentLogService.unregisterAllLogProcessor()
       window.SuanpanAPI.componentLogService.registerLogProcessor(appId, (logs) => {
         commit('allLogs', addLogs(state.allLogs, state.allLogsUnique, logs))
         if(logs && (logs.length > 0)) {
           commit('logUpdateFlag')
         }   
+      })
+      // 实时数据
+      window.SuanpanAPI.instantDataService.unregisterAllLogProcessor()
+      window.SuanpanAPI.instantDataService.registerInstantDataProcessor(appId, (logs) => {
+        commit('allInstantDatas', formatInstantData(state.allInstantDatas, logs))
       })
     },
     query({ state, commit }, appId) {
@@ -114,4 +128,58 @@ function getNodeLabel(nodeId) {
   }else {
     return `id:${nodeId.slice(0, 6)}`
   }
+}
+
+// 实时数据
+const MaxNodeDataLen = 50
+const PORT_PATTERN = /^(in|out)\d+$/;
+
+function formatInstantData(allData, newData={}) {
+  let newDataKeys = Object.keys(newData)
+  if(newDataKeys.length < 1) {
+    return allData
+  }
+  let resData = Object.assign({}, allData)
+  newDataKeys.forEach(nodeId => {
+    let nodeDataArr = newData[nodeId]
+    nodeDataArr.forEach(nodeData => {
+      Object.keys(nodeData.log).forEach(portId => {
+        if (PORT_PATTERN.test(portId)) {
+          if(resData[nodeId] == null) {
+            resData[nodeId] = []
+          }
+          resData[nodeId].unshift({
+            key: ++_instantDataKey,
+            port: portId,
+            htime: nodeData.time,
+            ftime: (new Date(nodeData.time)).toLocaleString(),
+            node_label: getNodeLabel(nodeId),
+            port_name: getPortDescription(nodeId, portId),
+            data: nodeData.log[portId],
+          })
+          if(resData[nodeId].length > MaxNodeDataLen) {
+            resData[nodeId] = resData[nodeId].slice(0, MaxNodeDataLen)
+          }
+        }
+      })
+    })
+  })
+  return resData;
+}
+
+function getPortDescription(nodeId, portId) {
+  let node = window.SuanpanAPI.nodeService.getNode(nodeId)
+  if(!node) {
+    return portId;
+  }
+  let portName = portId;
+  let ports = [];
+  if(node.metadata && node.metadata.def && node.metadata.def.ports) {
+    ports = node.metadata.def.ports;
+  }
+  let p = ports.find(i => i.uuid == portId);
+  if(p && p.description) {
+    portName = p.description.zh_CN || p.description;
+  }
+  return portName;
 }

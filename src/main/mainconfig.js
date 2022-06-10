@@ -30,4 +30,3 @@ export const isDevelopment = process.env.NODE_ENV !== "production"
       : path.join(".", "src", "main", "assets")
   );
 
-export const configPath = path.join(app.getPath('userData'), 'config.ini');

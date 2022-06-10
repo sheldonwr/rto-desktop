@@ -1,0 +1,177 @@
+{
+  "id": "2384840",
+  "name": "suanpan-rto",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "26673023",
+      "name": "调试",
+      "font_class": "tiaoshi",
+      "unicode": "e7a9",
+      "unicode_decimal": 59305
+    },
+    {
+      "icon_id": "15167578",
+      "name": "edit",
+      "font_class": "edit",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "929719",
+      "name": "refresh",
+      "font_class": "refresh",
+      "unicode": "e7da",
+      "unicode_decimal": 59354
+    },
+    {
+      "icon_id": "3029229",
+      "name": "project",
+      "font_class": "project-list",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "1898973",
+      "name": "recycle",
+      "font_class": "recycle",
+      "unicode": "e700",
+      "unicode_decimal": 59136
+    },
+    {
+      "icon_id": "8474202",
+      "name": "check",
+      "font_class": "check",
+      "unicode": "e6ab",
+      "unicode_decimal": 59051
+    },
+    {
+      "icon_id": "20237450",
+      "name": "loading",
+      "font_class": "loading-copy",
+      "unicode": "e805",
+      "unicode_decimal": 59397
+    },
+    {
+      "icon_id": "19273860",
+      "name": "start_line",
+      "font_class": "start",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "1045030",
+      "name": "stop",
+      "font_class": "stop",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "5560525",
+      "name": "日志",
+      "font_class": "rizhi",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "9232884",
+      "name": "保存",
+      "font_class": "baocun",
+      "unicode": "e661",
+      "unicode_decimal": 58977
+    },
+    {
+      "icon_id": "9696486",
+      "name": "打开 (1)",
+      "font_class": "dakai",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "10148657",
+      "name": "帮助",
+      "font_class": "bangzhu",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "12516398",
+      "name": "设 置 (1)",
+      "font_class": "shezhi",
+      "unicode": "e6f5",
+      "unicode_decimal": 59125
+    },
+    {
+      "icon_id": "13175767",
+      "name": "另存为",
+      "font_class": "lingcunwei",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
+      "icon_id": "13951634",
+      "name": "复制",
+      "font_class": "fuzhi",
+      "unicode": "e804",
+      "unicode_decimal": 59396
+    },
+    {
+      "icon_id": "16471247",
+      "name": "新建",
+      "font_class": "xinjian",
+      "unicode": "e718",
+      "unicode_decimal": 59160
+    },
+    {
+      "icon_id": "17916987",
+      "name": "剪切",
+      "font_class": "jianqie",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "20045315",
+      "name": "qinghangbihuanliuzhuan",
+      "font_class": "about",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "16887194",
+      "name": "close",
+      "font_class": "close",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "3061758",
+      "name": "right-arrow",
+      "font_class": "right-arrow",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "5260494",
+      "name": "maximize-restore",
+      "font_class": "maximize-restore",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "7856917",
+      "name": "minimize",
+      "font_class": "minimize",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "10292980",
+      "name": "maximize",
+      "font_class": "maximize",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    }
+  ]
+}

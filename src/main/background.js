@@ -3,7 +3,6 @@
 import "./api/";
 import { app, protocol, BrowserWindow, Menu, MenuItem, Tray, ipcMain } from "electron";
 import path from "path";
-import installExtension from "electron-devtools-installer";
 import { appInjectDev, appInjectProd, interceptUrl } from "./appInject";
 import * as mainconfigs from "./mainconfig";
 import { launchSuanpanServer, checkServerSuccess, killSuanpanServer, getWebOrigin, checkRedis, checkMinio, getVersion } from "./suanpan";
