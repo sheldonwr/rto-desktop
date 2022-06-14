@@ -171,13 +171,13 @@
         </div>
         <a-menu slot="overlay">
           <a-menu-item>
-            <div class="overlay-wrap" @click="clickHandler('deploy', {deploy: false})">
+            <div class="overlay-wrap" @click="clickHandler('deploy', {debug: false})">
               <span class="rto_iconfont icon-start" style="font-size: 20px"></span>
               <span>运行</span>
             </div>
           </a-menu-item>
           <a-menu-item>
-            <div class="overlay-wrap" @click="clickHandler('deploy', {deploy: true})">
+            <div class="overlay-wrap" @click="clickHandler('deploy', {debug: true})">
               <span class="rto_iconfont icon-tiaoshi" style="font-size: 20px"></span>
               <span>调试</span>
             </div>
@@ -360,11 +360,7 @@ export default {
               const failCallback = (msg) => {
                 this.$store.dispatch('showMessage', {type: "error", msg: msg});
               }
-              if (opt.deploy) {
-                window.SuanpanAPI.rootScope.deploy(true, successCallback, failCallback)
-              } else {
-                window.SuanpanAPI.rootScope.deploy(false, successCallback, failCallback)
-              }
+              window.SuanpanAPI.rootScope.deploy(opt.debug, successCallback, failCallback)
             } else {
               window.SuanpanAPI.rootScope.release()
               this.isRunning = !this.isRunning;

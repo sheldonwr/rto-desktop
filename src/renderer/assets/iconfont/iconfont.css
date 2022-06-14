@@ -1,6 +1,8 @@
 @font-face {
-  font-family: "rto_iconfont";
-  src: url('iconfont.woff?t=1619095568169') format('woff');
+  font-family: "rto_iconfont"; /* Project id 2384840 */
+  src: url('iconfont.woff2?t=1655173398137') format('woff2'),
+       url('iconfont.woff?t=1655173398137') format('woff'),
+       url('iconfont.ttf?t=1655173398137') format('truetype');
 }
 
 .rto_iconfont {
@@ -9,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tiaoshi:before {
+  content: "\e7a9";
 }
 
 .icon-edit:before {
