@@ -1,14 +1,13 @@
 import { getUrlContent } from "../utils";
 
-
 export let appConfig = {};
 
-export function getAppConfig(orgin) {
+export function getAppConfig(origin) {
   return new Promise((resolve, reject) => {
-    getUrlContent(`${orgin}/app/config`, "POST").then(
+    getUrlContent(`${origin}/app/config`, "POST").then(
       (rawData) => {
         let obj = JSON.parse(rawData).data;
-        let RtoOrigin = orgin;
+        let RtoOrigin = origin;
         Object.assign(appConfig,
           {
             ...obj,

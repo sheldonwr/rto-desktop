@@ -22,16 +22,16 @@
           </div>
           <div class="log-content-wrap">
             <VirtualScoller
-              ref="scroller"
-              :item-height="itemHeight"
-              :data="displayLogs"
-              :update-flag="$store.state.log.logUpdateFlag"
-              @update="updateVisibleData"
-              >
+                ref="scroller"
+                :item-height="itemHeight"
+                :data="displayLogs"
+                :update-flag="$store.state.log.logUpdateFlag"
+                @update="updateVisibleData"
+            >
               <div
-                class="clearfix"
-                v-for="log in visibleDisplayLogs"
-                :key="log.id"
+                  class="clearfix"
+                  v-for="log in visibleDisplayLogs"
+                  :key="log.id"
               >
                 <span class="pull-left single-line source" :title="log.fnode">{{ log.fnode }}</span>
                 <span class="pull-left single-line time" :title="log.ftime">{{ log.ftime }}</span>
@@ -60,6 +60,11 @@
           </div>
         </ResizeTabContent>
       </a-tab-pane>
+      <a-tab-pane key="4" tab="实时数据">
+        <ResizeTabContent :resize-height="resizeHeight">
+          <InstantDataView />
+        </ResizeTabContent>
+      </a-tab-pane>
     </a-tabs>
     <div class="close-wrap" @click="close">
       <span class="rto_iconfont icon-close"></span>
@@ -70,6 +75,7 @@
 <script>
 import ResizeTabContent from "components/ResizeTabContent";
 import VirtualScoller from "components/VirtualScoller";
+import InstantDataView from "components/InstantDataView";
 
 const LOG_LEVELS = {
   ERROR: 3,
@@ -83,7 +89,8 @@ export default {
   name: "log",
   components: {
     ResizeTabContent,
-    VirtualScoller
+    VirtualScoller,
+    InstantDataView
   },
   data() {
     return {
@@ -107,11 +114,11 @@ export default {
       return this.displayLogs.slice(this.visibleStartIdx, this.visibleEndIdx)
     },
     displayLogs() {
-      if(LOG_LEVELS[this.logThreshold] == -1) {
+      if(parseInt(LOG_LEVELS[this.logThreshold]) === -1) {
         return this.$store.state.log.allLogs
       }else {
         return this.$store.state.log.allLogs.filter(log => {
-          return LOG_LEVELS[log.level.toUpperCase()] == LOG_LEVELS[this.logThreshold]
+          return LOG_LEVELS[log.level.toUpperCase()] === LOG_LEVELS[this.logThreshold]
         })
       }
     }
@@ -160,8 +167,8 @@ export default {
         }else if(isLogging && this.$store.state.edit.selectedNode && this.$store.state.view.logPanelVisible) {
           this.getCompLog();
         }else {
-           this.clearAppLog();
-           this.clearCompLog();
+          this.clearAppLog();
+          this.clearCompLog();
         }
         if(this.$store.getters["status/isRunning"] && this.$store.state.file.currentApp.id) {
           // this.checkVscode();
@@ -265,8 +272,8 @@ export default {
       e.preventDefault();
       let diff = this.dragPre - e.clientY;
       this.resizeHeight = Math.min(
-        this.maxHeight,
-        Math.max(this.minHeight, this.orgHeight + diff)
+          this.maxHeight,
+          Math.max(this.minHeight, this.orgHeight + diff)
       );
     },
     resizeMouseUp(e) {
@@ -287,7 +294,7 @@ export default {
         let node = nodes[i];
         let def = node.metadata.def;
         if(def && def.dockerRepo && (def.dockerRepo.indexOf('vscode') > -1)
-          && def.params.__mode  && (def.params.__mode.value == 'online-edit')) {
+            && def.params.__mode  && (`${def.params.__mode.value}` === 'online-edit')) {
           this.$store.commit('log/addLog', node);
         }
       }
