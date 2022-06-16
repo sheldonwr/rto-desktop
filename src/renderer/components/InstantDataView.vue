@@ -3,52 +3,24 @@
     <el-table
         :data="logs"
         border
-        style="width: 100%">
-      <el-table-column
-          prop="name"
-          label="名称"
-          width="180">
+        style="width: 100%"
+        :cell-style="cellStyle"
+        :header-cell-style="headerCellStyle"
+    >
+      <el-table-column prop="name" label="名称" width="180"></el-table-column>
+      <el-table-column prop="type" label="类型" width="180"></el-table-column>
+      <el-table-column prop="value" label="值"></el-table-column>
+      <el-table-column prop="desc" label="描述" width="180"></el-table-column>
+      <el-table-column prop="port" label="端口" :filters="filters.port" :filter-method="portFilterHandler"
+                       width="180"></el-table-column>
+      <el-table-column prop="connection" label="连接"></el-table-column>
+      <el-table-column prop="timestamp" label="时间" width="180"></el-table-column>
+      <el-table-column prop="unit" label="单位" width="180"></el-table-column>
+      <el-table-column label="属性">
+        <template slot-scope="scope">
+          <json-viewer :value="scope.row.properties" :expanded="false" copyable boxed sort></json-viewer>
+        </template>
       </el-table-column>
-<!--      <el-table-column-->
-<!--          prop="type"-->
-<!--          label="类型"-->
-<!--          :filters="filters.type"-->
-<!--          :filter-method="typeFilterHandler"-->
-<!--          width="180">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="value"-->
-<!--          label="值">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="desc"-->
-<!--          label="描述"-->
-<!--          width="180">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="port"-->
-<!--          label="端口"-->
-<!--          width="180">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="connection"-->
-<!--          label="连接">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="timestamp"-->
-<!--          label="时间"-->
-<!--          width="180">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="unit"-->
-<!--          label="单位"-->
-<!--          width="180">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="属性">-->
-<!--        <template slot-scope="scope">-->
-<!--          <json-viewer :value="scope.row.properties" copyable boxed sort></json-viewer>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
     </el-table>
   </div>
 </template>
@@ -56,6 +28,7 @@
 <script>
 import Vue from 'vue';
 import JsonViewer from 'vue-json-viewer';
+import 'vue-json-viewer/style.css';
 
 Vue.component('json-viewer', JsonViewer);
 
@@ -64,7 +37,15 @@ export default {
   data() {
     return {
       filters: {
-        type: []
+        port: []
+      },
+      cellStyle: {height: '28px', padding: 0, backgroundColor: '#f5faff'},
+      headerCellStyle: {
+        backgroundColor: '#ebf4fd',
+        height: '28px',
+        padding: 0,
+        fontSize: '12px',
+        color: '#000'
       }
     }
   },
@@ -81,15 +62,15 @@ export default {
       }
       res.sort((a, b) => (b.htime - a.htime));
 
-      const typeFilter = new Set();
-      res.forEach(row => typeFilter.add(row.type));
+      const portFilter = new Set();
+      res.forEach(row => portFilter.add(row.port));
 
-      this.filters.type = Array.from(typeFilter).map(key => ({text: key, value: key}));
+      this.filters.port = Array.from(portFilter).map(key => ({text: key, value: key}));
       return res
     }
   },
   methods: {
-    typeFilterHandler(value, row, column) {
+    portFilterHandler(value, row, column) {
       const property = column['property'];
       return row[property] === value;
     }
@@ -100,50 +81,67 @@ export default {
 <style lang="scss" scoped>
 .instant-wrap {
   height: 100%;
-}
+  overflow-y: auto;
 
-.instant-head {
-  box-sizing: border-box;
-  line-height: 38px;
-  font-size: 12px;
-  color: #1f1f1f;
-  background: #EBF4FD;
-  padding: 0 30px 0 12px;
-  font-weight: bold;
+  .instant-head {
+    box-sizing: border-box;
+    line-height: 38px;
+    font-size: 12px;
+    color: #1f1f1f;
+    background: #EBF4FD;
+    padding: 0 30px 0 12px;
+    font-weight: bold;
 
-  .head-item {
-    min-height: 1px;
+    .head-item {
+      min-height: 1px;
+    }
+  }
+
+  .instant-node {
+    width: calc(100% / 24 * 4);
+  }
+
+  .instant-time {
+    width: calc(100% / 24 * 3);
+  }
+
+  .instant-portId {
+    width: calc(100% / 24 * 2);
+  }
+
+  .instant-portName {
+    width: calc(100% / 24 * 3);
+  }
+
+  .instant-content {
+    width: calc(100% / 24 * 12);
+  }
+
+  .instant-data {
+    box-sizing: border-box;
+    height: calc(100% - 38px);
+    background: #F5FAFF;
+    padding: 0 30px 0 12px;
+    font-size: 12px;
+    color: #1f1f1f;
+    line-height: 28px;
+    overflow: auto;
   }
 }
+</style>
 
-.instant-node {
-  width: calc(100% / 24 * 4);
-}
+<style lang="scss">
+.jv-container {
+  &.jv-light {
+    background-color: transparent !important;
 
-.instant-time {
-  width: calc(100% / 24 * 3);
-}
+    .jv-code {
+      padding: 0;
 
-.instant-portId {
-  width: calc(100% / 24 * 2);
-}
-
-.instant-portName {
-  width: calc(100% / 24 * 3);
-}
-
-.instant-content {
-  width: calc(100% / 24 * 12);
-}
-
-.instant-data {
-  box-sizing: border-box;
-  height: calc(100% - 38px);
-  background: #F5FAFF;
-  padding: 0 30px 0 12px;
-  font-size: 12px;
-  color: #1f1f1f;
-  line-height: 28px;
-  overflow: auto;
+      &.open {
+        padding-bottom: 0 !important;
+      }
+    }
+  }
 }
 </style>

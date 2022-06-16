@@ -135,30 +135,6 @@ const MaxNodeDataLen = 50
 const PORT_PATTERN = /^(in|out)\d+$/;
 
 function formatInstantData(allData, newData = {}) {
-  newData = {
-    "5cdf79c0ebaa11ec92fd2b07908872f1": [
-      {
-        "time": 1655257926548,
-        "type": "out",
-        "log": {
-          "request_id": "d6b3be7142f64c978fed909981d4e5bf",
-          "out1": "{\"module_name\":\"engine\",\"module_id\":\"9707dd92-8585-48f1-8e5f-2ca75f7e5421\",\"timestamp\":\"xxx\",\"values\":[{\"index\":\"1\",\"name\":\"temp_distillation_A\",\"value\":\"1234\",\"type\":\"float\",\"desc\":\"temperature of distillation A\",\"unit\":\"degree\",\"source id\":\"xxx\",\"timestamp\":\"xxx\",\"freq\":\"1000\",\"properties\":{}},{\"index\":\"2\",\"name\":\"pressure_distillation_b\",\"value\":\"4321\",\"type\":\"int\",\"desc\":\"pressure of distillation B\",\"unit\":\"degree\",\"source id\":\"xxx\",\"timestamp\":\"xxx\",\"freq\":\"1500\",\"properties\":{}}],\"properties\":[]}",
-          "success": "true"
-        }
-      },
-      {
-        "time": 1655257926555,
-        "type": "in",
-        "log": {
-          "in1": "{\"module_name\":\"engine\",\"module_id\":\"project1/modules1/port1/\",\"timestamp\":\"2004-12-05\",\"values\":[{\"index\":\"1\",\"name\":\"temp_distillation_A\",\"value\":\"1234.123\",\"type\":\"float\",\"timestamp\":\"xxx\",\"unit\":\"degree\",\"desc\":\"temperature of distillation A\",\"freq\":\"1000\",\"properties\":{\"aaa\": 2, \"ccc\": \"bbb\"}},{\"index\":\"2\",\"name\":\"pressure_distillation_b\",\"value\":\"4321\",\"type\":\"int\",\"desc\":\"pressure of distillation B\",\"unit\":\"degree\",\"source id\":\"xxx\",\"timestamp\":\"xxx\",\"freq\":\"1500\",\"propeties\":{}}],\"properties\":[]}",
-          "in1OutType": "data",
-          "in1OutSubType": "all",
-          "request_id": "0d66c038a4b545fc81f7a70ed1c7d951"
-        }
-      }
-    ]
-  };
-
   let newDataKeys = Object.keys(newData)
   if (newDataKeys.length < 1) {
     return allData
@@ -177,7 +153,7 @@ function formatInstantData(allData, newData = {}) {
           const record = JSON.parse(nodeData.log[portId]);
 
           if (record) {
-            resData[nodeId] = record.values.map(value => Object.assign({}, value, { port: portId, connection: record.module_id }));
+            resData[nodeId] = record.values.map(value => Object.assign({}, value, { port: portId, connection: record.module_id, properties: value.properties || {} }));
           }
         }
       })
