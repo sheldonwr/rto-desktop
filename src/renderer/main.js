@@ -12,10 +12,12 @@ import store from "./store";
 import Loading from "components/Loading"
 import bus from "utils/bus";
 import { listernersInit } from 'listerners/'
-
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = false;
 Vue.use(Vuex);
+Vue.use(ElementUI);
 Vue.use(Antd);
 Vue.prototype.$loading = Loading;
 
